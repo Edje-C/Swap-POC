@@ -1,0 +1,15 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poiret One', cursive;
+}
+
+button {
+  font-family: inherit;
+  margin-top: 50%;
+}
+
+.App {
+  display: flex;
+  justify-content: center;
+}
