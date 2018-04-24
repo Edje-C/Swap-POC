@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+
 const SpotifyWebApi = require('spotify-web-api-js');
 const spotifyApi = new SpotifyWebApi();
 
-class App extends Component {
+class Access extends Component {
   constructor(){
     super();
     this.params = this.getHashParams();
     this.state = {
-      loggedIn: this.params.access_token ? true : false
+      access_token: this.params.access_token,
+      refresh_token: this.params.refresh_token
     }
     if(this.params.access_token){
-      spotifyApi.setAccessToken(this.params.access_token)
-    }
+     spotifyApi.setAccessToken(this.params.access_token)
+   }
   }
 
   componentDidMount(){
@@ -39,15 +42,16 @@ class App extends Component {
     return hashParams;
   }
 
-
   render() {
-    console.log(this.state.loggedIn)
+    console.log(this.state)
     return (
-      <div className="App">
-        <a href="http://localhost:8888"><button>login with spotify</button></a>
+      <div>
+        <div id="login">
+          <a href="http://localhost:3100/users/spotifyLogin">Log in with Spotify</a>
+        </div>
       </div>
     );
   }
 }
 
-export default App;
+export default Access;

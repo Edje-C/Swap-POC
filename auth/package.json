@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Edje-C/Mickz-Spot.git"
+    "url": "git+https://github.com/Edje-C/Swap.git"
   },
-  "author": "",
+  "author": "Edje-C",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Edje-C/Mickz-Spot/issues"
+    "url": "https://github.com/Edje-C/Swap/issues"
   },
-  "homepage": "https://github.com/Edje-C/Mickz-Spot#readme",
+  "homepage": "https://github.com/Edje-C/Swap#readme",
   "dependencies": {
     "cookie-parser": "1.3.2",
     "express": "~4.16.0",
