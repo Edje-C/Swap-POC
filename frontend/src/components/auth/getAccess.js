@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
 import axios from 'axios';
 
 const SpotifyWebApi = require('spotify-web-api-js');
 const spotifyApi = new SpotifyWebApi();
 
-class Home extends Component {
+class Access extends Component {
   constructor(){
     super();
     this.params = this.getHashParams();
@@ -19,6 +18,11 @@ class Home extends Component {
   }
 
   componentDidMount(){
+    axios
+      .get('/users/getCurrentUser')
+      .then(res => console.log('USER', res.data))
+      .catch(err => console.log(err))
+
     if(this.params.access_token){
 
       spotifyApi.getMySavedTracks({
@@ -31,9 +35,16 @@ class Home extends Component {
         console.log('Something went wrong!', err);
       })
 ///////////////
-      spotifyApi.getTrack('3uToAb7I6e9l6iYPVeEv3H')
+      spotifyApi.getTrack('34xTFwjPQ1dC6uJmleno7x')
       .then(function(data) {
-        console.log('Get single Track', data);
+        console.log('Get single track', data);
+      }, function(err) {
+        console.log('Something went wrong!', err);
+      });
+///////////////
+      spotifyApi.getMe()
+      .then(function(data) {
+        console.log('Get Me', data);
       }, function(err) {
         console.log('Something went wrong!', err);
       });
@@ -42,7 +53,7 @@ class Home extends Component {
         limit: 5
       })
       .then(function(data) {
-          console.log('Get my Top Tracks', data);
+          console.log('Get my top tracks', data);
           let ids = data.items.map(v => v.id)
           spotifyApi.getRecommendations({
             limit: 50,
@@ -60,6 +71,9 @@ class Home extends Component {
     }
   }
 
+/**
+ * @return {string} returns the access_token and refresh_token
+ */
   getHashParams = () => {
     const hashParams = {};
     let e;
@@ -83,5 +97,4 @@ class Home extends Component {
     );
   }
 }
-
-export default Home;
+export default Access;

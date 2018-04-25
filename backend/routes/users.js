@@ -1,7 +1,27 @@
 var express = require('express');
 var request = require('request');
-var querystring = require('querystring');
 var router = express.Router();
+var querystring = require('querystring');
+
+const {loginRequired} = require("../auth/helpers");
+const passport = require("../auth/local");
+const db = require("../db/queries");
+
+router.post("/login", passport.authenticate("local"), (req, res) => {
+  console.log('this is what the DB returned', req.user);
+  res.status(200).json({
+    user: req.user.username,
+    message: `${req.user.username} is logged in`
+  });
+  return;
+});
+
+router.post("/register", db.registerUser);
+router.get("/getCurrentUser", loginRequired, db.getUser);
+router.get("/logout", loginRequired, db.logoutUser);
+
+
+// ~ * Spotify * ~ //
 
 var secrets = require('../secrets')
 var client_id = secrets.clientId;
@@ -99,7 +119,7 @@ router.get('/callback', function(req, res) {
         });
 
         // we can also pass the token to the browser to make requests from there
-        res.redirect('http://localhost:3000/#' +
+        res.redirect('http://localhost:3000/access/#' +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token
