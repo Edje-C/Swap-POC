@@ -1,0 +1,30 @@
+#profile {
+  display: flex;
+}
+
+#profile-data {
+  width: 25vw;
+  height: 100vh;
+  border-right: 3px solid black;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#playlist-data {
+  width: auto;
+}
+
+#new-swap {
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 25px;
+}
+
+#new-swap > button {
+  width: 100px;
+  height: 100px;
+  font-size: 42px;
+  border-radius: 100%;
+}

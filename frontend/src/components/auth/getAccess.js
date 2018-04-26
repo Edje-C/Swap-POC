@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 
 const SpotifyWebApi = require('spotify-web-api-js');
@@ -89,11 +90,7 @@ class Access extends Component {
   render() {
     console.log(this.state)
     return (
-      <div>
-        <div id="login">
-          <a href="http://localhost:3100/users/spotifyLogin">Log in with Spotify</a>
-        </div>
-      </div>
+      <Redirect to="/" />
     );
   }
 }

@@ -40,6 +40,7 @@ class Login extends Component {
           <input data-type='password' type="password" value={this.state.password} onChange={this.handleInput} />
           <input type="submit" />
         </form>
+        <Link to="/register">register</Link>
       </div>
     );
   }
