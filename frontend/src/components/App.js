@@ -15,6 +15,7 @@ class App extends Component {
     this.params = this.getHashParams();
     this.state = {
       thisUsername: '',
+      profileUsername: '',
       access_token: this.params.access_token,
       refresh_token: this.params.refresh_token
     }
@@ -27,8 +28,13 @@ class App extends Component {
     axios
       .get('/users/getCurrentUser')
       .then(res => {
-        this.setState({thisUsername: res.data.user.username})
+        this.setState({
+          thisUsername: res.data.user.username,
+          profileUsername: res.data.user.username
+        })
       })
+      .catch(err => <Login />)
+
   }
 
   getHashParams = () => {
@@ -53,40 +59,43 @@ class App extends Component {
       })
   }
 
-  renderProfile = () => (
-    this.state.thisUsername ?
-      this.state.access_token?
-        <Profile
-          thisUsername={this.state.thisUsername}
-          logout={this.logoutUser}
-          spotifyApi={spotifyApi}
-        /> :
-        window.location = 'http://localhost:3100/users/spotifyLogin':
-      <Redirect to="/login" />
-  )
+  renderProfile = (props) => {
+    return this.state.access_token?
+      <Profile
+        thisUsername={this.state.thisUsername}
+        logout={this.logoutUser}
+        spotifyApi={spotifyApi}
+        profileUsername={props.match.params.username}
+      /> :
+      window.location = 'http://localhost:3100/users/spotifyLogin'
+  }
 
-  renderLogin = () => (
-    this.state.thisUsername ?
-    <Redirect to="/" /> :
-    <Login />
+  renderLogin = () => (this.state.thisUsername?
+    <Redirect to={`/users/${this.state.thisUsername}`} />:
+    <Redirect to="/login" />
   )
 
 
   renderRegister = () => (
-    this.state.thisUsername ?
-      <Redirect to="/" /> :
-      <Register />
+    this.state.thisUsername?
+      <Redirect to={`/users/${this.state.thisUsername}`} />:
+      <Redirect to="/register" />
   )
 
+  redirectToProfile = () => (
+    this.state.thisUsername?
+      <Redirect to={`/users/${this.state.thisUsername}`} />:
+      <Redirect to="/login" />
+  )
 
   render() {
-    console.log('App', this.state)
     return (
       <div>
-        <Route exact path="/" render={this.renderProfile} />
+        <Route path="/users/:username" render={this.renderProfile} />
         <Route path="/login" render={this.renderLogin} />
         <Route path="/register" render={this.renderRegister} />
         <Route path="/access" component={Access}/>
+        <Route path="/" render={this.redirectToProfile}/>
       </div>
     );
   }

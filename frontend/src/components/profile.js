@@ -7,7 +7,7 @@ class Profile extends Component {
   constructor(props){
     super(props);
     this.state = {
-      username: props.thisUsername,
+      username: props.profileUsername,
       usersPlaylist: [],
       searchInput: '',
 
@@ -30,6 +30,11 @@ class Profile extends Component {
         this.allUsers = res.data.user
       });
 
+    axios
+      .get('/users/getUser')
+      .then(res => {
+        this.setState({thisUsername: res.data.user.username})
+      })
   }
 
   handleInput = e => {
@@ -40,7 +45,7 @@ class Profile extends Component {
   }
 
   render() {
-    console.log('profile', this.state)
+    console.log('profile', this.state, 'props', this.props.profileUsername)
     return (
       <div id="profile">
         <div id="profile-data">
@@ -48,19 +53,19 @@ class Profile extends Component {
             <h1>S</h1>
             <p>Swap</p>
           </div>
-          <h2>{this.state.username}</h2>
+          <h2>{this.props.profileUsername}</h2>
           <h3>{`# Friends`}</h3>
-          {this.state.username ? <h3><button onClick={this.props.logout}>logout</button></h3>: <Link to="/login">login</Link>}
+          {this.props.profileUsername ? <h3><button onClick={this.props.logout}>logout</button></h3>: <Link to="/login">login</Link>}
         </div>
         <div id="playlist-data">
           <input type="text" onChange={this.handleInput} value={this.state.searchInput}/>
           {
             this.state.searchInput ?
-              this.allUsers.filter(v => v.username.includes(this.state.searchInput)).map(v=><p>{v.username}</p>):
+              this.allUsers.filter(v => v.username.includes(this.state.searchInput)).map(v=><Link to={`/users/${v.username}`}>{v.username}</Link>):
               this.state.usersPlaylist[0] ?
                 this.state.usersPlaylist.map(v => (
                   <div>
-                    <a href={``}>{v.name}</a>{/*/users/:username/:playlistID*/}
+                    <a href={``}>{v.name}</a>{/*/users/:username/playlist/:playlistID*/}
                     <p>{v.date}</p>
                   </div>
                 )):
