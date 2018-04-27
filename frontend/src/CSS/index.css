@@ -2,7 +2,8 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  background-color: #eee;
+  background: url(https://i.imgur.com/gEHUcN4.png);
+  color: white;
 }
 
 h1, h2, h3 {

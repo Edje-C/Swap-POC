@@ -19,6 +19,7 @@ router.post("/login", passport.authenticate("local"), (req, res) => {
 router.post("/register", db.registerUser);
 router.get("/getCurrentUser", loginRequired, db.getUser);
 router.get("/logout", loginRequired, db.logoutUser);
+router.get("/getAllUsers", db.getAllUsers);
 
 
 // ~ * Spotify * ~ //
@@ -119,7 +120,7 @@ router.get('/callback', function(req, res) {
         });
 
         // we can also pass the token to the browser to make requests from there
-        res.redirect('http://localhost:3000/access/#' +
+        res.redirect('http://localhost:3000/#' +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token

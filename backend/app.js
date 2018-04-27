@@ -22,7 +22,6 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
 
 // Middle Ware
@@ -35,6 +34,7 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use('/users', users);

@@ -19,10 +19,6 @@ class Access extends Component {
   }
 
   componentDidMount(){
-    axios
-      .get('/users/getCurrentUser')
-      .then(res => console.log('USER', res.data))
-      .catch(err => console.log(err))
 
     if(this.params.access_token){
 
@@ -70,11 +66,9 @@ class Access extends Component {
       });
 
     }
+
   }
 
-/**
- * @return {string} returns the access_token and refresh_token
- */
   getHashParams = () => {
     const hashParams = {};
     let e;

@@ -41,3 +41,13 @@ CREATE TABLE collaborations (
     user_id INTEGER REFERENCES users(id),
     status BOOLEAN
 );
+
+
+INSERT INTO users (username, password_digest, email)
+  VALUES('edje-c', '$2a$10$nNpYLNkN7AOP41hvoVtaT.bUW3R.e3Fb/ZGqsXaOn3xlMuFW4wWeG', 'edje-c@swap.com'),
+        ('ikyomadu', '$2a$10$noryJFgByFccCS/F6XILSeqM.3TqBhmRJ0QtAMPHtlzriqk6rsY8S', 'ikyomadu@swap.com'),
+        ('xavierbx', '$2a$10$noryJFgByFccCS/F6XILSeqM.3TqBhmRJ0QtAMPHtlzriqk6rsY8S', 'xavierbx@swap.com'),
+        ('newtonjr', '$2a$10$noryJFgByFccCS/F6XILSeqM.3TqBhmRJ0QtAMPHtlzriqk6rsY8S', 'newtonjr@swap.com'),
+        ('ferminjan', '$2a$10$noryJFgByFccCS/F6XILSeqM.3TqBhmRJ0QtAMPHtlzriqk6rsY8S', 'ferminjan@swap.com'),
+        ('doriguzman', '$2a$10$noryJFgByFccCS/F6XILSeqM.3TqBhmRJ0QtAMPHtlzriqk6rsY8S', 'doriguzman@swap.com'),
+        ('notadocbuta', '$2a$10$noryJFgByFccCS/F6XILSeqM.3TqBhmRJ0QtAMPHtlzriqk6rsY8S', 'notadocbuta@swap.com');

@@ -6,11 +6,20 @@ import Register from './auth/register.js'
 import Profile from './profile.js'
 import Access from './auth/getAccess';
 
+const SpotifyWebApi = require('spotify-web-api-js');
+const spotifyApi = new SpotifyWebApi();
+
 class App extends Component {
   constructor(){
     super();
+    this.params = this.getHashParams();
     this.state = {
-      thisUsername: ''
+      thisUsername: '',
+      access_token: this.params.access_token,
+      refresh_token: this.params.refresh_token
+    }
+    if(this.params.access_token){
+     spotifyApi.setAccessToken(this.params.access_token)
     }
   }
 
@@ -20,6 +29,18 @@ class App extends Component {
       .then(res => {
         this.setState({thisUsername: res.data.user.username})
       })
+  }
+
+  getHashParams = () => {
+    const hashParams = {};
+    let e;
+    const r = /([^&;=]+)=?([^&;]*)/g;
+    const q = window.location.hash.substring(1);
+
+    while ( e = r.exec(q)) {
+      hashParams[e[1]] = decodeURIComponent(e[2]);
+    }
+    return hashParams;
   }
 
   logoutUser = () => {
@@ -34,10 +55,13 @@ class App extends Component {
 
   renderProfile = () => (
     this.state.thisUsername ?
-      <Profile
-        thisUsername={this.state.thisUsername}
-        logout={this.logoutUser}
-      /> :
+      this.state.access_token?
+        <Profile
+          thisUsername={this.state.thisUsername}
+          logout={this.logoutUser}
+          spotifyApi={spotifyApi}
+        /> :
+        window.location = 'http://localhost:3100/users/spotifyLogin':
       <Redirect to="/login" />
   )
 

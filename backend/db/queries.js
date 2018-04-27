@@ -40,8 +40,19 @@ function logoutUser(req, res) {
   res.status(200).send("log out success");
 };
 
+function getAllUsers(req, res) {
+  db
+    .any("SELECT * FROM users")
+    .then(data => {
+      res
+        .status(200)
+        .json({user: data});
+    })
+};
+
 module.exports = {
   registerUser,
   getUser,
-  logoutUser
+  logoutUser,
+  getAllUsers
 }
