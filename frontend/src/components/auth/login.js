@@ -19,7 +19,6 @@ class Login extends Component {
 
   loginUser = e => {
     e.preventDefault()
-
     axios
       .post('/users/login', {
           username: this.state.username,
@@ -27,12 +26,14 @@ class Login extends Component {
         })
         .then(res => {
           console.log(res.data)
-          window.location = 'http://localhost:3100/users/spotifyLogin'
+          this.props.getUser()
         })
         .catch(err => console.log(err));
   }
 
   render() {
+    console.log('login', this.props.history)
+    console.log('AM I REDIRCTING', this.props)
     return (
       <div>
         <form onSubmit={this.loginUser}>

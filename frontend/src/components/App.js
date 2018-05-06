@@ -3,7 +3,7 @@ import { Link, Route, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import Login from './auth/login.js'
 import Register from './auth/register.js'
-import Profile from './profile.js'
+import ProfileRouter from './profile/profileRouter.js'
 import Access from './auth/getAccess';
 
 const SpotifyWebApi = require('spotify-web-api-js');
@@ -16,25 +16,29 @@ class App extends Component {
     this.state = {
       thisUsername: '',
       profileUsername: '',
-      access_token: this.params.access_token,
-      refresh_token: this.params.refresh_token
+      // access_token: this.params.access_token,
+      // refresh_token: this.params.refresh_token
     }
-    if(this.params.access_token){
-     spotifyApi.setAccessToken(this.params.access_token)
-    }
+    // if(this.params.access_token){
+    //  spotifyApi.setAccessToken(this.params.access_token)
+    // }
   }
 
-  componentDidMount(){
+  componentWillMount(){
+    this.getUser()
+  }
+
+  getUser = () => {
     axios
-      .get('/users/getCurrentUser')
+      .get('/users/getThisUser')
       .then(res => {
+        console.log(res.data.user)
         this.setState({
           thisUsername: res.data.user.username,
           profileUsername: res.data.user.username
         })
       })
-      .catch(err => <Login />)
-
+      .catch(err => console.log('GET USER ERROR', err))
   }
 
   getHashParams = () => {
@@ -59,39 +63,41 @@ class App extends Component {
       })
   }
 
-  renderProfile = (props) => {
-    return this.state.access_token?
-      <Profile
+  renderProfile = (props) => (
+    this.state.thisUsername ?
+      <ProfileRouter
         thisUsername={this.state.thisUsername}
         logout={this.logoutUser}
-        spotifyApi={spotifyApi}
-        profileUsername={props.match.params.username}
-      /> :
-      window.location = 'http://localhost:3100/users/spotifyLogin'
-  }
+        changeProfile={this.changeProfile}
+        props={props}
+      />:
+      <Login getUser={this.getUser}/>
+  )
 
-  renderLogin = () => (this.state.thisUsername?
-    <Redirect to={`/users/${this.state.thisUsername}`} />:
-    <Redirect to="/login" />
+  renderLogin = (props) => (
+    this.state.thisUsername ?
+      <Redirect to={`/users/${this.state.thisUsername}`} />:
+      <Login getUser={this.getUser}/>
   )
 
 
   renderRegister = () => (
-    this.state.thisUsername?
+    this.state.thisUsername ?
       <Redirect to={`/users/${this.state.thisUsername}`} />:
-      <Redirect to="/register" />
+      <Register getUser={this.getUser}/>
   )
 
   redirectToProfile = () => (
-    this.state.thisUsername?
-      <Redirect to={`/users/${this.state.thisUsername}`} />:
+    this.state.thisUsername ?
+      <Redirect to={"/users"} />:
       <Redirect to="/login" />
   )
 
   render() {
+    console.log('App', this.state)
     return (
       <div>
-        <Route path="/users/:username" render={this.renderProfile} />
+        <Route path="/users/" render={this.renderProfile} />
         <Route path="/login" render={this.renderLogin} />
         <Route path="/register" render={this.renderRegister} />
         <Route path="/access" component={Access}/>

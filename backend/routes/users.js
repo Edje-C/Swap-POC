@@ -8,7 +8,6 @@ const passport = require("../auth/local");
 const db = require("../db/queries");
 
 router.post("/login", passport.authenticate("local"), (req, res) => {
-  console.log('this is what the DB returned', req.user);
   res.status(200).json({
     user: req.user.username,
     message: `${req.user.username} is logged in`
@@ -16,10 +15,16 @@ router.post("/login", passport.authenticate("local"), (req, res) => {
   return;
 });
 
-router.post("/register", db.registerUser);
-router.get("/getCurrentUser", loginRequired, db.getUser);
-router.get("/logout", loginRequired, db.logoutUser);
+router.post("/register", db.register);
+router.get("/getThisUser", loginRequired, db.getThisUser);
+router.get("/logout", loginRequired, db.logout);
 router.get("/getAllUsers", db.getAllUsers);
+router.get("/getUser/:username", db.getUser);
+router.get("/getPlaylist/:username", db.getPlaylistByUsername);
+router.get("/getTracks/:playlistID", db.getTracksForPlaylist)
+router.get("/getCollaborators/:playlistID", db.getCollaboratorsForPlaylist)
+router.get("/getFollowers/:username", db.getFollowers)
+router.get("/getFollowing/:username", db.getFollowing)
 
 
 // ~ * Spotify * ~ //
@@ -52,12 +57,10 @@ var stateKey = 'spotify_auth_state';
 
 /* GET users listing. */
 router.get('/', function(req, res) {
-  console.log('HERE')
   res.send('respond with a resource');
 });
 
 router.get('/spotifyLogin', function(req, res) {
-  console.log('HERE')
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
 
@@ -116,7 +119,6 @@ router.get('/callback', function(req, res) {
 
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
-          console.log('BODY', body);
         });
 
         // we can also pass the token to the browser to make requests from there
