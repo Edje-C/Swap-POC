@@ -12,16 +12,13 @@ const spotifyApi = new SpotifyWebApi();
 class App extends Component {
   constructor(){
     super();
-    this.params = this.getHashParams();
     this.state = {
       thisUsername: '',
       profileUsername: '',
-      // access_token: this.params.access_token,
-      // refresh_token: this.params.refresh_token
+      loggedUser: true,
+      access_token: '',
+      refresh_token: ''
     }
-    // if(this.params.access_token){
-    //  spotifyApi.setAccessToken(this.params.access_token)
-    // }
   }
 
   componentWillMount(){
@@ -35,22 +32,11 @@ class App extends Component {
         console.log(res.data.user)
         this.setState({
           thisUsername: res.data.user.username,
-          profileUsername: res.data.user.username
+          profileUsername: res.data.user.username,
+          loggedUser: true
         })
       })
-      .catch(err => console.log('GET USER ERROR', err))
-  }
-
-  getHashParams = () => {
-    const hashParams = {};
-    let e;
-    const r = /([^&;=]+)=?([^&;]*)/g;
-    const q = window.location.hash.substring(1);
-
-    while ( e = r.exec(q)) {
-      hashParams[e[1]] = decodeURIComponent(e[2]);
-    }
-    return hashParams;
+      .catch(err => {this.setState({ loggedUser: false })} )
   }
 
   logoutUser = () => {
@@ -58,50 +44,72 @@ class App extends Component {
       .get('/users/logout')
       .then(res => {
         this.setState({
-          thisUsername: ''
+          thisUsername: '',
+          loggedUser: false
         })
       })
   }
 
+  saveTokens = (tokens) => {
+    this.setState({
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token
+    })
+
+    spotifyApi.setAccessToken(tokens.access_token)
+    console.log('SVE TOKENS')
+  }
+
   renderProfile = (props) => (
-    this.state.thisUsername ?
+    this.state.loggedUser ?
       <ProfileRouter
         thisUsername={this.state.thisUsername}
+        profileUsername={props.match.params.username}
+        access_token={this.state.access_token}
+        spotifyApi={spotifyApi}
         logout={this.logoutUser}
         changeProfile={this.changeProfile}
         props={props}
-      />:
-      <Login getUser={this.getUser}/>
+      /> :
+      <Redirect to="/login" />
   )
 
   renderLogin = (props) => (
-    this.state.thisUsername ?
-      <Redirect to={`/users/${this.state.thisUsername}`} />:
+    this.state.loggedUser ?
+      <Redirect to={`/users/${this.state.thisUsername}`} /> :
       <Login getUser={this.getUser}/>
   )
 
 
   renderRegister = () => (
-    this.state.thisUsername ?
-      <Redirect to={`/users/${this.state.thisUsername}`} />:
+    this.state.loggedUser ?
+      <Redirect to={`/users/${this.state.thisUsername}`} /> :
       <Register getUser={this.getUser}/>
   )
 
   redirectToProfile = () => (
-    this.state.thisUsername ?
-      <Redirect to={"/users"} />:
+    this.state.loggedUser ?
+      <Redirect to={`/users/${this.state.thisUsername}`} /> :
       <Redirect to="/login" />
+  )
+
+  renderAccess = () => (
+    <Access
+      saveTokens={this.saveTokens}
+      access_token={this.state.access_token}
+    />
   )
 
   render() {
     console.log('App', this.state)
     return (
       <div>
-        <Route path="/users/" render={this.renderProfile} />
+        <Route exact path="/" render={this.redirectToProfile}/>
+        <Route exact path="/users" render={this.redirectToProfile}/>
         <Route path="/login" render={this.renderLogin} />
         <Route path="/register" render={this.renderRegister} />
-        <Route path="/access" component={Access}/>
-        <Route path="/" render={this.redirectToProfile}/>
+        <Route path="/access" render={this.renderAccess}/>
+        <Route path="/users/:username" render={this.renderProfile} />
       </div>
     );
   }

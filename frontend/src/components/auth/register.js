@@ -46,6 +46,7 @@ class Register extends Component {
           <input data-type='repassword' type="password" value={this.state.repassword} onChange={this.handleInput} />
           <input type="submit" />
         </form>
+        <Link to="/login">login</Link>
       </div>
     );
   }

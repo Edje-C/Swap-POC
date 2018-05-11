@@ -33,6 +33,7 @@ var secrets = require('../secrets')
 var client_id = secrets.clientId;
 var client_secret = secrets.clientSecret;
 var redirect_uri = 'http://localhost:3100/users/callback';
+console.log('HERE', secrets)
 
 /**
  * Generates a random string containing numbers and letters
@@ -63,7 +64,6 @@ router.get('/', function(req, res) {
 router.get('/spotifyLogin', function(req, res) {
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
-
   // your application requests authorization
   var scope = 'user-read-private user-read-email user-library-read user-top-read user-follow-read playlist-modify-private playlist-modify-public';
   res.redirect('https://accounts.spotify.com/authorize?' +
@@ -122,7 +122,7 @@ router.get('/callback', function(req, res) {
         });
 
         // we can also pass the token to the browser to make requests from there
-        res.redirect('http://localhost:3000/#' +
+        res.redirect('http://localhost:3000/access/#' +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token

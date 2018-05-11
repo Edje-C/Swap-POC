@@ -32,8 +32,7 @@ class Login extends Component {
   }
 
   render() {
-    console.log('login', this.props.history)
-    console.log('AM I REDIRCTING', this.props)
+    console.log('login', this.props)
     return (
       <div>
         <form onSubmit={this.loginUser}>
