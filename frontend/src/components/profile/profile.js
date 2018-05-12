@@ -2,11 +2,15 @@ import React, { Component, Fragment } from 'react';
 import { Link, Route, Redirect } from 'react-router-dom';
 import Playlists from '../home/playlists';
 import Search from '../home/search';
+import New from '../home/new'
 import axios from 'axios';
 
 class Profile extends Component {
   constructor(){
     super();
+    this.state = {
+      new : false
+    }
   }
 
   renderSearch = () => {
@@ -25,21 +29,26 @@ class Profile extends Component {
     <Playlists thisUsername={this.props.thisUsername} profileUsername={this.props.profileUsername} playlists={this.props.usersPlaylists} />
   )
 
+
+  renderNew = () => (
+    <New users={this.props.allUsers}/>
+  )
+
+
   render(){
     console.log('profile', this.state, this.props)
     return (
-      <Fragment>
-        <div id="content">
-          <input type="text" onChange={this.props.handleInput} value={this.props.searchInput}/>
-          {this.props.searchInput ?
-            this.renderSearch():
-            this.renderPlaylists()
-          }
-        </div>
-        <div id="new-swap">
-          <button>+</button>
-        </div>
-      </Fragment>
+      this.props.new ?
+        this.renderNew():
+        <Fragment>
+          <div id="content">
+            <input type="text" onChange={this.props.handleInput} value={this.props.searchInput}/>
+            {this.props.searchInput ?
+              this.renderSearch():
+              this.renderPlaylists()
+            }
+          </div>
+        </Fragment>
     );
   }
 }

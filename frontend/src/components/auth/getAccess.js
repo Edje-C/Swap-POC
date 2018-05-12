@@ -73,7 +73,6 @@ class Access extends Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       this.props.access_token ?
         <Redirect to="/" /> :

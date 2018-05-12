@@ -15,6 +15,7 @@ class ProfileRouter extends Component {
       profileUsername: '',
       usersPlaylists: [],
       searchInput: '',
+      new: false,
       allUsers: [],
       access_token: this.props.access_token
     }
@@ -96,6 +97,12 @@ class ProfileRouter extends Component {
       })
   }
 
+  toggleNew = e => {
+    this.setState({
+      new: !this.state.new
+    })
+  }
+
   renderProfile = (props) => {
     console.log('Rener profile', 'props', props, this.props)
     console.log(` !!m ${this.state.profileUsername} ${this.state.thisUsername}`)
@@ -108,6 +115,7 @@ class ProfileRouter extends Component {
           changeProfile={this.changeProfile}
           logout={this.props.logout}
           handleInput={this.handleInput}
+          new={this.state.new}
           searchInput={this.state.searchInput}
           allUsers={this.state.allUsers}
           changeProfile={this.changeProfile}
@@ -124,7 +132,7 @@ class ProfileRouter extends Component {
       <div  id="profile">
         <div id="profile-data">
           <div className="logo">
-            <Link to={`/users/${this.props.thisUsername}`}  data-username={this.props.thisUsername} onClick={this.props.changeProfile}>
+            <Link to={`/users/${this.props.thisUsername}`}  data-username={this.props.thisUsername} onClick={this.props.changeProfile, ()=>{this.setState({new: false})} }>
               <h1 data-username={this.props.thisUsername} >S</h1>
               <p data-username={this.props.thisUsername} >Swap</p>
             </Link>
@@ -133,8 +141,10 @@ class ProfileRouter extends Component {
           <h3>{`# Friends`}</h3>
           <h3><button onClick={this.props.logout}>logout</button></h3>
         </div>
-        <Route path = {`/users/:username/new`} render={this.renderNew}/>
         <Route path = {`/users/:username`} render={this.renderProfile}/>
+        <div id="new-swap">
+          <button onClick={this.toggleNew}>{this.state.new ? 'x' : '+'}</button>
+        </div>
       </div>
     )
   }
