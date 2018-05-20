@@ -17,7 +17,7 @@ CREATE TABLE playlists (
     name VARCHAR,
     length INTEGER,
     date_created DATE,
-    status BOOLEAN
+    uri VARCHAR DEFAULT ''
 );
 
 CREATE TABLE tracks (
@@ -37,7 +37,7 @@ CREATE TABLE friends (
 CREATE TABLE collaborations (
     playlist_id INTEGER REFERENCES playlists(id),
     user_id INTEGER REFERENCES users(id),
-    status CHAR
+    status CHAR DEFAULT 'p'
 );
 
 
@@ -51,16 +51,16 @@ INSERT INTO users (username, password_digest, email)
         ('notadocbuta', '$2a$10$noryJFgByFccCS/F6XILSeqM.3TqBhmRJ0QtAMPHtlzriqk6rsY8S', 'notadocbuta@swap.com');
 
 
-INSERT INTO playlists (creator_id, name, length, date_created, status)
-  VALUES(1, 'New Beginnings', 15, '2018/05/01', false),
-        (1, 'Road Trip With Losers', 96, '2018/05/03', false),
-        (7, 'Jams', 56, '2018/05/05', false),
-        (3, 'Quality and Trash', 30, '2018/05/05', false),
-        (1, 'Today''s A Good One', 50, '2018/05/07', false),
-        (6, 'Pussy Poppin Playlist Remix', 60, '2018/05/09', false),
-        (2, '音楽は癒しです', 10, '2018/05/10', false),
-        (4, 'That Mix', 72, '2018/05/10', false),
-        (5, 'Música Para Las Chicas', 80, '2018/05/15', false);
+INSERT INTO playlists (creator_id, name, length, date_created)
+  VALUES(1, 'New Beginnings', 15, '05/01/2018'),
+        (1, 'Road Trip With Losers', 96, '05/03/2018'),
+        (7, 'Jams', 56, '05/05/2018'),
+        (3, 'Quality and Trash', 30, '05/05/2018'),
+        (1, 'Today''s A Good One', 50, '05/07/2018'),
+        (6, 'Pussy Poppin Playlist Remix', 60, '05/09/2018'),
+        (2, '音楽は癒しです', 10, '05/10/2018'),
+        (4, 'That Mix', 72, '05/10/2018'),
+        (5, 'Música Para Las Chicas', 80, '05/15/2018');
 
 INSERT INTO tracks (playlist_id, track_uri, name, duration, artists, album)
   VALUES(1, '34xTFwjPQ1dC6uJmleno7x', 'Godspeed', '2:57', 'Frank Ocean', 'Blonde'),

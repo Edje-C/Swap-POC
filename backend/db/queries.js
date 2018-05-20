@@ -91,7 +91,7 @@ function getCollaboratorsForPlaylist(req, res) {
 
 function getFollowers(req, res) {
   db
-    .any("SELECT username FROM friends JOIN users ON follower_id = users.id WHERE following_id = (SELECT id FROM users WHERE username = ${username}) ORDER BY username", {username: req.params.username})
+    .any("SELECT id, username FROM friends JOIN users ON follower_id = users.id WHERE following_id = (SELECT id FROM users WHERE username = ${username}) ORDER BY username", {username: req.params.username})
     .then(data => {
       res
         .status(200)
@@ -101,13 +101,45 @@ function getFollowers(req, res) {
 
 function getFollowing(req, res) {
   db
-    .any("SELECT username FROM friends JOIN users ON following_id = users.id WHERE follower_id = (SELECT id FROM users WHERE username = ${username}) ORDER BY username", {username: req.params.username})
+    .any("SELECT id, username FROM friends JOIN users ON following_id = users.id WHERE follower_id = (SELECT id FROM users WHERE username = ${username}) ORDER BY username", {username: req.params.username})
     .then(data => {
       res
         .status(200)
         .json(data)
     })
 };
+
+function createPlaylist(req, res) {
+  db
+    .one("INSERT INTO playlists (creator_id, name, length, date_created) VALUES ((SELECT id FROM users WHERE username = ${username}), ${name}, ${length}, to_date(${date}, 'DD/MM/YYYY')) RETURNING id", {username: req.body.username, name: req.body.name, length: req.body.length, date: req.body.date})
+    .then(data => {
+      res
+        .status(200)
+        .json(data)
+    })
+    .catch(data => {
+      res
+        .status(500)
+        .json({status: 'Failed'})
+    })
+}
+
+function addCollaborators(req, res) {
+  console.log('ADdIGN', req.body, req.body.userIDs)
+  db
+    .none("INSERT INTO collaborations (playlist_id, user_id, status) VALUES" + req.body.userIDs.map(v => `(${req.body.playlistID}, ${v}, 'p')`).join(','))
+    .then(data => {
+      res
+        .status(200)
+        .json({status: 'Success'})
+    })
+    .catch(data => {
+      res
+        .status(500)
+        .json({status: 'Failed'})
+    })
+}
+
 
 module.exports = {
   register,
@@ -119,5 +151,7 @@ module.exports = {
   getTracksForPlaylist,
   getCollaboratorsForPlaylist,
   getFollowers,
-  getFollowing
+  getFollowing,
+  createPlaylist,
+  addCollaborators
 }

@@ -47,6 +47,8 @@ class ProfileRouter extends Component {
 
     this.getPlaylists(props.profileUsername)
 
+    spotifyApi.getUserPlaylists("alittleify").then(function(data){console.log('get user playlist', data)})
+
     spotifyApi.getMyTopTracks({
       limit: 5
     })
@@ -120,6 +122,7 @@ class ProfileRouter extends Component {
           allUsers={this.state.allUsers}
           changeProfile={this.changeProfile}
           usersPlaylists={this.state.usersPlaylists}
+          spotifyApi={this.props.spotifyApi}
         />
       ) :
       window.location = "http://localhost:3100/users/spotifyLogin") :

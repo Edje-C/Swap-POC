@@ -16,8 +16,9 @@ router.post("/login", passport.authenticate("local"), (req, res) => {
 });
 
 router.post("/register", db.register);
-router.get("/getThisUser", loginRequired, db.getThisUser);
 router.get("/logout", loginRequired, db.logout);
+
+router.get("/getThisUser", loginRequired, db.getThisUser);
 router.get("/getAllUsers", db.getAllUsers);
 router.get("/getUser/:username", db.getUser);
 router.get("/getPlaylist/:username", db.getPlaylistByUsername);
@@ -26,6 +27,8 @@ router.get("/getCollaborators/:playlistID", db.getCollaboratorsForPlaylist)
 router.get("/getFollowers/:username", db.getFollowers)
 router.get("/getFollowing/:username", db.getFollowing)
 
+router.post("/createPlaylist", db.createPlaylist)
+router.post("/addCollaborators", db.addCollaborators)
 
 // ~ * Spotify * ~ //
 

@@ -31,7 +31,11 @@ class Profile extends Component {
 
 
   renderNew = () => (
-    <New users={this.props.allUsers}/>
+    <New
+      thisUsername={this.props.thisUsername}
+      users={this.props.allUsers} 
+      spotifyApi={this.props.spotifyApi}
+    />
   )
 
 
