@@ -73,37 +73,53 @@ class New extends Component {
     //       });
     //   });
 
-      this.props.spotifyApi.getMyTopTracks({
-          limit: 5
-        })
-        .then(data => {
-            console.log('Get my top tracks', data);
-            let ids = data.items.map(v => v.id)
+    // this.props.spotifyApi.getMyTopTracks({
+    //     limit: 5
+    //   })
+    //   .then(data => {
+    //       console.log('Get my top tracks', data);
+    //       let ids = data.items.map(v => v.id)
+    //
+    //       this.props.spotifyApi.getRecommendations({
+    //         limit: 50,
+    //         seed_tracks: ids
+    //       })
+    //       .then(data => {
+    //         console.log('Get Recommendations', data);
+    //       })
+    //       .catch(err => {
+    //         console.log('Something went wrong!', err);
+    //       });
+    //   })
+    //   .catch(err => {
+    //     console.log('Something went wrong!', err);
+    //   });
 
-            this.props.spotifyApi.getRecommendations({
-              limit: 50,
-              seed_tracks: ids
-            })
-            .then(data => {
-              console.log('Get Recommendations', data);
-            })
-            .catch(err => {
-              console.log('Something went wrong!', err);
-            });
-        })
-        .catch(err => {
-          console.log('Something went wrong!', err);
-        });
 
+    // for(var i=0; i<((this.state.length || this.state.customLength)/this.state.selectedFriends.length+1); i++) {
+    //   console.log(i)
+    // }
+    //
 
-        spotifyApi.getMySavedTracks({
-          limit: 50,
-          offset: 0
-        })
-          .then(data => {
-            console.log('My saved tracks', data)
-          })
-          .catch(err => console.log(err))
+    /*
+      Saved songs 70%
+      The rest split between top and recommendations
+      If any are left pull from top artists
+     */
+
+     /*
+       see how many songs needed for from each iteration of saved tracks limit and only call the API that many times
+      */
+    console.log('here', this.state.length || this.state.customLength)
+
+    spotifyApi.getMySavedTracks({
+      limit: 50,
+      offset: 0
+    })
+      .then(data => {
+        console.log('My saved tracks', data)
+      })
+      .catch(err => console.log(err))
 
   }
 
