@@ -17,7 +17,8 @@ class New extends Component {
       selectedFriends: [],
       selectedFriendsIDs: [],
       renderModal: false,
-      searchInput: ''
+      searchInput: '',
+      tracks: []
     }
   }
 
@@ -38,7 +39,6 @@ class New extends Component {
   }
 
   createSwap = () => {
-    let {spotifyApi} = this.props
     let today = new Date();
     let dd = today.getDate();
     let mm = today.getMonth()+1;
@@ -73,53 +73,77 @@ class New extends Component {
     //       });
     //   });
 
-    // this.props.spotifyApi.getMyTopTracks({
-    //     limit: 5
-    //   })
-    //   .then(data => {
-    //       console.log('Get my top tracks', data);
-    //       let ids = data.items.map(v => v.id)
-    //
-    //       this.props.spotifyApi.getRecommendations({
-    //         limit: 50,
-    //         seed_tracks: ids
-    //       })
-    //       .then(data => {
-    //         console.log('Get Recommendations', data);
-    //       })
-    //       .catch(err => {
-    //         console.log('Something went wrong!', err);
-    //       });
-    //   })
-    //   .catch(err => {
-    //     console.log('Something went wrong!', err);
-    //   });
+    this.getSongsFree()
+  }
 
+  getSongsFree = () => {
+    let {spotifyApi} = this.props
+    let tracks = []
 
-    // for(var i=0; i<((this.state.length || this.state.customLength)/this.state.selectedFriends.length+1); i++) {
-    //   console.log(i)
-    // }
-    //
-
-    /*
-      Saved songs 70%
-      The rest split between top and recommendations
-      If any are left pull from top artists
-     */
-
-     /*
-       see how many songs needed for from each iteration of saved tracks limit and only call the API that many times
-      */
-    console.log('here', this.state.length || this.state.customLength)
-
-    spotifyApi.getMySavedTracks({
-      limit: 50,
-      offset: 0
-    })
-      .then(data => {
-        console.log('My saved tracks', data)
+    spotifyApi.getMyTopTracks({
+        limit: 50
       })
-      .catch(err => console.log(err))
+      .then(data => {
+        let arr = []
+        let nums = []
+        console.log('TOP', data)
+        while(arr.length < Math.floor(Math.floor((this.state.length || this.state.customLength)/(this.state.selectedFriends.length+1))/3)){
+          let num = Math.floor(Math.random()*49) + 1;
+          if(nums.indexOf(num) > -1) {
+            continue
+          }
+          arr.push(data.items[num]);
+          console.log(tracks)
+          nums.push(num);
+        }
+
+        tracks.push(...arr)
+
+        let topTrackIDs = []
+        for(let i=0; i<5; i++) {
+          topTrackIDs.push(data.items[i].id)
+        }
+
+        spotifyApi.getRecommendations({
+            limit: Math.floor(Math.floor((this.state.length || this.state.customLength)/(this.state.selectedFriends.length+1))/3) + Math.floor(Math.floor((this.state.length || this.state.customLength)/(this.state.selectedFriends.length+1))%3),
+            seed_tracks: topTrackIDs
+          })
+          .then(data => {
+            console.log('OCUNT', Math.floor((this.state.length || this.state.customLength)/(this.state.selectedFriends.length+1)%3))
+            tracks.push(...data.tracks);
+            this.setState({tracks})
+          })
+          .catch(err => {
+            console.log('Something went wrong!', err);
+          });
+      })
+      .catch(err => {
+        console.log('Something went wrong!', err);
+      });
+
+      spotifyApi.getMyTopArtists({
+          limit: Math.floor(Math.floor((this.state.length || this.state.customLength)/(this.state.selectedFriends.length+1))/3)
+        })
+        .then(data => {
+          console.log('recs', tracks)
+
+          let topArtistsIDs = data.items.map(v => v.id)
+
+          topArtistsIDs.forEach(v => {
+            spotifyApi.getArtistTopTracks(v, 'us')
+              .then(data => {
+                tracks.push(data.tracks[0])
+                this.setState({tracks})
+                console.log('recs', tracks)
+              })
+              .catch(err => {
+                console.log('Something went wrong!', err);
+              });
+          })
+        })
+        .catch(err => {
+          console.log('Something went wrong!', err);
+        });
 
   }
 
