@@ -15,7 +15,7 @@ class ProfileRouter extends Component {
       profileUsername: '',
       usersPlaylists: [],
       searchInput: '',
-      new: false,
+      new: true,
       allUsers: [],
       access_token: this.props.access_token
     }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios'
 import '../../CSS/new.css'
+import getTracks from './getTracks'
 
 class New extends Component {
   constructor(){
@@ -25,9 +26,7 @@ class New extends Component {
   componentDidMount(){
     axios
       .get('/users/getAllUsers')
-      .then(res => {
-        this.setState({allUsers: res.data.user})
-      });
+      .then(res => {this.setState({allUsers: res.data.user})});
 
     axios
       .get(`/users/getFollowing/${this.props.thisUsername}`)
@@ -73,79 +72,11 @@ class New extends Component {
     //       });
     //   });
 
-    this.getSongsFree()
+    console.log(
+      getTracks.getSongsPremium(this.props.spotifyApi, this.state.length, this.state.customLength, this.state.selectedFriends))
+    // .then(data => {console.log('fhbdskj', data)})
   }
 
-  getSongsFree = () => {
-    let {spotifyApi} = this.props
-    let tracks = []
-
-    spotifyApi.getMyTopTracks({
-        limit: 50
-      })
-      .then(data => {
-        let arr = []
-        let nums = []
-        console.log('TOP', data)
-        while(arr.length < Math.floor(Math.floor((this.state.length || this.state.customLength)/(this.state.selectedFriends.length+1))/3)){
-          let num = Math.floor(Math.random()*49) + 1;
-          if(nums.indexOf(num) > -1) {
-            continue
-          }
-          arr.push(data.items[num]);
-          console.log(tracks)
-          nums.push(num);
-        }
-
-        tracks.push(...arr)
-
-        let topTrackIDs = []
-        for(let i=0; i<5; i++) {
-          topTrackIDs.push(data.items[i].id)
-        }
-
-        spotifyApi.getRecommendations({
-            limit: Math.floor(Math.floor((this.state.length || this.state.customLength)/(this.state.selectedFriends.length+1))/3) + Math.floor(Math.floor((this.state.length || this.state.customLength)/(this.state.selectedFriends.length+1))%3),
-            seed_tracks: topTrackIDs
-          })
-          .then(data => {
-            console.log('OCUNT', Math.floor((this.state.length || this.state.customLength)/(this.state.selectedFriends.length+1)%3))
-            tracks.push(...data.tracks);
-            this.setState({tracks})
-          })
-          .catch(err => {
-            console.log('Something went wrong!', err);
-          });
-      })
-      .catch(err => {
-        console.log('Something went wrong!', err);
-      });
-
-      spotifyApi.getMyTopArtists({
-          limit: Math.floor(Math.floor((this.state.length || this.state.customLength)/(this.state.selectedFriends.length+1))/3)
-        })
-        .then(data => {
-          console.log('recs', tracks)
-
-          let topArtistsIDs = data.items.map(v => v.id)
-
-          topArtistsIDs.forEach(v => {
-            spotifyApi.getArtistTopTracks(v, 'us')
-              .then(data => {
-                tracks.push(data.tracks[0])
-                this.setState({tracks})
-                console.log('recs', tracks)
-              })
-              .catch(err => {
-                console.log('Something went wrong!', err);
-              });
-          })
-        })
-        .catch(err => {
-          console.log('Something went wrong!', err);
-        });
-
-  }
 
   setLength = e => {
     this.setState({
@@ -164,13 +95,10 @@ class New extends Component {
   }
 
   setClass = num => (
-    this.state.length === num && !this.state.custom ?
-      'selectedLength':
-      ''
+    this.state.length === num && !this.state.custom ? 'selectedLength': ''
   )
 
   getLengths = () => {
-    console.log('friuneda', 5/ (this.state.selectedFriends.length+1))
     this.setState({lengthOptions: this.state.selectedFriends.length ?
       [25, 50, 75, 100].map(v => Math.floor(v/(this.state.selectedFriends.length+1)) * (this.state.selectedFriends.length+1) ):
       [25, 50, 75, 100]})
@@ -180,12 +108,12 @@ class New extends Component {
     let index = this.state.selectedFriends.indexOf(e.target.dataset.name)
     let newFriendsArr = [...this.state.selectedFriends]
     let newIDsArr = [...this.state.selectedFriendsIDs]
-    console.log('1!1!1', index, e.target.dataset.name)
 
     index > -1 ?
       (newFriendsArr.splice(index, 1), newIDsArr.splice(index, 1)):
       (newFriendsArr.push(e.target.dataset.name), newIDsArr.push(Number(e.target.dataset.id)))
-    this.setState({selectedFriends: newFriendsArr, selectedFriendsIDs: newIDsArr})
+
+    this.setState({selectedFriends: newFriendsArr, selectedFriendsIDs: newIDsArr, length: 0, customLength: ''})
   }
 
   handleInput = e => {
@@ -239,7 +167,7 @@ class New extends Component {
   }
 
   render() {
-    console.log('new', this.state, this.props)
+    // console.log('new', this.state, this.props)
     return (
       <div>
         {this.state.renderModal ? this.modal() : ''}
