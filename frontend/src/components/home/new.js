@@ -72,6 +72,8 @@ class New extends Component {
     //       });
     //   });
 
+      getTracks.getSongsPremium(this.props.spotifyApi, this.state.length, this.state.customLength, this.state.selectedFriends)
+      .then(data => {console.log('fhbdskj', data)})
       getTracks.getSongsFree(this.props.spotifyApi, this.state.length, this.state.customLength, this.state.selectedFriends)
       .then(data => {console.log('fhbdskj', data)})
   }

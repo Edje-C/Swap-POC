@@ -1,8 +1,7 @@
 const getSongsFree = (spotifyApi, length, customLength, selectedFriends) => {
   let trackCount = Math.floor((length || customLength)/(selectedFriends.length+1))
-  let topTracks, artistTopTracks
 
-  topTracks = spotifyApi.getMyTopTracks({
+  let getTopAndRecs = spotifyApi.getMyTopTracks({
       limit: 50
     })
     .then(data => {
@@ -36,7 +35,7 @@ const getSongsFree = (spotifyApi, length, customLength, selectedFriends) => {
     })
     .catch(err => {console.log('Something went wrong!', err)});
 
-    artistTopTracks = spotifyApi.getMyTopArtists({
+    let artistTopTracks = spotifyApi.getMyTopArtists({
         limit: Math.floor(trackCount/3)
       })
       .then(data => {
@@ -55,7 +54,9 @@ const getSongsFree = (spotifyApi, length, customLength, selectedFriends) => {
       .catch(err => {console.log('Something went wrong!', err)});
 
     //returns all songs
-    return Promise.all([topTracks, artistTopTracks]).then(data => [...data[0], ...data[1][0]])
+    return Promise.all([getTopAndRecs, artistTopTracks]).then(data => {
+      let all = [...data[0], ...data[1][0]]
+    })
 }
 
 
@@ -68,6 +69,7 @@ const getSongsPremium = (spotifyApi, length, customLength, selectedFriends) => {
         limit: 50
       })
       .then(data => {
+        console.log('DATA', data)
           if(data.total >= Math.floor(trackCount*.7)){
             let savedSongsCount =  Math.floor(trackCount*.7)
             let maxPossibleIterations = Math.ceil(data.total/50)
@@ -149,7 +151,45 @@ const getSongsPremium = (spotifyApi, length, customLength, selectedFriends) => {
     })
     .catch(err => {console.log(err)})
 
-    return Promise.all([getSavedTracks]).then(data => data)
+    let getTopAndRecs = spotifyApi.getMyTopTracks({
+        limit: 50
+      })
+      .then(data => {
+        //get's random top songs
+        let topSongsArr = []
+        let nums = []
+        let topAmount = Math.ceil((trackCount - Math.floor(trackCount*.7))/2)
+        let recAmount = Math.floor((trackCount - Math.floor(trackCount*.7))/2)
+
+        //assures every song is different
+        while(topSongsArr.length < topAmount){
+          let num = Math.floor(Math.random()*(data.items.length-1)) + 1;
+          if(nums.indexOf(num) > -1) {
+            continue
+          }
+          topSongsArr.push(data.items[num]);
+          nums.push(num);
+        }
+
+        //gets ids for first five tracks
+        let topTrackIDs = []
+        for(let i=0; i<5; i++) {
+          topTrackIDs.push(data.items[i].id)
+        }
+
+        //returns tops songs and recommended songs
+        return spotifyApi.getRecommendations({
+            limit: recAmount,
+            seed_tracks: topTrackIDs
+          })
+            .then(data => [...topSongsArr, ...data.tracks])
+            .catch(err => {console.log('Something went wrong!', err)})
+      })
+      .catch(err => {console.log(err)})
+
+    return Promise.all([getSavedTracks, getTopAndRecs]).then(data => {
+      let all = [...data[0], ...data[1]]
+    })
 }
 
 module.exports = {
