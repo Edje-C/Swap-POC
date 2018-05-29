@@ -40,7 +40,6 @@ class Profile extends Component {
 
 
   render(){
-    console.log('profile', this.state, this.props)
     return (
       this.props.new ?
         this.renderNew():

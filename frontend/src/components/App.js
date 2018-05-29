@@ -29,7 +29,6 @@ class App extends Component {
     axios
       .get('/users/getThisUser')
       .then(res => {
-        console.log(res.data.user)
         this.setState({
           thisUsername: res.data.user.username,
           profileUsername: res.data.user.username,
@@ -57,7 +56,6 @@ class App extends Component {
     })
 
     spotifyApi.setAccessToken(tokens.access_token)
-    console.log('SVE TOKENS')
   }
 
   renderProfile = (props) => (
@@ -101,7 +99,6 @@ class App extends Component {
   )
 
   render() {
-    console.log('App', this.state)
     return (
       <div>
         <Route exact path="/" render={this.redirectToProfile}/>

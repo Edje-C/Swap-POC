@@ -68,7 +68,6 @@ class Access extends Component {
       hashParams[e[1]] = decodeURIComponent(e[2]);
     }
 
-    console.log('haqshpars', hashParams, this.props)
     this.props.saveTokens(hashParams)
   }
 

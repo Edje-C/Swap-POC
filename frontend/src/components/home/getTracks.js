@@ -12,7 +12,7 @@ const getSongsFree = (spotifyApi, length, customLength, selectedFriends) => {
 
       //assures every song is different
       while(topSongsArr.length < Math.floor(trackCount/3)){
-        let num = Math.floor(Math.random()*(data.total-1)) + 1;
+        let num = Math.floor(Math.random()*(data.items.length-1)) + 1;
         if(nums.indexOf(num) > -1) {
           continue
         }
@@ -49,7 +49,7 @@ const getSongsFree = (spotifyApi, length, customLength, selectedFriends) => {
             .then(data => {songs.push(data.tracks[0])})
             .catch(err => {console.log('Something went wrong!', err)});
         })
-        //waits for all songs to return
+        //waits for all songs then returns
         return Promise.all([songs]).then(values => values)
       })
       .catch(err => {console.log('Something went wrong!', err)});
@@ -62,113 +62,94 @@ const getSongsFree = (spotifyApi, length, customLength, selectedFriends) => {
 const getSongsPremium = (spotifyApi, length, customLength, selectedFriends) => {
     let trackCount = Math.floor((length || customLength)/(selectedFriends.length+1))
     let savedSongs = []
-    let offset = 50
 
-    const scope = () => {
-      let data = {
-        total: 532
-      }
-      let thisAmount =  Math.floor(trackCount*.7)
-      let maxPossibleIterations = Math.ceil(data.total/50)
-      let maxAdds = Math.ceil(Math.floor(trackCount*.7)/maxPossibleIterations)
-      console.log('thisAmount', thisAmount)
-      if(maxAdds > 1){
-        for(let i=0; i<maxAdds; i++) {
-          savedSongs.push({pre: maxAdds})
-        }
-        //I think this is bad code, you're really tired
-        for(let i=0; i<maxPossibleIterations-1; i++) {
-          if(maxPossibleIterations-i<thisAmount-savedSongs.length && (i<maxPossibleIterations-1 && maxAdds < thisAmount-savedSongs.length)){
-            savedSongs.push({pre: maxAdds})
-          } else {
+
+    let getSavedTracks = spotifyApi.getMySavedTracks({
+        limit: 50
+      })
+      .then(data => {
+          if(data.total >= Math.floor(trackCount*.7)){
+            let savedSongsCount =  Math.floor(trackCount*.7)
+            let maxPossibleIterations = Math.ceil(data.total/50)
+            let maxAdds = Math.ceil(Math.floor(trackCount*.7)/maxPossibleIterations)
+            //for the first set of 50 add the max amount of songs
+            let nums = []
+            //assures every song is different
+            while(savedSongs.length < maxAdds){
+              let num = Math.floor(Math.random()*(data.items.length-1)) + 1;
+              if(nums.indexOf(num) > -1) {
+                continue
+              }
+              savedSongs.push(data.items[num].track);
+              nums.push(num);
+            }
+            //if I need to add more than 1 at any period
+            if(maxAdds > 1){
+              let  p = Promise.resolve();
+                for(let i=1; i<maxPossibleIterations; i++) {
+                  p = p.then(_ => new Promise(resolve => {
+                  let nums = []
+                  spotifyApi.getMySavedTracks({
+                      limit: 50,
+                      offset: 50*i
+                    })
+                    .then(data => {
+                      //if at the end of loop && the amount of songs left to add is less than the max
+                      if(i === maxPossibleIterations-1 && savedSongsCount-savedSongs.length < maxAdds) {
+                        while(savedSongsCount-savedSongs.length>0){
+                          let num = Math.floor(Math.random()*(data.items.length-1)) + 1;
+                          if(nums.indexOf(num) > -1) {
+                            continue
+                          }
+                          savedSongs.push(data.items[num].track);
+                          nums.push(num);
+                          resolve()
+                        }
+                      //if i need to add the max amount of songs
+                      } else if(savedSongsCount-savedSongs.length > maxPossibleIterations-i && maxAdds < savedSongsCount-savedSongs.length){
+                        for(let i=0; i<maxAdds; i++){
+                          let num = Math.floor(Math.random()*(data.items.length-1)) + 1;
+                          if(nums.indexOf(num) > -1) {
+                            continue
+                          }
+                          savedSongs.push(data.items[num].track);
+                          nums.push(num);
+                          resolve()
+                        }
+                      //otherwise just add one
+                      } else {
+                        let num = Math.floor(Math.random()*(data.items.length-1)) + 1;
+                        savedSongs.push(data.items[num].track);
+                        resolve()
+                      }
+                    })
+                    .catch(err => { console.log(err)})
+              }))
+
+            }
+            return Promise.all([p]).then(data => savedSongs)
+        } else {
+          let  p = Promise.resolve();
+          for(let i=1; i<savedSongsCount; i++) {
+            p = p.then(_ => new Promise(resolve => {
+              spotifyApi.getMySavedTracks({
+                  limit: 50,
+                  offset: 50*i
+                })
+                .then(data => {
+                  let num = Math.floor(Math.random()*(data.items.length-1)) + 1;
+                  savedSongs.push(data.items[num].track);
+                  resolve()
+                })
+            }))
           }
+          return Promise.all([p]).then(data => savedSongs)
         }
-      } else {
-        savedSongs.push({pre: 1})
       }
+    })
+    .catch(err => {console.log(err)})
 
-      // savedSongs.push(Math.ceil(Math.floor(trackCount*.7)/maxPossibleIterations))
-      // for(let i=1; i<Math.ceil(data.total/50); i++){
-      //   console.log(i)
-      //   if(Math.floor(trackCount*.7) - savedSongs.length > maxPossibleIterations-i) {
-      //     for(let i=0; i<Math.ceil(Math.floor(trackCount*.7)/maxPossibleIterations); i++){
-      //       savedSongs.push(Math.ceil(Math.floor(trackCount*.7)/maxPossibleIterations))
-      //     }
-      //     console.log('ciel', i, Math.ceil(Math.floor(trackCount*.7)/maxPossibleIterations), savedSongs.length)
-      //   }
-      // }
-      console.log('savedAongs', savedSongs)
-    }
-
-
-    scope()
-
-
-    // spotifyApi.getMySavedTracks({
-    //     limit: 50
-    //   })
-    //   .then(data => {
-    //     let maxPossibleIterations = Math.floor(data.total/50)
-    //     console.log('num of iterations', maxPossibleIterations)
-    //     console.log(data)
-    //     //if I need more songs than loops to access all saved songs
-    //     if(data.total > maxPossibleIterations) {
-    //       //add the max amount of songs
-    //       for(let i=0; i<Math.ceil(trackCount/maxPossibleIterations); i++){
-    //         savedSongs.push({track: Math.ceil(trackCount/maxPossibleIterations)});
-    //         spotifyApi.getMySavedTracks({
-    //             limit: 50,
-    //             offset: offset * i
-    //           })
-    //           .then(data => {console.log(data)})
-    //       }
-    //
-    //       console.log('trackCount:', trackCount, '\nsavedSongsLength:', savedSongs.length, '\nmaxPossibleIterations:', maxPossibleIterations, '\ni:', 0)
-    //       for(let i=1; i<maxPossibleIterations; i++) {
-    //         //if the max amount of songs is more than the songs that can be added
-    //         if(Math.ceil(trackCount/maxPossibleIterations) > trackCount-savedSongs.length) {
-    //           for(let i=0; trackCount-savedSongs.length > 0; i++){
-    //             console.log(i, Math.ceil(trackCount/maxPossibleIterations), trackCount-savedSongs.length)
-    //             savedSongs.push({track: i});
-    //             spotifyApi.getMySavedTracks({
-    //                 limit: 50,
-    //                 offset: offset * i
-    //               })
-    //               .then(data => {console.log(data)})
-    //           }
-    //           console.log('breaking')
-    //           break
-    //         }
-    //
-    //         if(savedSongs.length+maxPossibleIterations-i+1 <= trackCount) {
-    //           for(let i=0; i<Math.ceil(trackCount/maxPossibleIterations); i++){
-    //             savedSongs.push({track: Math.ceil(trackCount/maxPossibleIterations)});
-    //             spotifyApi.getMySavedTracks({
-    //                 limit: 50,
-    //                 offset: offset * i
-    //               })
-    //               .then(data => {console.log(data)})
-    //           }
-    //           console.log('ceil', Math.ceil(trackCount/maxPossibleIterations))
-    //         } else {
-    //           console.log('doing the last thing')
-    //           savedSongs.push({track: 1})
-    //           spotifyApi.getMySavedTracks({
-    //               limit: 50,
-    //               offset: offset * i
-    //             })
-    //             .then(data => {console.log(data)})
-    //
-    //         }
-    //
-    //         console.log('trackCount:', trackCount, '\nsavedSongsLength:', savedSongs.length, '\nmaxPossibleIterations:', maxPossibleIterations, '\ni:', i)
-    //       }
-    //       console.log('ehfikd', savedSongs)
-    //     }
-    //     return data
-    //   })
-
-    // Promise.all([savedSongs]).then(data => data)
+    return Promise.all([getSavedTracks]).then(data => data)
 }
 
 module.exports = {

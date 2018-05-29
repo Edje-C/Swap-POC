@@ -79,16 +79,13 @@ class ProfileRouter extends Component {
     axios
       .get(`/users/getPlaylist/${username}`)
       .then(res => {
-        console.log('get my playlists', res.data)
         this.setState({usersPlaylists: res.data})
       });
   }
 
   changeProfile = e => {
     let username = e.target.dataset.username
-    console.log('USENAMe', username)
     this.setState({profileUsername: username})
-    console.log('HERE!!!!!!!!', )
     axios
       .get(`/users/getUser/${username}`)
       .then(res => {
@@ -106,8 +103,6 @@ class ProfileRouter extends Component {
   }
 
   renderProfile = (props) => {
-    console.log('Rener profile', 'props', props, this.props)
-    console.log(` !!m ${this.state.profileUsername} ${this.state.thisUsername}`)
     return this.state.thisUsername ?
       (this.props.access_token || (this.state.thisUsername !== this.state.profileUsername) ?
       (
@@ -130,7 +125,6 @@ class ProfileRouter extends Component {
   }
 
   render() {
-    console.log('rputer', this.state, this.props)
     return (
       <div  id="profile">
         <div id="profile-data">

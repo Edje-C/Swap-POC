@@ -9,13 +9,13 @@ class New extends Component {
     super();
     this.state = {
       title: '',
-      length: 0,
+      length: 50,
       custom: false,
       customLength: '',
       lengthOptions: [],
       allUsers: [],
       friends: [],
-      selectedFriends: [],
+      selectedFriends: ['ferminjan'],
       selectedFriendsIDs: [],
       renderModal: false,
       searchInput: '',
@@ -72,9 +72,8 @@ class New extends Component {
     //       });
     //   });
 
-    console.log(
-      getTracks.getSongsPremium(this.props.spotifyApi, this.state.length, this.state.customLength, this.state.selectedFriends))
-    // .then(data => {console.log('fhbdskj', data)})
+      getTracks.getSongsFree(this.props.spotifyApi, this.state.length, this.state.customLength, this.state.selectedFriends)
+      .then(data => {console.log('fhbdskj', data)})
   }
 
 

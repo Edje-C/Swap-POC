@@ -25,14 +25,12 @@ class Login extends Component {
           password: this.state.password
         })
         .then(res => {
-          console.log(res.data)
           this.props.getUser()
         })
         .catch(err => console.log(err));
   }
 
   render() {
-    console.log('login', this.props)
     return (
       <div>
         <form onSubmit={this.loginUser}>
