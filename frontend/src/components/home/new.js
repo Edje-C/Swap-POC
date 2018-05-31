@@ -16,7 +16,7 @@ class New extends Component {
       allUsers: [],
       friends: [],
       selectedFriends: ['ferminjan'],
-      selectedFriendsIDs: [],
+      selectedFriendsIDs: [5],
       renderModal: false,
       searchInput: '',
       tracks: []
@@ -61,21 +61,34 @@ class New extends Component {
     //     date: date
     //   })
     //   .then(res => {
-    //     console.log('ADDED PLAYLIST, id:', res.data.id)
+    //     let playlistID = res.data.id
     //     axios
     //       .post('/users/addCollaborators', {
-    //         playlistID: res.data.id,
+    //         playlistID,
     //         userIDs: this.state.selectedFriendsIDs
     //       })
     //       .then(res => {
     //         console.log('ADDED collaborations', res)
-    //       });
-    //   });
+    //       })
+    //       .catch(err => {console.log(err)})
 
-      getTracks.getSongsPremium(this.props.spotifyApi, this.state.length, this.state.customLength, this.state.selectedFriends)
-      .then(data => {console.log('fhbdskj', data)})
-      getTracks.getSongsFree(this.props.spotifyApi, this.state.length, this.state.customLength, this.state.selectedFriends)
-      .then(data => {console.log('fhbdskj', data)})
+          getTracks.getSongs(this.props.spotifyApi, this.state.length, this.state.customLength, this.state.selectedFriends)
+            .then(data => {
+              //munipulate data so it only sends content you need the way you want it (duration) then send it to the backend
+
+              
+
+            //   axios
+            //     .post('/users/saveTracks', {
+            //       playlistID,
+            //       tracks: data
+            //     })
+            //     .catch(err => {
+            //       console.log('err', err)
+            //     })
+            // })
+      });
+
   }
 
 

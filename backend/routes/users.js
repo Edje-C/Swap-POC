@@ -29,6 +29,7 @@ router.get("/getFollowing/:username", db.getFollowing)
 
 router.post("/createPlaylist", db.createPlaylist)
 router.post("/addCollaborators", db.addCollaborators)
+router.post("/saveTracks", db.saveTracks)
 
 // ~ * Spotify * ~ //
 
