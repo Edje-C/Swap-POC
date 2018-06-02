@@ -2,21 +2,21 @@ import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios'
 import '../../CSS/new.css'
-import getTracks from './getTracks'
+import modules from './modules'
 
 class New extends Component {
   constructor(){
     super();
     this.state = {
       title: '',
-      length: 50,
+      length: 24,
       custom: false,
       customLength: '',
       lengthOptions: [],
       allUsers: [],
       friends: [],
-      selectedFriends: ['ferminjan'],
-      selectedFriendsIDs: [5],
+      selectedFriends: [],
+      selectedFriendsIDs: [],
       renderModal: false,
       searchInput: '',
       tracks: []
@@ -38,57 +38,49 @@ class New extends Component {
   }
 
   createSwap = () => {
-    let today = new Date();
-    let dd = today.getDate();
-    let mm = today.getMonth()+1;
-    let yyyy = today.getFullYear();
+    axios
+      .post('/users/createPlaylist', {
+        username: this.props.thisUsername,
+        name: this.state.title,
+        length: this.state.length || this.state.customLength,
+        date: modules.getDate()
+      })
+      .then(res => {
+        let playlistID = res.data.id
+        console.log('!!!!!!!' ,typeof playlistID)
+        axios
+          .post('/users/addCollaborators', {
+            playlistID,
+            userIDs: this.state.selectedFriendsIDs
+          })
+          .then(res => {
+            console.log('ADDED collaborations', res)
+          })
+          .catch(err => {console.log(err)})
 
-    if(dd<10) {
-        dd = '0'+dd
-    }
-
-    if(mm<10) {
-        mm = '0'+mm
-    }
-
-    let date = `${dd}/${mm}/${yyyy}`
-
-    // axios
-    //   .post('/users/createPlaylist', {
-    //     username: this.props.thisUsername,
-    //     name: this.state.title,
-    //     length: this.state.length || this.state.customLength,
-    //     date: date
-    //   })
-    //   .then(res => {
-    //     let playlistID = res.data.id
-    //     axios
-    //       .post('/users/addCollaborators', {
-    //         playlistID,
-    //         userIDs: this.state.selectedFriendsIDs
-    //       })
-    //       .then(res => {
-    //         console.log('ADDED collaborations', res)
-    //       })
-    //       .catch(err => {console.log(err)})
-
-          getTracks.getSongs(this.props.spotifyApi, this.state.length, this.state.customLength, this.state.selectedFriends)
+          modules.getSongs(this.props.spotifyApi, this.state.length, this.state.customLength, this.state.selectedFriends)
             .then(data => {
-              //munipulate data so it only sends content you need the way you want it (duration) then send it to the backend
+              let neededData = data.map(v => {
+                  return {
+                    trackURI: v.id,
+                    name: v.name.replace(/(')/g, "''"),
+                    duration: modules.getDuration(v.duration_ms),
+                    artists: v.artists.map(v => v.name).join(', ').replace(/(')/g, "''"),
+                    album: v.album.name.replace(/(')/g, "''")
+                  }
+              })
 
-              
-
-            //   axios
-            //     .post('/users/saveTracks', {
-            //       playlistID,
-            //       tracks: data
-            //     })
-            //     .catch(err => {
-            //       console.log('err', err)
-            //     })
-            // })
-      });
-
+              console.log('neededData', neededData)
+              axios
+                .post('/users/saveTracks', {
+                  playlistID: playlistID,
+                  tracks: neededData
+                })
+                .catch(err => {
+                  console.log('err', err)
+                })
+            });
+      })
   }
 
 
@@ -182,6 +174,7 @@ class New extends Component {
 
   render() {
     // console.log('new', this.state, this.props)
+    // this.getDuration(231857)
     return (
       <div>
         {this.state.renderModal ? this.modal() : ''}

@@ -31,6 +31,8 @@ router.post("/createPlaylist", db.createPlaylist)
 router.post("/addCollaborators", db.addCollaborators)
 router.post("/saveTracks", db.saveTracks)
 
+router.patch("/acceptCollaboration", db.saveTracks)
+
 // ~ * Spotify * ~ //
 
 var secrets = require('../secrets')

@@ -60,11 +60,33 @@ const getSongsFree = (spotifyApi, length, customLength, selectedFriends) => {
 }
 
 
-exports.getSongs = (spotifyApi, length, customLength, selectedFriends) => {
+const getOnlyTopSongs = (spotifyApi, length) => {
+  return spotifyApi.getMyTopTracks({
+      limit: 50
+    })
+    .then(data => {
+      let songs = []
+      let nums = []
+      while(length > songs.length){
+        let num = Math.floor(Math.random()*(data.items.length-1)) + 1;
+        if(nums.indexOf(num) > -1) {
+          continue
+        }
+        songs.push(data.items[num]);
+        nums.push(num);
+      }
+      return songs
+    })
+}
+
+const getSongs = (spotifyApi, length, customLength, selectedFriends) => {
     let trackCount = Math.floor((length || customLength)/(selectedFriends.length+1))
     let savedSongsCount =  Math.floor(trackCount*.7)
     let savedSongs = []
 
+    if(length < 4) {
+      return getOnlyTopSongs(spotifyApi, trackCount)
+    }
 
     let getTopAndRecs = _ => {
       return spotifyApi.getMyTopTracks({
@@ -197,7 +219,41 @@ exports.getSongs = (spotifyApi, length, customLength, selectedFriends) => {
     .catch(err => {console.log(err)})
 
       return Promise.all([getSavedTracks]).then(data => {
-      console.log('FINAL', data)
       return [...data[0]]
     })
+}
+
+
+
+const getDate = _ => {
+  let today = new Date();
+  let dd = today.getDate();
+  let mm = today.getMonth()+1;
+  let yyyy = today.getFullYear();
+
+  if(dd<10) {
+      dd = '0'+dd
+  }
+
+  if(mm<10) {
+      mm = '0'+mm
+  }
+
+  let date = `${dd}/${mm}/${yyyy}`
+
+  return date
+}
+
+
+const getDuration = ms => {
+  let minutes = (Math.trunc(ms/60000)).toString()
+  let seconds = (Math.trunc((ms/60000 - minutes) * 60)).toString()
+  // console.log('mins', minutes, 'secs', seconds, 'dur', ms/60000)
+  return `${minutes}:${seconds.length > 1 ? seconds : 0+seconds}`
+}
+
+module.exports = {
+  getSongs,
+  getDate,
+  getDuration
 }

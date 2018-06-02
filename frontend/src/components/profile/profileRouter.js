@@ -15,7 +15,7 @@ class ProfileRouter extends Component {
       profileUsername: '',
       usersPlaylists: [],
       searchInput: '',
-      new: true,
+      new: false,
       allUsers: [],
       access_token: this.props.access_token
     }
@@ -80,7 +80,8 @@ class ProfileRouter extends Component {
       .get(`/users/getPlaylist/${username}`)
       .then(res => {
         this.setState({usersPlaylists: res.data})
-      });
+      })
+      .catch(err => {console.log(err)})
   }
 
   changeProfile = e => {
@@ -100,6 +101,7 @@ class ProfileRouter extends Component {
     this.setState({
       new: !this.state.new
     })
+    this.getPlaylists(this.props.profileUsername)
   }
 
   renderProfile = (props) => {

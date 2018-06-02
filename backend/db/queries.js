@@ -32,6 +32,11 @@ const getThisUser = (req, res) => {
         .status(200)
         .json({user: data});
     })
+    .catch(data => {
+      res
+        .status(500)
+        .json({status: 'Failed'})
+    })
 };
 
 const logout = (req, res) => {
@@ -47,6 +52,11 @@ const getAllUsers = (req, res) => {
         .status(200)
         .json({user: data});
     })
+    .catch(data => {
+      res
+        .status(500)
+        .json({status: 'Failed'})
+    })
 };
 
 const getUser = (req, res) => {
@@ -57,15 +67,25 @@ const getUser = (req, res) => {
         .status(200)
         .json({user: data});
     })
+    .catch(data => {
+      res
+        .status(500)
+        .json({status: 'Failed'})
+    })
 };
 
 const getPlaylistByUsername = (req, res) => {
   db
-    .any("SELECT DISTINCT playlists.id, creator_id, name, date_created, collaborations.status AS accepted_status FROM playlists FULL JOIN collaborations ON playlist_id = playlists.id WHERE creator_id = (SELECT id FROM users WHERE username = ${username}) OR user_id = (SELECT id FROM users WHERE username = ${username}) ORDER BY date_created DESC", {username: req.params.username})
+    .any("SELECT DISTINCT playlists.id, NULL AS status, name, creator_id, date_created FROM collaborations FULL JOIN playlists ON playlists.id = playlist_id WHERE creator_id = (SELECT id FROM users WHERE username = ${username}) UNION SELECT DISTINCT playlists.id, status, name, creator_id, date_created FROM collaborations FULL JOIN playlists ON playlists.id = playlist_id WHERE user_id = (SELECT id FROM users WHERE username = ${username}) ORDER BY date_created DESC", {username: req.params.username})
     .then(data => {
       res
         .status(200)
         .json(data)
+    })
+    .catch(data => {
+      res
+        .status(500)
+        .json({status: 'Failed'})
     })
 };
 
@@ -77,6 +97,11 @@ const getTracksForPlaylist = (req, res) => {
         .status(200)
         .json(data)
     })
+    .catch(data => {
+      res
+        .status(500)
+        .json({status: 'Failed'})
+    })
 };
 
 const getCollaboratorsForPlaylist = (req, res) => {
@@ -86,6 +111,11 @@ const getCollaboratorsForPlaylist = (req, res) => {
       res
         .status(200)
         .json(data)
+    })
+    .catch(data => {
+      res
+        .status(500)
+        .json({status: 'Failed'})
     })
 };
 
@@ -97,6 +127,11 @@ const getFollowers = (req, res) => {
         .status(200)
         .json(data)
     })
+    .catch(data => {
+      res
+        .status(500)
+        .json({status: 'Failed'})
+    })
 };
 
 const getFollowing = (req, res) => {
@@ -106,6 +141,11 @@ const getFollowing = (req, res) => {
       res
         .status(200)
         .json(data)
+    })
+    .catch(data => {
+      res
+        .status(500)
+        .json({status: 'Failed'})
     })
 };
 
@@ -125,9 +165,8 @@ const createPlaylist = (req, res) => {
 }
 
 const addCollaborators = (req, res) => {
-  console.log('ADdIGN', req.body, req.body.userIDs)
   db
-    .none("INSERT INTO collaborations (playlist_id, user_id, status) VALUES" + req.body.userIDs.map(v => `(${req.body.playlistID}, ${v}, 'p')`).join(','))
+    .none("INSERT INTO collaborations (playlist_id, user_id) VALUES" + req.body.userIDs.map(v => `(${req.body.playlistID}, ${v})`).join(','))
     .then(data => {
       res
         .status(200)
@@ -141,9 +180,25 @@ const addCollaborators = (req, res) => {
 }
 
 const saveTracks = (req, res) => {
-  console.log('ADdIGN', req.body, req.body.userIDs)
+  // console.log('ADdIGN', req.body.tracks.map(v => `(${Number(req.body.playlistID)}, ${v.trackURI}, ${v.name}, ${v.duration}, ${v.artists}, ${v.album})`).join(',\n'))
+  console.log('tracks', req.body.tracks.map(v => `(${req.body.playlistID}, '${v.trackURI}', '${v.name}', '${v.duration}', '${v.artists}', '${v.album}')`).join(',\n'))
   db
-    .none("INSERT INTO collaborations (playlist_id, user_id, status) VALUES" + req.body.userIDs.map(v => `(${req.body.playlistID}, ${v}, 'p')`).join(','))
+    .none("INSERT INTO tracks (playlist_id, track_uri, name, duration, artists, album) VALUES" + req.body.tracks.map(v => `(${req.body.playlistID}, '${v.trackURI}', '${v.name}', '${v.duration}', '${v.artists}', '${v.album}')`).join(','))
+    .then(data => {
+      res
+        .status(200)
+        .json({status: 'Success'})
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({status: 'Failed'})
+    })
+}
+
+const addCollaborators = (req, res) => {
+  db
+    .none("INSERT INTO collaborations (playlist_id, user_id) VALUES" + req.body.userIDs.map(v => `(${req.body.playlistID}, ${v})`).join(','))
     .then(data => {
       res
         .status(200)
