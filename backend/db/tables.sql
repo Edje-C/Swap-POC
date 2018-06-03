@@ -8,7 +8,7 @@ CREATE TABLE users (
     username VARCHAR UNIQUE,
     password_digest VARCHAR,
     email VARCHAR,
-    spotfiy_id VARCHAR DEFAULT ''
+    spotify_id VARCHAR DEFAULT ''
 );
 
 CREATE TABLE playlists (
@@ -17,7 +17,8 @@ CREATE TABLE playlists (
     name VARCHAR,
     length INTEGER,
     date_created DATE,
-    uri VARCHAR DEFAULT ''
+    uri VARCHAR DEFAULT '',
+    complete BOOLEAN DEFAULT false
 );
 
 CREATE TABLE tracks (
@@ -51,16 +52,16 @@ INSERT INTO users (username, password_digest, email)
         ('notadocbuta', '$2a$10$noryJFgByFccCS/F6XILSeqM.3TqBhmRJ0QtAMPHtlzriqk6rsY8S', 'notadocbuta@swap.com');
 
 
-INSERT INTO playlists (creator_id, name, length, date_created)
-  VALUES(1, 'New Beginnings', 15, '05/01/2018'),
-        (1, 'Road Trip With Losers', 96, '05/03/2018'),
-        (7, 'Jams', 56, '05/05/2018'),
-        (3, 'Quality and Trash', 30, '05/05/2018'),
-        (1, 'Today''s A Good One', 50, '05/07/2018'),
-        (6, 'Pussy Poppin Playlist Remix', 60, '05/09/2018'),
-        (2, '音楽は癒しです', 10, '05/10/2018'),
-        (4, 'That Mix', 72, '05/10/2018'),
-        (5, 'Música Para Las Chicas', 80, '05/15/2018');
+INSERT INTO playlists (creator_id, name, length, date_created, complete)
+  VALUES(1, 'New Beginnings', 15, '05/01/2018', true),
+        (1, 'Road Trip With Losers', 96, '05/03/2018', true),
+        (7, 'Jams', 56, '05/05/2018', true),
+        (3, 'Quality and Trash', 30, '05/05/2018', true),
+        (1, 'Today''s A Good One', 50, '05/07/2018', true),
+        (6, 'Pussy Poppin Playlist Remix', 60, '05/09/2018', true),
+        (2, '音楽は癒しです', 10, '05/10/2018', false),
+        (4, 'That Mix', 72, '05/10/2018', false),
+        (5, 'Música Para Las Chicas', 80, '05/15/2018', true);
 
 INSERT INTO tracks (playlist_id, track_uri, name, duration, artists, album)
   VALUES(1, '34xTFwjPQ1dC6uJmleno7x', 'Godspeed', '2:57', 'Frank Ocean', 'Blonde'),
@@ -119,7 +120,7 @@ INSERT INTO collaborations (playlist_id, user_id, status)
         (7, 1, 'p'),
         (8, 5, 'a'),
         (8, 3, 'a'),
-        (8, 1, 'a'),
+        (8, 1, 'p'),
         (8, 6, 'a'),
         (8, 7, 'a'),
         (9, 6, 'a'),

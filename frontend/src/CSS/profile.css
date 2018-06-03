@@ -1,16 +1,17 @@
 #profile {
-  height: 100vh;
   display: flex;
 }
 
 #profile-data {
   width: 25vw;
   height: 100vh;
-  border-right: 1px solid white;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+  position: fixed;
+  /* background: rgba(0,0,0,.5); */
+  background: rgba(5,39,60,.7);
 }
 
 #playlist-data {
@@ -19,17 +20,41 @@
 }
 
 #new-swap {
+  width: auto;
+  height: 90%;
+  padding: 5vh 0;
   display: flex;
   align-items: flex-end;
   padding-bottom: 25px;
+  position: fixed;
+  right: 2%;
 }
 
-#new-swap > button {
-  width: 100px;
-  height: 100px;
-  font-size: 42px;
+#new-button {
+  width: 3.5em;
+  height: 3.5em;
   border-radius: 100%;
+  background: #fff;
+  background: #05273C;
 }
 
-#profile > #content {
+#new-button > .MuiButton-label-2 > i {
+  font-size: 2em;
+  color: white;
+  color: #69E8FC;
+
+}
+
+#content {
+  width: 70vw;
+  font-size: 1.25em;
+  margin-left: 25vw;
+  padding: 5% 5% 10% 5%;
+}
+
+#search-user {
+  font-size: inherit;
+  padding: 2%;
+  border: 1px solid #eee;
+  color: #4BA8C8;
 }

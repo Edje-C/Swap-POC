@@ -58,7 +58,7 @@ class New extends Component {
           })
           .catch(err => {console.log(err)})
 
-          modules.getSongs(this.props.spotifyApi, this.state.length, this.state.customLength, this.state.selectedFriends)
+          modules.getSongs(this.props.spotifyApi, this.state.length || this.state.customLength, this.state.selectedFriends.length)
             .then(data => {
               let neededData = data.map(v => {
                   return {
@@ -75,6 +75,9 @@ class New extends Component {
                 .post('/users/saveTracks', {
                   playlistID: playlistID,
                   tracks: neededData
+                })
+                .then(data => {
+                  this.props.toggleNew()
                 })
                 .catch(err => {
                   console.log('err', err)
@@ -128,18 +131,13 @@ class New extends Component {
     })
   }
 
-  modal = () => (
-    <div className="modal" onClick={this.modalDown}>
+  modal = () => {
+    let friendsList = this.state.searchInput ? this.state.allUsers : this.state.friends
+    return (<div className="modal" onClick={this.modalDown}>
       <div id="modal-search">
         <input type="text" data-type="searchInput" onChange={this.handleInput} value={this.state.searchInput}/>
-        {this.state.searchInput ?
-          this.state.allUsers.filter(v => v.username.includes(this.state.searchInput) && v.username !== this.props.thisUsername).map(v => (
-            <div className="add-friend-container" data-name={v.username} data-id={v.id} onClick={this.toggleFriend}>
-              <p>{v.username}</p>
-              <button>{this.state.selectedFriends.includes(v.username)? "Remove" : "Add"}</button>
-            </div>
-          )):
-          this.state.friends.map(v => (
+        {
+          friendsList.filter(v => v.username.includes(this.state.searchInput) && v.username !== this.props.thisUsername).map(v => (
             <div className="add-friend-container" data-name={v.username} data-id={Number(v.id)} onClick={this.toggleFriend}>
               <p data-name={v.username} data-id={Number(v.id)}>{v.username}</p>
               <button data-name={v.username} data-id={Number(v.id)}>{this.state.selectedFriends.includes(v.username)? "Remove" : "Add"}</button>
@@ -154,8 +152,8 @@ class New extends Component {
         </div>
         <button id="modal-button" onClick={this.modalDown}>Done</button>
       </div>
-    </div>
-  )
+    </div>)
+  }
 
   modalUp = () => {
     this.setState({
@@ -173,7 +171,7 @@ class New extends Component {
   }
 
   render() {
-    // console.log('new', this.state, this.props)
+    console.log('new', this.state, this.props)
     // this.getDuration(231857)
     return (
       <div>

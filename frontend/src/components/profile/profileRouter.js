@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { Link, Route, Redirect } from 'react-router-dom';
 import axios from 'axios';
-import '../../CSS/profile.css';
 import Profile from './profile'
+import '../../CSS/profile.css';
+import Button from '@material-ui/core/Button';
 
 const SpotifyWebApi = require('spotify-web-api-js');
 const spotifyApi = new SpotifyWebApi();
@@ -11,7 +12,6 @@ class ProfileRouter extends Component {
   constructor(props){
     super(props);
     this.state = {
-      thisUsername: '',
       profileUsername: '',
       usersPlaylists: [],
       searchInput: '',
@@ -77,8 +77,9 @@ class ProfileRouter extends Component {
 
   getPlaylists = (username) => {
     axios
-      .get(`/users/getPlaylist/${username}`)
+      .get(`/users/getPlaylists/${username}`)
       .then(res => {
+        console.log('setting plasylsits', res.data)
         this.setState({usersPlaylists: res.data})
       })
       .catch(err => {console.log(err)})
@@ -105,11 +106,13 @@ class ProfileRouter extends Component {
   }
 
   renderProfile = (props) => {
-    return this.state.thisUsername ?
-      (this.props.access_token || (this.state.thisUsername !== this.state.profileUsername) ?
+    return this.props.thisUsername ?
+      (this.props.access_token || (this.props.thisUsername !== this.state.profileUsername) ?
       (
         <Profile
-          thisUsername={this.state.thisUsername}
+          thisUserID={this.props.thisUserID}
+          thisUsername={this.props.thisUsername}
+          thisUserSpotifyID={this.props.thisUserSpotifyID}
           profileUsername={this.state.profileUsername}
           changeProfile={this.changeProfile}
           logout={this.props.logout}
@@ -120,6 +123,8 @@ class ProfileRouter extends Component {
           changeProfile={this.changeProfile}
           usersPlaylists={this.state.usersPlaylists}
           spotifyApi={this.props.spotifyApi}
+          getPlaylists={this.getPlaylists}
+          toggleNew={this.toggleNew}
         />
       ) :
       window.location = "http://localhost:3100/users/spotifyLogin") :
@@ -127,6 +132,7 @@ class ProfileRouter extends Component {
   }
 
   render() {
+    // console.log('PR', this.state, this.props)
     return (
       <div  id="profile">
         <div id="profile-data">
@@ -140,9 +146,13 @@ class ProfileRouter extends Component {
           <h3>{`# Friends`}</h3>
           <h3><button onClick={this.props.logout}>logout</button></h3>
         </div>
-        <Route path = {`/users/:username`} render={this.renderProfile}/>
+        <div id="content">
+          <Route path = {`/users/:username`} render={this.renderProfile}/>
+        </div>
         <div id="new-swap">
-          <button onClick={this.toggleNew}>{this.state.new ? 'x' : '+'}</button>
+          <Button variant="fab" onClick={this.toggleNew} id="new-button">
+            {this.state.new ? <i class="material-icons">close</i>: <i class="material-icons">add</i>}
+          </Button>
         </div>
       </div>
     )

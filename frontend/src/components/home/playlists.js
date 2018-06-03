@@ -2,72 +2,159 @@ import React, { Component, Fragment } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import modules from './modules'
+import '../../CSS/playlists.css'
 
 const Playlists = props => {
-
+  console.log(props)
   const acceptCollab = e => {
     let playlistID = e.target.dataset.id
+    axios
+      .get(`/users/getPlaylist/${playlistID}`)
+      .then(res => {
+        console.log('res' ,res.data)
+        modules.getSongs(props.spotifyApi, (res.data.length).toString(), Number(res.data.collaborators))
+        .then(data => {
+          let neededData = data.map(v => {
+            return {
+              trackURI: v.id,
+              name: v.name.replace(/(')/g, "''"),
+              duration: modules.getDuration(v.duration_ms),
+              artists: v.artists.map(v => v.name).join(', ').replace(/(')/g, "''"),
+              album: v.album.name.replace(/(')/g, "''")
+            }
+          })
 
-    // modules.getSongs(this.props.spotifyApi, this.state.length, this.state.customLength, this.state.selectedFriends)
-    //   .then(data => {
-    //     let neededData = data.map(v => {
-    //         return {
-    //           trackURI: v.id,
-    //           name: v.name.replace(/(')/g, "''"),
-    //           duration: modules.getDuration(v.duration_ms),
-    //           artists: v.artists.map(v => v.name).join(', ').replace(/(')/g, "''"),
-    //           album: v.album.name.replace(/(')/g, "''")
-    //         }
-    //     })
-    //
-    //     console.log('neededData', neededData)
-    //     axios
-    //       .post('/users/saveTracks', {
-    //         playlistID: playlistID,
-    //         tracks: neededData
-    //       })
-    //       .then(data => {
+          console.log('neededData', neededData)
+          axios
+          .post('/users/saveTracks', {
+            playlistID: playlistID,
+            tracks: neededData
+          })
+          .then(data => {
             axios
-              .patch('/users/acceptCollaboration', {
-                playlistID,
-                username: this.props.thisUsername
-              })
-              .then(res => {
-                console.log('ADDED collaborations', res)
-              })
-              .catch(err => {console.log(err)})
-      //      })
-      //     .catch(err => {
-      //       console.log('err', err)
-      //     })
-      // });
+            .patch('/users/acceptCollaboration', {
+              playlistID,
+              username: props.thisUsername,
+            })
+            .then(res => {
+              updatePlaylist(playlistID)
+            })
+            .catch(err => {console.log(err)})
+          })
+          .catch(err => {
+            console.log('err', err)
+          })
+        });
+      })
+
   }
 
   const declineCollab = e => {
-
+    axios
+      .patch('/users/declineCollaboration', {
+        playlistID: e.target.dataset.id,
+        username: props.thisUsername,
+      })
+      .then(res => {
+        updatePlaylist(e.target.dataset.id)
+      })
+      .catch(err => {console.log(err)})
   }
 
-  console.log('playlists', props)
+  const updatePlaylist = playlistID => {
+    axios
+      .get(`/users/getPlaylistStatus/${playlistID}`)
+      .then(res => {
+        console.log('playlsit status', res.data)
+        if(res.data.filter(v => v.status === 'p').length) {
+          props.getPlaylists(props.thisUsername)
+        } else {
+          axios
+            .patch('/users/setAsComplete', {playlistID})
+            .then(res => {
+              props.getPlaylists(props.thisUsername)
+            })
+            .catch(err => {console.log(err)})
+        }
+      })
+      .catch(err => {console.log(err)})
+  }
+
+  const saveToSpotify = e => {
+
+    e.persist()
+    let playlistID = e.target.dataset.id
+    axios
+      .get(`/users/getTracks/${playlistID}`)
+      .then(res => {
+        console.log('hbrefd', res.data, e.target.dataset.name)
+        let allUris = res.data.map(v => `spotify:track:${v.track_uri}`)
+        console.log(allUris)
+        props.spotifyApi.createPlaylist(props.thisUserSpotifyID, {
+          name: e.target.dataset.name,
+          public: false
+        })
+          .then(data => {
+            console.log(data)
+            let ownerID = data.owner.id, playlistURI = data.id
+            let i = 1
+            while(i<=Math.ceil(allUris.length/100)) {
+              let uris = allUris.slice(100*(i-1), 100*(i))
+              props.spotifyApi.addTracksToPlaylist(ownerID, playlistURI, uris)
+              i++
+            }
+
+            axios
+              .patch('/users/saveURI', {playlistID, playlistURI })
+              .then(res => {
+                console.log(res.data)
+              })
+              .catch(err => {console.log(err)})
+
+            props.spotifyApi.changePlaylistDetails((ownerID), (playlistURI), {
+              collaborative: true
+            })
+          })
+          .catch(err => {console.log(err)})
+      })
+      .catch(err => {console.log(err)})
+  }
+
   return (
     <div id="playlists">
       {
         props.playlists[0] ?
           props.playlists.map(v => (
             <div className="playlist">
-              <p>{v.name}</p>
-              {
-                props.profileUsername === props.thisUsername && v.status === 'p' ?
-                  <Fragment>
-                    <button data-id={v.id} onClick={acceptCollab}>Accept</button>
-                    <button data-id={v.id} onClick={this.declineCollab}>Decline</button>
-                  </Fragment>:
-                  <p>{v.status === 'p' ? 'Pending' :  v.date_created}</p>
-              }
+              <div className="playlist-name-info">
+                {v.uri ? <a href={`http://open.spotify.com/user/${v.spotify_id}/playlist/${v.uri}`}>{v.name}</a>: <p>{v.name}</p>}
+              </div>
+              <div className="playlist-status">
+                {
+                  v.uri ?
+                    <p>{v.date_created}</p>:
+                    props.profileUsername === props.thisUsername ?
+                      v.complete ?
+                        v.creator_id === props.thisUserID ?
+                          <button data-id={v.id} data-name={v.name} onClick={saveToSpotify}>Save To Spotify</button> :
+                          <p>Ready To Save</p>:
+                        v.status === 'p' ?
+                          <Fragment>
+                            <button data-id={v.id} onClick={acceptCollab}>Accept</button>
+                            <button data-id={v.id} onClick={declineCollab}>Decline</button>
+                          </Fragment>:
+                          <p>Pending</p>:
+                      v.complete ?
+                        <p>{v.date_created}</p>:
+                        <p>Pending</p>
+
+                }
+              </div>
             </div>)):
-          <div>
-            <h1>You currently have no Swaps</h1>
-            <p>Create your first Swap!</p>
-          </div>
+        <div>
+          <h1>You currently have no Swaps</h1>
+          <p>Create your first Swap!</p>
+        </div>
       }
     </div>
   );

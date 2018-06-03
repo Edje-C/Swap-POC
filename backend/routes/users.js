@@ -15,23 +15,28 @@ router.post("/login", passport.authenticate("local"), (req, res) => {
   return;
 });
 
-router.post("/register", db.register);
-router.get("/logout", loginRequired, db.logout);
+router.post("/register", db.register)
+router.get("/logout", loginRequired, db.logout)
 
-router.get("/getThisUser", loginRequired, db.getThisUser);
-router.get("/getAllUsers", db.getAllUsers);
-router.get("/getUser/:username", db.getUser);
-router.get("/getPlaylist/:username", db.getPlaylistByUsername);
+router.get("/getThisUser", loginRequired, db.getThisUser)
+router.get("/getAllUsers", db.getAllUsers)
+router.get("/getUser/:username", db.getUser)
+router.get("/getPlaylists/:username", db.getPlaylistsByUsername)
+router.get("/getPlaylist/:playlistID", db.getPlaylistByID)
 router.get("/getTracks/:playlistID", db.getTracksForPlaylist)
 router.get("/getCollaborators/:playlistID", db.getCollaboratorsForPlaylist)
 router.get("/getFollowers/:username", db.getFollowers)
 router.get("/getFollowing/:username", db.getFollowing)
+router.get("/getPlaylistStatus/:playlistID", db.getPlaylistStatus)
 
 router.post("/createPlaylist", db.createPlaylist)
 router.post("/addCollaborators", db.addCollaborators)
 router.post("/saveTracks", db.saveTracks)
 
-router.patch("/acceptCollaboration", db.saveTracks)
+router.patch("/acceptCollaboration", db.acceptCollaboration)
+router.patch("/declineCollaboration", db.declineCollaboration)
+router.patch("/setAsComplete", db.setAsComplete)
+router.patch("/saveURI", db.savePlaylistURI)
 
 // ~ * Spotify * ~ //
 
@@ -39,7 +44,6 @@ var secrets = require('../secrets')
 var client_id = secrets.clientId;
 var client_secret = secrets.clientSecret;
 var redirect_uri = 'http://localhost:3100/users/callback';
-console.log('HERE', secrets)
 
 /**
  * Generates a random string containing numbers and letters
@@ -71,7 +75,7 @@ router.get('/spotifyLogin', function(req, res) {
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
   // your application requests authorization
-  var scope = 'user-read-private user-read-email user-library-read user-top-read user-follow-read playlist-modify-private playlist-modify-public';
+  var scope = 'user-read-private user-read-email user-library-read user-top-read user-follow-read playlist-modify-private playlist-modify-public playlist-read-collaborative';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',

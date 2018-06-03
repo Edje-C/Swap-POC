@@ -32,7 +32,7 @@ const getThisUser = (req, res) => {
         .status(200)
         .json({user: data});
     })
-    .catch(data => {
+    .catch(err => {
       res
         .status(500)
         .json({status: 'Failed'})
@@ -52,7 +52,7 @@ const getAllUsers = (req, res) => {
         .status(200)
         .json({user: data});
     })
-    .catch(data => {
+    .catch(err => {
       res
         .status(500)
         .json({status: 'Failed'})
@@ -67,26 +67,41 @@ const getUser = (req, res) => {
         .status(200)
         .json({user: data});
     })
-    .catch(data => {
+    .catch(err => {
       res
         .status(500)
         .json({status: 'Failed'})
     })
 };
 
-const getPlaylistByUsername = (req, res) => {
+const getPlaylistsByUsername = (req, res) => {
   db
-    .any("SELECT DISTINCT playlists.id, NULL AS status, name, creator_id, date_created FROM collaborations FULL JOIN playlists ON playlists.id = playlist_id WHERE creator_id = (SELECT id FROM users WHERE username = ${username}) UNION SELECT DISTINCT playlists.id, status, name, creator_id, date_created FROM collaborations FULL JOIN playlists ON playlists.id = playlist_id WHERE user_id = (SELECT id FROM users WHERE username = ${username}) ORDER BY date_created DESC", {username: req.params.username})
+    .any("SELECT DISTINCT playlists.id, NULL AS status, name, creator_id, spotify_id, date_created, uri, complete FROM collaborations JOIN playlists ON playlists.id = playlist_id JOIN users ON creator_id = users.id WHERE creator_id = (SELECT id FROM users WHERE username = ${username}) UNION SELECT DISTINCT playlists.id, status, name, creator_id, spotify_id, date_created, uri, complete FROM collaborations JOIN playlists ON playlists.id = playlist_id JOIN users ON creator_id = users.id  WHERE user_id = (SELECT id FROM users WHERE username = ${username}) AND status <> 'd' ORDER BY date_created DESC", {username: req.params.username})
     .then(data => {
       res
         .status(200)
         .json(data)
     })
-    .catch(data => {
+    .catch(err => {
       res
         .status(500)
         .json({status: 'Failed'})
     })
+};
+
+const getPlaylistByID = (req, res) => {
+  db
+  .one("SELECT id, creator_id, name, length, date_created, complete, COUNT (status) AS collaborators FROM playlists JOIN collaborations ON playlists.id = playlist_id WHERE id = ${playlistID} GROUP BY id, creator_id, name, length, date_created, complete", {playlistID: req.params.playlistID})
+  .then(data => {
+    res
+    .status(200)
+    .json(data)
+  })
+  .catch(err => {
+    res
+    .status(500)
+    .json({status: 'Failed'})
+  })
 };
 
 const getTracksForPlaylist = (req, res) => {
@@ -97,7 +112,7 @@ const getTracksForPlaylist = (req, res) => {
         .status(200)
         .json(data)
     })
-    .catch(data => {
+    .catch(err => {
       res
         .status(500)
         .json({status: 'Failed'})
@@ -112,7 +127,7 @@ const getCollaboratorsForPlaylist = (req, res) => {
         .status(200)
         .json(data)
     })
-    .catch(data => {
+    .catch(err => {
       res
         .status(500)
         .json({status: 'Failed'})
@@ -127,7 +142,7 @@ const getFollowers = (req, res) => {
         .status(200)
         .json(data)
     })
-    .catch(data => {
+    .catch(err => {
       res
         .status(500)
         .json({status: 'Failed'})
@@ -142,7 +157,7 @@ const getFollowing = (req, res) => {
         .status(200)
         .json(data)
     })
-    .catch(data => {
+    .catch(err => {
       res
         .status(500)
         .json({status: 'Failed'})
@@ -157,7 +172,7 @@ const createPlaylist = (req, res) => {
         .status(200)
         .json(data)
     })
-    .catch(data => {
+    .catch(err => {
       res
         .status(500)
         .json({status: 'Failed'})
@@ -172,7 +187,7 @@ const addCollaborators = (req, res) => {
         .status(200)
         .json({status: 'Success'})
     })
-    .catch(data => {
+    .catch(err => {
       res
         .status(500)
         .json({status: 'Failed'})
@@ -196,21 +211,82 @@ const saveTracks = (req, res) => {
     })
 }
 
-const addCollaborators = (req, res) => {
+const acceptCollaboration = (req, res) => {
+  console.log('!!!!', req.body)
   db
-    .none("INSERT INTO collaborations (playlist_id, user_id) VALUES" + req.body.userIDs.map(v => `(${req.body.playlistID}, ${v})`).join(','))
+    .none("UPDATE collaborations SET status = 'a' WHERE playlist_id = ${playlistID} AND user_id = (SELECT id from users WHERE username = ${username})", {playlistID: req.body.playlistID, username: req.body.username})
     .then(data => {
       res
         .status(200)
         .json({status: 'Success'})
     })
-    .catch(data => {
+    .catch(err => {
       res
         .status(500)
         .json({status: 'Failed'})
     })
 }
 
+const declineCollaboration = (req, res) => {
+  db
+    .none("UPDATE collaborations SET status = 'd' WHERE playlist_id = ${playlistID} AND user_id = (SELECT id from users WHERE username = ${username})", {playlistID: req.body.playlistID, username: req.body.username})
+    .then(data => {
+      res
+        .status(200)
+        .json({status: 'Success'})
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({status: 'Failed'})
+    })
+}
+
+const getPlaylistStatus = (req, res) => {
+  db
+    .any("SELECT status FROM collaborations WHERE playlist_id = ${playlistID} GROUP BY status", {playlistID: req.params.playlistID})
+    .then(data => {
+      res
+        .status(200)
+        .json(data)
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({status: 'Failed'})
+    })
+
+}
+
+const setAsComplete = (req, res) => {
+  db
+    .none("UPDATE playlists SET complete = true WHERE id = ${playlistID}", {playlistID: req.body.playlistID})
+    .then(data => {
+      res
+        .status(200)
+        .json({status: 'Success'})
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({status: 'Failed'})
+    })
+}
+
+const savePlaylistURI = (req, res) => {
+  db
+    .none("UPDATE playlists SET uri = ${uri} WHERE id = ${playlistID}", {playlistID: req.body.playlistID, uri: req.body.playlistURI})
+    .then(data => {
+      res
+        .status(200)
+        .json({status: 'Success'})
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({status: 'Failed'})
+    })
+}
 
 module.exports = {
   register,
@@ -218,12 +294,18 @@ module.exports = {
   logout,
   getAllUsers,
   getUser,
-  getPlaylistByUsername,
+  getPlaylistsByUsername,
+  getPlaylistByID,
   getTracksForPlaylist,
   getCollaboratorsForPlaylist,
   getFollowers,
   getFollowing,
   createPlaylist,
   addCollaborators,
-  saveTracks
+  saveTracks,
+  acceptCollaboration,
+  declineCollaboration,
+  getPlaylistStatus,
+  setAsComplete,
+  savePlaylistURI
 }

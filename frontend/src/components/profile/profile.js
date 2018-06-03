@@ -25,7 +25,15 @@ class Profile extends Component {
   }
 
   renderPlaylists = () => (
-    <Playlists thisUsername={this.props.thisUsername} profileUsername={this.props.profileUsername} playlists={this.props.usersPlaylists} />
+    <Playlists
+      thisUserID={this.props.thisUserID}
+      thisUsername={this.props.thisUsername}
+      thisUserSpotifyID={this.props.thisUserSpotifyID}
+      profileUsername={this.props.profileUsername}
+      playlists={this.props.usersPlaylists}
+      getPlaylists={this.props.getPlaylists}
+      spotifyApi={this.props.spotifyApi}
+    />
   )
 
 
@@ -34,6 +42,7 @@ class Profile extends Component {
       thisUsername={this.props.thisUsername}
       users={this.props.allUsers}
       spotifyApi={this.props.spotifyApi}
+      toggleNew={this.props.toggleNew}
     />
   )
 
@@ -43,8 +52,8 @@ class Profile extends Component {
       this.props.new ?
         this.renderNew():
         <Fragment>
-          <div id="content">
-            <input type="text" onChange={this.props.handleInput} value={this.props.searchInput}/>
+          <div id="home">
+            <input type="text" id="search-user" onChange={this.props.handleInput} value={this.props.searchInput}/>
             {this.props.searchInput ?
               this.renderSearch():
               this.renderPlaylists()
