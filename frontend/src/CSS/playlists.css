@@ -5,6 +5,16 @@
   margin-bottom: 10px;
 }
 
+.playlist-name-info > a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.playlist-name-info > a > i {
+  margin-left: 5px;
+}
+
 .playlist-status {
   display: flex;
   justify-content: center;

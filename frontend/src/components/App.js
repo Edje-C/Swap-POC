@@ -30,7 +30,7 @@ class App extends Component {
     axios
       .get('/users/getThisUser')
       .then(res => {
-        console.log(res.data)
+        console.log('!!!!1' ,res.data)
         this.setState({
           thisUserID: res.data.user.id,
           thisUserSpotifyID: res.data.user.spotify_id,
@@ -38,14 +38,17 @@ class App extends Component {
           profileUsername: res.data.user.username,
           loggedUser: true
         })
-        if(!res.data.spotify_id) {
+        if(!res.data.user.spotify_id) {
           spotifyApi.getMe()
             .then(data => {
               axios
-              .patch('/users/saveSpotifyID', {
-                userID: res.data.user.id,
-                spotifyID: data.id
-              })
+                .patch('/users/saveSpotifyID', {
+                  userID: res.data.user.id,
+                  spotifyID: data.id
+                })
+                .then(data => {
+                  this.getUser()
+                })
             })
         }
       })

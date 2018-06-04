@@ -59,8 +59,8 @@ class New extends Component {
 
           modules.getSongs(this.props.spotifyApi, this.state.length, this.state.selectedFriends.length)
             .then(data => {
-              console.log('DATA', data)
-              if(!data[0] || !data) {
+              console.log('DATA!', data)
+              if(!data || !data[0]) {
                 this.setState({error: true})
                 return
               }
@@ -73,7 +73,7 @@ class New extends Component {
                     album: v.album.name.replace(/(')/g, "''")
                   }
               })
-
+              console.log('neededDataNEw', neededData)
               axios
                 .post('/users/saveTracks', {
                   playlistID: playlistID,

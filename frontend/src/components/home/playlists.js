@@ -11,7 +11,7 @@ const Playlists = props => {
     axios
       .get(`/users/getPlaylist/${playlistID}`)
       .then(res => {
-        console.log('res' ,res.data)
+        console.log('resGET' ,res.data)
         modules.getSongs(props.spotifyApi, (res.data.length).toString(), Number(res.data.collaborators))
         .then(data => {
           if(!data[0] || !data) {
@@ -28,7 +28,7 @@ const Playlists = props => {
             }
           })
 
-          console.log('neededData', neededData)
+          console.log('neededDataPlay', neededData)
           axios
           .post('/users/saveTracks', {
             playlistID: playlistID,
@@ -87,7 +87,7 @@ const Playlists = props => {
   }
 
   const saveToSpotify = e => {
-
+    console.log('save')
     e.persist()
     let playlistID = e.target.dataset.id
     axios
@@ -134,7 +134,7 @@ const Playlists = props => {
           props.playlists.map(v => (
             <div className="playlist">
               <div className="playlist-name-info">
-                {v.uri ? <a href={`http://open.spotify.com/user/${v.spotify_id}/playlist/${v.uri}`}>{v.name}</a>: <p>{v.name}</p>}
+                {v.uri ? <a className="playlist-link" href={`http://open.spotify.com/user/${v.spotify_id}/playlist/${v.uri}`}>{v.name}<i class="material-icons green">call_made</i></a>: <p>{v.name}</p>}
               </div>
               <div className="playlist-status">
                 {
@@ -143,12 +143,12 @@ const Playlists = props => {
                     props.profileUsername === props.thisUsername ?
                       v.complete ?
                         v.creator_id === props.thisUserID ?
-                          <button className="save" data-id={v.id} data-name={v.name} onClick={saveToSpotify}>Save To Spotify<i class="material-icons blue" data-id={v.id} data-name={v.name} onClick={saveToSpotify}>call_made</i></button> :
+                          <button className="save" data-id={v.id} data-name={v.name} onClick={saveToSpotify}>Save To Spotify<i class="material-icons blue">arrow_downward</i></button> :
                           <p>Ready To Save</p>:
                         v.status === 'p' ?
                           <Fragment>
-                            <button className="accept green" data-id={v.id} onClick={acceptCollab}><i class="material-icons" data-id={v.id} onClick={acceptCollab}>add</i></button>
-                            <button  className="decline white" data-id={v.id} onClick={declineCollab}><i class="material-icons" data-id={v.id} onClick={declineCollab}>clear</i></button>
+                            <button className="accept green"><i class="material-icons" data-id={v.id} onClick={acceptCollab}>add</i></button>
+                            <button  className="decline white"><i class="material-icons" data-id={v.id} onClick={declineCollab}>clear</i></button>
                           </Fragment>:
                           <p className="pending">Pending</p>:
                       v.complete ?

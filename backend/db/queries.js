@@ -164,6 +164,21 @@ const getFollowing = (req, res) => {
     })
 };
 
+const getFollow = (req, res) => {
+  db
+    .any("SELECT * FROM friends WHERE follower_id = ${followerID} AND following_id = (SELECT id FROM users WHERE username = ${followingUsername})", {followerID: req.params.followerID, followingUsername: req.params.followingUsername})
+    .then(data => {
+      res
+        .status(200)
+        .json(data)
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({status: 'Failed'})
+    })
+};
+
 const createPlaylist = (req, res) => {
   db
     .one("INSERT INTO playlists (creator_id, name, length, date_created) VALUES ((SELECT id FROM users WHERE username = ${username}), ${name}, ${length}, to_date(${date}, 'DD/MM/YYYY')) RETURNING id", {username: req.body.username, name: req.body.name, length: req.body.length, date: req.body.date})
@@ -303,6 +318,36 @@ const saveSpotifyID = (req, res) => {
     })
 }
 
+const followUser = (req, res) => {
+  db
+    .none("INSERT INTO friends (follower_id, following_id) VALUES(${followerID}, ${followingID})", {followerID: req.body.follower_id, followingID: req.body.following_id})
+    .then(data => {
+      res
+        .status(200)
+        .json({status: 'Success'})
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({status: 'Failed'})
+    })
+}
+
+const unfollowUser = (req, res) => {
+  db
+    .none("DELETE FROM friends WHERE follower_id = ${followerID} AND following_id = (SELECT id FROM users WHERE username = ${followingUsername})", {followerID: req.body.followerID, followingUsername: req.body.followingUsername})
+    .then(data => {
+      res
+        .status(200)
+        .json({status: 'Success'})
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({status: 'Failed'})
+    })
+}
+
 module.exports = {
   register,
   getThisUser,
@@ -315,6 +360,7 @@ module.exports = {
   getCollaboratorsForPlaylist,
   getFollowers,
   getFollowing,
+  getFollow,
   createPlaylist,
   addCollaborators,
   saveTracks,
@@ -323,5 +369,7 @@ module.exports = {
   getPlaylistStatus,
   setAsComplete,
   savePlaylistURI,
-  saveSpotifyID
+  saveSpotifyID,
+  followUser,
+  unfollowUser
 }

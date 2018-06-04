@@ -31,6 +31,14 @@ class ProfileRouter extends Component {
         // console.log('all users', res.data)
         this.setState({allUsers: res.data.user})
       });
+
+      if(this.props.thisUsername !== this.props.profileUsername) {
+        axios
+          .get(`/users/getFollow/${this.props.thisUserID}/${this.props.profileUsername}`)
+          .then(res => {
+            console.log('get follow', res.data)
+          });
+      }
   }
 
   componentWillReceiveProps(nextprops){
@@ -111,7 +119,7 @@ class ProfileRouter extends Component {
   }
 
   render() {
-    // console.log('PR', this.state, this.props)
+    console.log('PR', this.state, this.props)
     return (
       <div  id="profile">
         <div id="profile-data">
