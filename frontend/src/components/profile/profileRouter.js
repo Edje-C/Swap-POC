@@ -46,27 +46,6 @@ class ProfileRouter extends Component {
     })
 
     this.getPlaylists(props.profileUsername)
-
-    // spotifyApi.getUserPlaylists("alittleify").then(function(data){console.log('get user playlist', data)})
-
-    // spotifyApi.getMyTopTracks({
-    //   limit: 5
-    // })
-    // .then(function(data) {
-    //     console.log('Get my top tracks', data);
-    //     let ids = data.items.map(v => v.id)
-    //     spotifyApi.getRecommendations({
-    //       limit: 50,
-    //       seed_tracks: ids
-    //     })
-    //     .then(function(data) {
-    //       console.log('Get Recommendations', data);
-    //     }, function(err) {
-    //       console.log('Something went wrong!', err);
-    //     });
-    // }, function(err) {
-    //   console.log('Something went wrong!', err);
-    // });
   }
 
   handleInput = e => {

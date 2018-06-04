@@ -54,9 +54,9 @@ const getSongsFree = (spotifyApi, length, selectedFriends) => {
       .catch(err => {console.log('Something went wrong!', err)});
 
     //returns all songs
-    return Promise.all([getTopAndRecs, artistTopTracks]).then(data => {
-      return [...data[0], ...data[1][0]]
-    })
+    return Promise.all([getTopAndRecs, artistTopTracks])
+      .then(data => {return [...data[0], ...data[1][0]]})
+      .catch(err => {console.log('Something went wrong!', err)})
 }
 
 
@@ -80,10 +80,14 @@ const getOnlyTopSongs = (spotifyApi, length) => {
 }
 
 const getSongs = (spotifyApi, length, selectedFriends) => {
-  
+
   let trackCount = Math.floor(length/(selectedFriends+1))
   let savedSongsCount =  Math.floor(trackCount*.7)
   let savedSongs = []
+
+  if(length>250 || selectedFriends<1 || !spotifyApi){
+    return [];
+  }
 
   if(trackCount < 4) {
     return getOnlyTopSongs(spotifyApi, trackCount)
@@ -124,7 +128,7 @@ const getSongs = (spotifyApi, length, selectedFriends) => {
             .then(data => [...topSongsArr, ...data.tracks])
             .catch(err => {console.log('Something went wrong!', err)})
       })
-      .catch(err => {console.log(err)})
+      .catch(err => {return err})
   }
 
   let getSavedTracks = spotifyApi.getMySavedTracks({
@@ -187,12 +191,16 @@ const getSongs = (spotifyApi, length, selectedFriends) => {
               })
               .catch(err => { console.log(err)})
         }))
+        .catch(err => {console.log('Something went wrong!', err)})
 
       }
 
         let topAndRecs = getTopAndRecs()
 
-        return Promise.all([p, topAndRecs]).then(data => [...savedSongs, ...data[1]])
+        return Promise.all([p, topAndRecs])
+            .then(data => [...savedSongs, ...data[1]])
+            .catch(err => {console.log('Something went wrong!', err)})
+
       } else {
         let  p = Promise.resolve();
           for(let i=1; i<savedSongsCount; i++) {
@@ -211,7 +219,9 @@ const getSongs = (spotifyApi, length, selectedFriends) => {
 
           let topAndRecs = getTopAndRecs()
 
-          return Promise.all([p, topAndRecs]).then(data => [...savedSongs, ...data[1]])
+          return Promise.all([p, topAndRecs])
+            .then(data => [...savedSongs, ...data[1]])
+            .catch(err => {console.log('Something went wrong!', err)})
         }
       } else {
         return getSongsFree(spotifyApi, length, selectedFriends)
@@ -219,9 +229,9 @@ const getSongs = (spotifyApi, length, selectedFriends) => {
     })
     .catch(err => {console.log(err)})
 
-      return Promise.all([getSavedTracks]).then(data => {
-          return [...data[0]]
-        })
+      return Promise.all([getSavedTracks])
+        .then(data => {return [...data[0]]})
+        .catch(err => {console.log('Something went wrong!', err)})
 }
 
 

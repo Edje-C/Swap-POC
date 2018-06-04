@@ -17,7 +17,8 @@ class New extends Component {
       selectedFriendsIDs: [],
       renderModal: false,
       searchInput: '',
-      tracks: []
+      tracks: [],
+      error: false
     }
   }
 
@@ -58,6 +59,11 @@ class New extends Component {
 
           modules.getSongs(this.props.spotifyApi, this.state.length, this.state.selectedFriends.length)
             .then(data => {
+              console.log('DATA', data)
+              if(!data[0] || !data) {
+                this.setState({error: true})
+                return
+              }
               let neededData = data.map(v => {
                   return {
                     trackURI: v.id,
@@ -68,7 +74,6 @@ class New extends Component {
                   }
               })
 
-              console.log('neededData', neededData)
               axios
                 .post('/users/saveTracks', {
                   playlistID: playlistID,
@@ -80,7 +85,8 @@ class New extends Component {
                 .catch(err => {
                   console.log('err', err)
                 })
-            });
+            })
+            .catch(err => {console.log('Something went wrong!', err)});
       })
   }
 

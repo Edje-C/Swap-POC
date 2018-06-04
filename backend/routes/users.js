@@ -37,6 +37,7 @@ router.patch("/acceptCollaboration", db.acceptCollaboration)
 router.patch("/declineCollaboration", db.declineCollaboration)
 router.patch("/setAsComplete", db.setAsComplete)
 router.patch("/saveURI", db.savePlaylistURI)
+router.patch("/saveSpotifyID", db.saveSpotifyID)
 
 // ~ * Spotify * ~ //
 

@@ -288,6 +288,21 @@ const savePlaylistURI = (req, res) => {
     })
 }
 
+const saveSpotifyID = (req, res) => {
+  db
+    .none("UPDATE users SET spotify_id = ${spotifyID} WHERE id = ${userID}", {userID: req.body.userID, spotifyID: req.body.spotifyID})
+    .then(data => {
+      res
+        .status(200)
+        .json({status: 'Success'})
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({status: 'Failed'})
+    })
+}
+
 module.exports = {
   register,
   getThisUser,
@@ -307,5 +322,6 @@ module.exports = {
   declineCollaboration,
   getPlaylistStatus,
   setAsComplete,
-  savePlaylistURI
+  savePlaylistURI,
+  saveSpotifyID
 }

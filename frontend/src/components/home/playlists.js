@@ -14,6 +14,10 @@ const Playlists = props => {
         console.log('res' ,res.data)
         modules.getSongs(props.spotifyApi, (res.data.length).toString(), Number(res.data.collaborators))
         .then(data => {
+          if(!data[0] || !data) {
+            return
+          }
+          console.log('DATA' ,data)
           let neededData = data.map(v => {
             return {
               trackURI: v.id,
@@ -44,8 +48,10 @@ const Playlists = props => {
           .catch(err => {
             console.log('err', err)
           })
-        });
+        })
+        .catch(err => {console.log('Something went wrong!', err)});
       })
+      .catch(err => {console.log('Something went wrong!', err)})
 
   }
 

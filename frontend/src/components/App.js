@@ -38,6 +38,16 @@ class App extends Component {
           profileUsername: res.data.user.username,
           loggedUser: true
         })
+        if(!res.data.spotify_id) {
+          spotifyApi.getMe()
+            .then(data => {
+              axios
+              .patch('/users/saveSpotifyID', {
+                userID: res.data.user.id,
+                spotifyID: data.id
+              })
+            })
+        }
       })
       .catch(err => {this.setState({ loggedUser: false })} )
   }
