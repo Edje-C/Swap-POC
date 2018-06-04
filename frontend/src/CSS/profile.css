@@ -1,22 +1,36 @@
+.logo {
+  font-size: 1.5em;
+  text-align: center;
+  color: #2FD887;
+}
+
 #profile {
   display: flex;
+  background: #24242C;
 }
 
 #profile-data {
   width: 25vw;
   height: 100vh;
+  color: #5F5F65;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
   position: fixed;
-  /* background: rgba(0,0,0,.5); */
-  background: rgba(5,39,60,.7);
+  border-right: 1px solid #76EBBD;
 }
 
 #playlist-data {
   width: auto;
   padding: 50px;
+}
+
+#logout > button {
+  background: none;
+  text-decoration: underline;
+  color: white;
+  padding: 15%;
 }
 
 #new-swap {
@@ -35,13 +49,13 @@
   height: 3.5em;
   border-radius: 100%;
   background: #fff;
-  background: #05273C;
+  background: #2FD887;
 }
 
 #new-button > .MuiButton-label-2 > i {
   font-size: 2em;
-  color: white;
   color: #69E8FC;
+  color: #24242C;
 
 }
 
@@ -52,9 +66,32 @@
   padding: 5% 5% 10% 5%;
 }
 
+#search-field {
+  display: flex;
+  margin-bottom: 30px;
+}
+
+#search-icon {
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  background: white;
+  color: #2FD887;
+  border-radius: 5px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
 #search-user {
+  width: 90%;
   font-size: inherit;
-  padding: 2%;
-  border: 1px solid #eee;
-  color: #4BA8C8;
+  padding: 1.5%;
+  border: 1px solid white;
+  color: #64D87D;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+#search-user::placeholder {
+  color: #5F5F65;
 }

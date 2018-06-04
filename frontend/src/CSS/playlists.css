@@ -2,4 +2,52 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 10px;
+}
+
+.playlist-status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.save {
+  width: 10em;
+  background: none;
+  border: 1px solid #76EBBD;
+  color: #24242C;
+  color: white;
+  padding: 5%;
+}
+
+.save > i {
+  margin-left: 5px;
+}
+
+.accept, .decline {
+  width: 4em;
+  padding: 2%;
+  font-size: inherit;
+  background: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.accept > i , .decline > i {
+  font-size: 1.5em;
+}
+
+.search-link {
+  width: 90%;
+  padding: 2%;
+}
+
+.search-link > a {
+  display: flex;
+  align-items: center;
+}
+
+.search-link > a > i{
+  margin-right: 20px;
 }

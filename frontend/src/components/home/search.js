@@ -11,11 +11,14 @@ class Search extends Component {
     console.log('!!!!!!!!!PROPS', this.props)
     let {users, search, thisUsername, changeProfile} = this.props
     return (
-      <div>
+      <div id="search">
         {
         users.filter(v => (v.username.includes(search) && v.username !== thisUsername))[0] ?
-          users.filter(v => v.username.includes(search) && v.username !== thisUsername).map(v => <Link to = {`/users/${v.username}`} data-username={v.username} onClick={changeProfile} >{v.username}</Link>):
-          <h1>No Results Found</h1>
+          users.filter(v => v.username.includes(search) && v.username !== thisUsername).map(v =>
+            <div className="search-link">
+              <Link to = {`/users/${v.username}`} data-username={v.username} onClick={changeProfile}><i class="material-icons">person</i>{v.username}</Link>
+            </div>):
+            <h1>No Results Found</h1>
         }
       </div>
     );

@@ -137,14 +137,14 @@ class ProfileRouter extends Component {
       <div  id="profile">
         <div id="profile-data">
           <div className="logo">
-            <Link to={`/users/${this.props.thisUsername}`}  data-username={this.props.thisUsername} onClick={this.props.changeProfile, ()=>{this.setState({new: false})} }>
+            <Link to={`/users/${this.props.thisUsername}`}  data-username={this.props.thisUsername} onClick={this.props.changeProfile, ()=>{this.setState({new: false, searchInput: ''})} }>
               <h1 data-username={this.props.thisUsername} >S</h1>
-              <p data-username={this.props.thisUsername} >Swap</p>
+              <p className="blue" data-username={this.props.thisUsername} >Swap</p>
             </Link>
           </div>
           <h2>{this.props.profileUsername}</h2>
           <h3>{`# Friends`}</h3>
-          <h3><button onClick={this.props.logout}>logout</button></h3>
+          <h3 id="logout"><button onClick={this.props.logout}>logout</button></h3>
         </div>
         <div id="content">
           <Route path = {`/users/:username`} render={this.renderProfile}/>

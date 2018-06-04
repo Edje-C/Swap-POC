@@ -53,7 +53,10 @@ class Profile extends Component {
         this.renderNew():
         <Fragment>
           <div id="home">
-            <input type="text" id="search-user" onChange={this.props.handleInput} value={this.props.searchInput}/>
+            <div id="search-field">
+              <input type="text" id="search-user" onChange={this.props.handleInput} value={this.props.searchInput} placeholder="Search For Friends"/>
+              <div id="search-icon"><i class="material-icons">search</i></div>
+            </div>
             {this.props.searchInput ?
               this.renderSearch():
               this.renderPlaylists()

@@ -108,6 +108,7 @@ const Playlists = props => {
               .patch('/users/saveURI', {playlistID, playlistURI })
               .then(res => {
                 console.log(res.data)
+                props.getPlaylists(props.thisUsername)
               })
               .catch(err => {console.log(err)})
 
@@ -132,21 +133,21 @@ const Playlists = props => {
               <div className="playlist-status">
                 {
                   v.uri ?
-                    <p>{v.date_created}</p>:
+                    <p className="white">{v.date_created}</p>:
                     props.profileUsername === props.thisUsername ?
                       v.complete ?
                         v.creator_id === props.thisUserID ?
-                          <button data-id={v.id} data-name={v.name} onClick={saveToSpotify}>Save To Spotify</button> :
+                          <button className="save" data-id={v.id} data-name={v.name} onClick={saveToSpotify}>Save To Spotify<i class="material-icons blue" data-id={v.id} data-name={v.name} onClick={saveToSpotify}>call_made</i></button> :
                           <p>Ready To Save</p>:
                         v.status === 'p' ?
                           <Fragment>
-                            <button data-id={v.id} onClick={acceptCollab}>Accept</button>
-                            <button data-id={v.id} onClick={declineCollab}>Decline</button>
+                            <button className="accept green" data-id={v.id} onClick={acceptCollab}><i class="material-icons" data-id={v.id} onClick={acceptCollab}>add</i></button>
+                            <button  className="decline white" data-id={v.id} onClick={declineCollab}><i class="material-icons" data-id={v.id} onClick={declineCollab}>clear</i></button>
                           </Fragment>:
-                          <p>Pending</p>:
+                          <p className="pending">Pending</p>:
                       v.complete ?
-                        <p>{v.date_created}</p>:
-                        <p>Pending</p>
+                        <p className="white">{v.date_created}</p>:
+                        <p className="white">Pending</p>
 
                 }
               </div>
