@@ -238,19 +238,37 @@ const getSongs = (spotifyApi, length, selectedFriends) => {
 
 const getDate = _ => {
   let today = new Date();
+  //date
   let dd = today.getDate();
   let mm = today.getMonth()+1;
   let yyyy = today.getFullYear();
+  //time
+  let hours = today.getHours();
+  let mins = today.getMinutes();
+  let secs = today.getSeconds();
+
 
   if(dd<10) {
-      dd = '0'+dd
+      dd = '0' + dd
   }
 
   if(mm<10) {
-      mm = '0'+mm
+      mm = '0' + mm
   }
 
-  let date = `${dd}/${mm}/${yyyy}`
+  if(hours<10) {
+      hours = '0' + hours
+  }
+
+  if(mins<10) {
+      mins = '0' + mins
+  }
+
+  if(secs<10) {
+      secs = '0' + secs
+  }
+
+  let date = `${dd}/${mm}/${yyyy} ${hours}:${mins}:${secs}`
 
   return date
 }

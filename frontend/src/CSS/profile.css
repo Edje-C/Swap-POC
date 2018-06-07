@@ -26,6 +26,11 @@
   padding: 50px;
 }
 
+#logout {
+  display: flex;
+  justify-content: center;
+}
+
 #logout > button {
   background: none;
   text-decoration: underline;
@@ -69,6 +74,20 @@
 #search-field {
   display: flex;
   margin-bottom: 30px;
+}
+
+#friend-modal {
+  width: 35vw;
+  height: 60vh;
+  background: white;
+}
+
+#friends-modal-button {
+  background: none;
+  font-size: inherit;
+  font-weight: inherit;
+  text-decoration: underline;
+  color: inherit;
 }
 
 #search-icon {

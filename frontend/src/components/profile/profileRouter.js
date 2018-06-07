@@ -16,44 +16,46 @@ class ProfileRouter extends Component {
       usersPlaylists: [],
       searchInput: '',
       new: false,
+      following: false,
+      renderModal: false,
       allUsers: [],
+      friends: [],
       access_token: this.props.access_token
     }
   }
 
   componentDidMount(){
-
     this.initializeState(this.props)
-
-    axios
-      .get('/users/getAllUsers')
-      .then(res => {
-        // console.log('all users', res.data)
-        this.setState({allUsers: res.data.user})
-      });
-
-      if(this.props.thisUsername !== this.props.profileUsername) {
-        axios
-          .get(`/users/getFollow/${this.props.thisUserID}/${this.props.profileUsername}`)
-          .then(res => {
-            console.log('get follow', res.data)
-          });
-      }
   }
 
   componentWillReceiveProps(nextprops){
-    console.log('nextprops', nextprops)
     this.initializeState(nextprops)
   }
 
   initializeState = props => {
 
-    this.setState({
-      thisUsername: props.thisUsername,
-      profileUsername: props.profileUsername
-    })
+    if(props.thisUsername !== props.profileUsername) {
+      axios
+        .get(`/users/getFollow/${props.thisUserID}/${props.profileUsername}`)
+        .then(res => {
+          console.log('get follow', res.data)
+          this.setState({following: !!res.data[0]})
+        });
+    }
 
-    this.getPlaylists(props.profileUsername)
+    axios
+      .get('/users/getAllUsers')
+      .then(res => {
+        this.setState({allUsers: res.data.user})
+      });
+
+      this.setState({
+        thisUsername: props.thisUsername,
+        profileUsername: props.profileUsername
+      })
+
+      this.getPlaylists(props.profileUsername)
+      this.getFollowing()
   }
 
   handleInput = e => {
@@ -66,10 +68,18 @@ class ProfileRouter extends Component {
     axios
       .get(`/users/getPlaylists/${username}`)
       .then(res => {
-        console.log('setting plasylsits', res.data)
         this.setState({usersPlaylists: res.data})
       })
       .catch(err => {console.log(err)})
+  }
+
+  getFollowing = () => {
+    axios
+      .get(`/users/getFollowing/${this.props.profileUsername}`)
+      .then(res => {
+        console.log('friends', res.data)
+        this.setState({friends: res.data})
+      });
   }
 
   changeProfile = e => {
@@ -78,8 +88,6 @@ class ProfileRouter extends Component {
     axios
       .get(`/users/getUser/${username}`)
       .then(res => {
-        console.log('get user', res.data)
-        // this.renderProfile(props)
         this.getPlaylists(username)
         this.setState({searchInput: ''})
       })
@@ -91,6 +99,66 @@ class ProfileRouter extends Component {
     })
     this.getPlaylists(this.props.profileUsername)
   }
+
+  toggleFriend = e => {
+    axios
+      .post(this.state.following ? '/users/unfollowUser' : '/users/followUser', {
+        followerID: this.props.thisUserID,
+        followingUsername: this.state.profileUsername
+      })
+      .then(res => {
+        axios
+          .get(`/users/getFollow/${this.props.thisUserID}/${this.state.profileUsername}`)
+          .then(res => {
+            console.log('get follow', res.data)
+            this.setState({following: !!res.data[0]})
+          });
+      })
+      .catch(err => console.log(err))
+  }
+
+  toggleFollow = e => {
+    console.log('toggle')
+    e.persist()
+    axios
+      .post(e.target.innerText === 'remove' ? '/users/unfollowUser' : '/users/followUser', {
+        followerID: this.props.thisUserID,
+        followingUsername: e.target.dataset.name
+      })
+      .then(res => {
+        e.target.innerText === 'remove' ?
+          (e.target.innerText = "add", e.target.className = 'material-icons green'):
+          (e.target.innerText = "remove", e.target.className = 'material-icons background-color')
+      })
+  }
+
+  modalUp = e => {
+    this.setState({
+      renderModal: true
+    })
+  }
+
+  modalDown = e => {
+    if(e.target.className === 'modal' || e.target.id === 'modal-cancel'){
+      this.setState({
+        renderModal: false
+      })
+      this.getFollowing()
+    }
+  }
+
+  renderFriendsModal = () => (
+    <div className="modal" onClick={this.modalDown}>
+      <div id="friend-modal"  onClick={this.getFollowing}>
+        {this.state.friends.map(v => (
+          <div className="add-friend-container" data-name={v.username} data-id={Number(v.id)}>
+            <p data-name={v.username} data-id={Number(v.id)}>{v.username}</p>
+            <p data-name={v.username} data-id={Number(v.id)}>{<i class="material-icons background-color" data-name={v.username} data-id={Number(v.id)} onClick={this.toggleFollow}>remove</i>}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 
   renderProfile = (props) => {
     return this.props.thisUsername ?
@@ -122,16 +190,22 @@ class ProfileRouter extends Component {
     console.log('PR', this.state, this.props)
     return (
       <div  id="profile">
+        {this.state.renderModal ? this.renderFriendsModal() : ''}
         <div id="profile-data">
           <div className="logo">
-            <Link to={`/users/${this.props.thisUsername}`}  data-username={this.props.thisUsername} onClick={this.props.changeProfile, ()=>{this.setState({new: false, searchInput: ''})} }>
+            <Link to={`/users/${this.props.thisUsername}`} data-username={this.props.thisUsername} onClick={this.props.changeProfile, ()=>{this.setState({new: false, searchInput: ''})} }>
               <h1 data-username={this.props.thisUsername} >S</h1>
               <p className="blue" data-username={this.props.thisUsername} >Swap</p>
             </Link>
           </div>
           <h2>{this.props.profileUsername}</h2>
-          <h3>{`# Friends`}</h3>
-          <h3 id="logout"><button onClick={this.props.logout}>logout</button></h3>
+          <h3><button id="friends-modal-button" onClick={this.modalUp}>{`${this.state.friends.length} Friends`}</button></h3>
+          {
+            this.props.thisUsername !== this.props.profileUsername ?
+              this.state.following ?
+                <button onClick={this.toggleFriend}>Friend</button> : <button onClick={this.toggleFriend}>friend</button> :
+              <h3 id="logout"><button onClick={this.props.logout}>logout</button></h3>
+          }
         </div>
         <div id="content">
           <Route path = {`/users/:username`} render={this.renderProfile}/>

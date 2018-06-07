@@ -134,12 +134,12 @@ const Playlists = props => {
           props.playlists.map(v => (
             <div className="playlist">
               <div className="playlist-name-info">
-                {v.uri ? <a className="playlist-link" href={`http://open.spotify.com/user/${v.spotify_id}/playlist/${v.uri}`}>{v.name}<i class="material-icons green">call_made</i></a>: <p>{v.name}</p>}
+                {v.uri ? <a className="playlist-link" href={`http://open.spotify.com/user/${v.spotify_id}/playlist/${v.uri}`} target="_blank">{v.name}<i class="material-icons green">call_made</i></a>: <p>{v.name}</p>}
               </div>
               <div className="playlist-status">
                 {
                   v.uri ?
-                    <p className="white">{v.date_created}</p>:
+                    <p className="white">{v.date_created.substr(0, 10)}</p>:
                     props.profileUsername === props.thisUsername ?
                       v.complete ?
                         v.creator_id === props.thisUserID ?
@@ -152,7 +152,7 @@ const Playlists = props => {
                           </Fragment>:
                           <p className="pending">Pending</p>:
                       v.complete ?
-                        <p className="white">{v.date_created}</p>:
+                        <p className="white">{v.date_created.substr(0, 10)}</p>:
                         <p className="white">Pending</p>
 
                 }

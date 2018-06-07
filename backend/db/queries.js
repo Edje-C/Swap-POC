@@ -210,8 +210,6 @@ const addCollaborators = (req, res) => {
 }
 
 const saveTracks = (req, res) => {
-  // console.log('ADdIGN', req.body.tracks.map(v => `(${Number(req.body.playlistID)}, ${v.trackURI}, ${v.name}, ${v.duration}, ${v.artists}, ${v.album})`).join(',\n'))
-  console.log('tracks', req.body.tracks.map(v => `(${req.body.playlistID}, '${v.trackURI}', '${v.name}', '${v.duration}', '${v.artists}', '${v.album}')`).join(',\n'))
   db
     .none("INSERT INTO tracks (playlist_id, track_uri, name, duration, artists, album) VALUES" + req.body.tracks.map(v => `(${req.body.playlistID}, '${v.trackURI}', '${v.name}', '${v.duration}', '${v.artists}', '${v.album}')`).join(','))
     .then(data => {
@@ -320,7 +318,7 @@ const saveSpotifyID = (req, res) => {
 
 const followUser = (req, res) => {
   db
-    .none("INSERT INTO friends (follower_id, following_id) VALUES(${followerID}, ${followingID})", {followerID: req.body.follower_id, followingID: req.body.following_id})
+    .none("INSERT INTO friends (follower_id, following_id) VALUES(${followerID}, (SELECT id FROM users WHERE username = ${followingUsername}))", {followerID: req.body.followerID, followingUsername: req.body.followingUsername})
     .then(data => {
       res
         .status(200)
