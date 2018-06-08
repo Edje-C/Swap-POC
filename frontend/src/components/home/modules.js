@@ -248,23 +248,23 @@ const getDate = _ => {
   let secs = today.getSeconds();
 
 
-  if(dd<10) {
+  if(dd < 10) {
       dd = '0' + dd
   }
 
-  if(mm<10) {
+  if(mm < 10) {
       mm = '0' + mm
   }
 
-  if(hours<10) {
+  if(hours < 10) {
       hours = '0' + hours
   }
 
-  if(mins<10) {
+  if(mins < 10) {
       mins = '0' + mins
   }
 
-  if(secs<10) {
+  if(secs < 10) {
       secs = '0' + secs
   }
 

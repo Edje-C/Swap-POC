@@ -181,7 +181,7 @@ const getFollow = (req, res) => {
 
 const createPlaylist = (req, res) => {
   db
-    .one("INSERT INTO playlists (creator_id, name, length, date_created) VALUES ((SELECT id FROM users WHERE username = ${username}), ${name}, ${length}, to_date(${date}, 'DD/MM/YYYY')) RETURNING id", {username: req.body.username, name: req.body.name, length: req.body.length, date: req.body.date})
+    .one("INSERT INTO playlists (creator_id, name, length, date_created) VALUES ((SELECT id FROM users WHERE username = ${username}), ${name}, ${length}, to_timestamp(${date}, 'DD/MM/YYYY HH24:MI:SS')) RETURNING id", {username: req.body.username, name: req.body.name, length: req.body.length, date: req.body.date})
     .then(data => {
       res
         .status(200)

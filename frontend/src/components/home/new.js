@@ -104,8 +104,8 @@ class New extends Component {
 
   getLengths = () => {
     this.setState({lengthOptions: this.state.selectedFriends.length ?
-      [25, 50, 75, 100, 200, 250].map(v => Math.floor(v/(this.state.selectedFriends.length+1)) * (this.state.selectedFriends.length+1) ):
-      [25, 50, 75, 100, 200, 250]})
+      [25, 50, 75, 100, 200].map(v => Math.floor(v/(this.state.selectedFriends.length+1)) * (this.state.selectedFriends.length+1) ):
+      [25, 50, 75, 100, 200]})
   }
 
   toggleFriend = e => {
