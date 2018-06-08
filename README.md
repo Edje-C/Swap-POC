@@ -1,13 +1,11 @@
 
 # Swap
-<br/>
 
 ## What is Swap?
 Swap is an application created to allow friends to listen to music without worrying about what's playing.
 
 Here we have the home page which is also your profile where you can see all the playlists you have created and have been invited to.
 
-<br/>
 
 ## How do I use Swap?
 
@@ -28,7 +26,6 @@ The invitation buttons will be replaced by either 'Pending' which means there ar
 If you are the playlist initializer when every collaborator has accepted or declined their invitation you will see a button 'Save To Spotify' which, when clicked, will save the playlist to your Spotify account and the playlist name will become a link to your playlist. 
 
 ![picture](/screenshots/home.png)
-<br/>
 
 ## How does Swap work?
 
