@@ -8,13 +8,13 @@ Here we have the home page which is also your profile where you can see all the 
 
 ## How do I use Swap?
 
-To create a Swap click on the '+' button in the bottom right corner which will render the 'new' page. 
-
 ![picture](/screenshots/new.png)
+
+To create a Swap click on the '+' button in the bottom right corner which will render the 'new' page. 
 
 Give your playlist a title, add your friends, and select your playlist length. Hit done and Swap will collect tracks from your Spotify account. 
 
-![picture](/screenshots/addFriends.png)
+![picture](/screenshots/home.png)
 
 If you've been invited to a playlist, you can accept the invitation by clicking the '+' button and decline by clicking the '-' button.
 
@@ -22,7 +22,6 @@ The invitation buttons will be replaced by either 'Pending' which means there ar
 
 If you are the playlist initializer when every collaborator has accepted or declined their invitation you will see a button 'Save To Spotify' which, when clicked, will save the playlist to your Spotify account and the playlist name will become a link to your playlist. 
 
-![picture](/screenshots/home.png)
 
 ## How does Swap work?
 
