@@ -6,6 +6,7 @@ Swap is an application created to allow friends to listen to music without worry
 
 Here we have the home page which is also your profile where you can see all the playlists you have created and have been invited to.
 
+![picture](/screenshots/login.png)
 
 ## How do I use Swap?
 
