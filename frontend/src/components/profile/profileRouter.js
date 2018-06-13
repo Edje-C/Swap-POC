@@ -194,8 +194,8 @@ class ProfileRouter extends Component {
         <div id="profile-data">
           <div className="logo">
             <Link to={`/users/${this.props.thisUsername}`} data-username={this.props.thisUsername} onClick={this.props.changeProfile, ()=>{this.setState({new: false, searchInput: ''})} }>
-              <h1 data-username={this.props.thisUsername} >S</h1>
-              <p className="blue" data-username={this.props.thisUsername} >Swap</p>
+              <h1  className="logo-S"data-username={this.props.thisUsername} >S</h1>
+              <p className="logo-name" data-username={this.props.thisUsername} >Swap</p>
             </Link>
           </div>
           <h2>{this.props.profileUsername}</h2>

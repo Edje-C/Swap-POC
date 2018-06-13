@@ -48,8 +48,8 @@ class Login extends Component {
       <div className="auth">
         <div className="auth-container">
           <div className="logo">
-            <h1>S</h1>
-            <p className="blue">Swap</p>
+            <h1 className="logo-S">S</h1>
+            <p className="logo-name">Swap</p>
           </div>
           <form onSubmit={this.loginUser} className="auth-form">
             <input className="auth-input" data-type='username' type="text" value={this.state.username} onChange={this.handleInput} placeholder="Username"/>

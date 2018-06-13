@@ -116,10 +116,8 @@ class Register extends Component {
       <div className="auth">
         <div className="auth-container">
           <div className="logo">
-            <Link to={`/users/${this.props.thisUsername}`}  data-username={this.props.thisUsername} onClick={this.props.changeProfile, ()=>{this.setState({new: false, searchInput: ''})} }>
-              <h1 data-username={this.props.thisUsername} >S</h1>
-              <p className="blue" data-username={this.props.thisUsername} >Swap</p>
-            </Link>
+            <h1 className="logo-S">S</h1>
+            <p className="logo-name">Swap</p>
           </div>
           <form onSubmit={this.registerUser} className="auth-form">
             <input className="auth-input" data-type='username' type="text" value={this.state.username} onChange={this.handleInput} placeholder="Username"/>

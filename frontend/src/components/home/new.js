@@ -157,11 +157,13 @@ class New extends Component {
           }
         </div>
         <div id="modal-panel">
-          <div>
+          <div id="modal-panel-top">
             <h3>Selected Friends</h3>
-            {this.state.selectedFriends.map(v => <p>{v}</p>)}
+            <div id="selected-friends-container">
+              {this.state.selectedFriends.map(v => <p>{v}</p>)}
+            </div>
           </div>
-          <div id="modal-panel-footer">
+          <div id="modal-panel-bottom">
             <p>{`${this.state.selectedFriends.length}/10`}</p>
             <button id="modal-done" onClick={this.modalDown}>Done</button>
           </div>
@@ -186,8 +188,8 @@ class New extends Component {
 
   render() {
     return (
-      <div>
-        {this.state.renderModal ? this.modal() : ''}
+      <div id="new">
+        {this.state.renderModal ? this.modal() : null}
         <div className="new-section">
           <h2 className="new-title">Title</h2>
           <div className="action-cap">

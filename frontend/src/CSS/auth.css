@@ -18,6 +18,10 @@
   text-align: center;
 }
 
+.auth-container > .logo {
+  margin: 30px 0;
+}
+
 .auth-form {
   display: flex;
   flex-direction: column;
