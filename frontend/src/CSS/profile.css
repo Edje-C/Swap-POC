@@ -57,7 +57,7 @@
   background: #2FD887;
 }
 
-#new-button > .MuiButton-label-2 > i {
+#new-swap > button > span > i {
   font-size: 2em;
   color: #69E8FC;
   color: #24242C;

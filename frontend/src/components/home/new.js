@@ -109,6 +109,9 @@ class New extends Component {
   }
 
   toggleFriend = e => {
+    if(this.state.selectedFriends.length === 10) {
+      return
+    }
     let index = this.state.selectedFriends.indexOf(e.target.dataset.name)
     let newFriendsArr = [...this.state.selectedFriends]
     let newIDsArr = [...this.state.selectedFriendsIDs]
@@ -158,7 +161,10 @@ class New extends Component {
             <h3>Selected Friends</h3>
             {this.state.selectedFriends.map(v => <p>{v}</p>)}
           </div>
-          <button id="modal-done" onClick={this.modalDown}>Done</button>
+          <div id="modal-panel-footer">
+            <p>{`${this.state.selectedFriends.length}/10`}</p>
+            <button id="modal-done" onClick={this.modalDown}>Done</button>
+          </div>
         </div>
       </div>)
   }
@@ -179,8 +185,6 @@ class New extends Component {
   }
 
   render() {
-    // console.log('new', this.state, this.props)
-    // this.getDuration(231857)
     return (
       <div>
         {this.state.renderModal ? this.modal() : ''}
