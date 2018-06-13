@@ -121,9 +121,21 @@ class New extends Component {
   }
 
   handleInput = e => {
-    this.setState({
-      [e.target.dataset.type]: e.target.value
-    })
+    let name = e.target.dataset.type
+    let value = e.target.value
+    console.log(value, value.length)
+    if(name === 'title') {
+      if (value.length === 30){
+        this.setState({[name]: value})
+        return
+      }
+      if (value.length-1 >= 30){
+        this.setState({[name]: value.substr(0,30)})
+        return
+      }
+    }
+
+    this.setState({[name]: value})
   }
 
   modal = () => {
@@ -167,18 +179,24 @@ class New extends Component {
   }
 
   render() {
-    console.log('new', this.state, this.props)
+    // console.log('new', this.state, this.props)
     // this.getDuration(231857)
     return (
       <div>
         {this.state.renderModal ? this.modal() : ''}
         <div className="new-section">
           <h2 className="new-title">Title</h2>
-          <input id="new-title-input" type="text" data-type="title" onChange={this.handleInput}/>
+          <div className="action-cap">
+            <input id="new-title-input" type="text" data-type="title" onChange={this.handleInput} value={this.state.title}/>
+            <p className='cap'>{`${this.state.title.length}/30`}</p>
+          </div>
         </div>
         <div className="new-section">
           <h2 className="new-title">Friends</h2>
-          <button id="add-friends-button" onClick={this.modalUp}>Add Friends</button>
+          <div className="action-cap">
+            <button id="add-friends-button" onClick={this.modalUp}>Add Friends</button>
+            <p className='cap'>{`${this.state.selectedFriends.length}/10`}</p>
+          </div>
           <div id="selected-friends">
             {this.state.selectedFriends.map(v => <p className="friend">{v}</p>)}
           </div>

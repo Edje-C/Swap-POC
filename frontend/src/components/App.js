@@ -92,14 +92,14 @@ class App extends Component {
   )
 
   renderLogin = (props) => (
-    this.state.loggedUser ?
+    this.state.thisUsername ?
       <Redirect to={`/users/${this.state.thisUsername}`} /> :
       <Login getUser={this.getUser}/>
   )
 
 
   renderRegister = () => (
-    this.state.loggedUser ?
+    this.state.thisUsername ?
       <Redirect to={`/users/${this.state.thisUsername}`} /> :
       <Register getUser={this.getUser}/>
   )

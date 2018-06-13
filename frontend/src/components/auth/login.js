@@ -8,7 +8,9 @@ class Login extends Component {
     super();
     this.state = {
       username: '',
-      password: ''
+      password: '',
+      message: 'You found the secret message!',
+      messageClassName: 'white'
     }
   }
 
@@ -19,16 +21,26 @@ class Login extends Component {
   }
 
   loginUser = e => {
+    let {username, password} = this.state
+
     e.preventDefault()
+
+    if(!username || !password) {
+      this.setState({message: 'Please complete form.', messageClassName: 'auth-message'})
+      return
+    }
+
     axios
       .post('/users/login', {
-          username: this.state.username,
-          password: this.state.password
+          username: username,
+          password: password
         })
         .then(res => {
           this.props.getUser()
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          this.setState({message: 'Your username or password are incorrect.', messageClassName: 'auth-message'})
+        });
   }
 
   render() {
@@ -42,8 +54,9 @@ class Login extends Component {
           <form onSubmit={this.loginUser} className="auth-form">
             <input className="auth-input" data-type='username' type="text" value={this.state.username} onChange={this.handleInput} placeholder="Username"/>
             <input className="auth-input" data-type='password' type="password" value={this.state.password} onChange={this.handleInput} placeholder="Password"/>
-            <input  className="auth-submit" type="submit" value="Login"/>
+            <input className="auth-submit" type="submit" value="Login"/>
           </form>
+          <p className={`auth-message ${this.state.messageClassName}`}>{this.state.message}</p>
         </div>
         <p className="auth-link">Don't have an account yet? <Link to="/register">Register</Link></p>
       </div>

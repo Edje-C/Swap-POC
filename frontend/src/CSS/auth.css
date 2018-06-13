@@ -11,9 +11,11 @@
 }
 
 .auth-container {
+  width: 25em;
   background: white;
   padding: 20px 60px;
   border-radius: 5px;
+  text-align: center;
 }
 
 .auth-form {
@@ -45,6 +47,10 @@
   color: #76EBBD;
   text-decoration: underline;
   font-weight: bold;
+}
+
+.auth-message {
+  margin-top: 0;
 }
 
 .auth-submit {

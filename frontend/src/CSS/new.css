@@ -12,10 +12,19 @@
   position: absolute;
 }
 
+.action-cap {
+  display: flex;
+}
+
 .add-friend-container {
   width: 100%;
   height: auto;
   display: flex;
+}
+
+.cap {
+  width: 5em;
+  margin-left: 20px;
 }
 
 .length {
@@ -31,7 +40,7 @@
   margin-bottom: 20px;
 }
 
-.new-section > input, button {
+#new-title-input, #add-friends-button, #new-done, .length {
   padding: 15px;
   color: #24242C;
 }
@@ -53,7 +62,8 @@
 }
 
 #new-title-input {
-  width: 92.5%;
+  width: 100%;
+  /* width: 92.5%; */
   color: #5F5F65;
 }
 
