@@ -159,7 +159,7 @@ const Playlists = props => {
               </div>
             </div>)):
         <div>
-          <h1>You currently have no Swaps</h1>
+          <h1>{props.profileUsername === props.thisUsername ? 'You currently have no Swaps.' : 'This user currently has no Swaps.'}</h1>
           <p>Create your first Swap!</p>
         </div>
       }

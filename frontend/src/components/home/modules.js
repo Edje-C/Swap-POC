@@ -85,7 +85,7 @@ const getSongs = (spotifyApi, length, selectedFriends) => {
   let savedSongsCount =  Math.floor(trackCount*.7)
   let savedSongs = []
 
-  if(length>250 || selectedFriends<1 || !spotifyApi){
+  if(length>200 || selectedFriends<1 || !spotifyApi){
     return [];
   }
 

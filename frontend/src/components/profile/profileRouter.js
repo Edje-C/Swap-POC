@@ -15,7 +15,7 @@ class ProfileRouter extends Component {
       profileUsername: '',
       usersPlaylists: [],
       searchInput: '',
-      new: true,
+      new: false,
       following: false,
       renderModal: false,
       allUsers: [],

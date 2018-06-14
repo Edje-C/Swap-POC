@@ -39,7 +39,7 @@ class Login extends Component {
           this.props.getUser()
         })
         .catch(err => {
-          this.setState({message: 'Your username or password are incorrect.', messageClassName: 'auth-message'})
+          this.setState({message: 'Username or password is incorrect.', messageClassName: 'auth-message'})
         });
   }
 

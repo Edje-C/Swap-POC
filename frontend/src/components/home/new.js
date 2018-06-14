@@ -18,7 +18,9 @@ class New extends Component {
       renderModal: false,
       searchInput: '',
       tracks: [],
-      error: false
+      error: false,
+      message: 'Please complete form.',
+      messageClass: 'new-message background-color'
     }
   }
 
@@ -37,7 +39,35 @@ class New extends Component {
     this.getLengths()
   }
 
+  complete = _ => {
+    let {title, selectedFriends, length} = this.state
+
+    if(!title) {
+      this.setState({message: 'Give this Swap a title.', messageClass: 'new-message'})
+      return false
+    }
+
+    if(selectedFriends.length < 1) {
+      this.setState({message: 'Choose at least one friend.', messageClass: 'new-message'})
+      return false
+    }
+
+    if(length < 10 || length%(selectedFriends.length+1)) {
+      this.setState({message: 'Choose a length for your playlist.', messageClass: 'new-message'})
+      return false
+    }
+
+    this.setState({message: 'Processing', messageClass: 'new-message'})
+    return true
+
+  }
+
   createSwap = () => {
+
+    if(!this.complete()) {
+      return
+    }
+
     axios
       .post('/users/createPlaylist', {
         username: this.props.thisUsername,
@@ -47,7 +77,6 @@ class New extends Component {
       })
       .then(res => {
         let playlistID = res.data.id
-        console.log('!!!!!!!' ,typeof playlistID)
         axios
           .post('/users/addCollaborators', {
             playlistID,
@@ -93,6 +122,7 @@ class New extends Component {
 
 
   setLength = e => {
+    console.log('setting length')
     this.setState({
       length: Number(e.target.dataset.length)
     })
@@ -160,7 +190,7 @@ class New extends Component {
           <div id="modal-panel-top">
             <h3>Selected Friends</h3>
             <div id="selected-friends-container">
-              {this.state.selectedFriends.map(v => <p>{v}</p>)}
+              {this.state.selectedFriends.map(v => <p className="modal-selected-friend">{v}</p>)}
             </div>
           </div>
           <div id="modal-panel-bottom">
@@ -187,6 +217,7 @@ class New extends Component {
   }
 
   render() {
+    console.log('new', this.state)
     return (
       <div id="new">
         {this.state.renderModal ? this.modal() : null}
@@ -204,7 +235,7 @@ class New extends Component {
             <p className='cap'>{`${this.state.selectedFriends.length}/10`}</p>
           </div>
           <div id="selected-friends">
-            {this.state.selectedFriends.map(v => <p className="friend">{v}</p>)}
+            {this.state.selectedFriends.map(v => <p className="new-selected-friend">{v}</p>)}
           </div>
         </div>
         <div className="new-section">
@@ -214,6 +245,7 @@ class New extends Component {
           </div>
         </div>
         <div id="done-section">
+          <p className={this.state.messageClass}>{this.state.message}</p>
           <button id="new-done" onClick={this.createSwap}>Done</button>
         </div>
       </div>

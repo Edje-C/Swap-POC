@@ -164,6 +164,21 @@ const getFollowing = (req, res) => {
     })
 };
 
+const getOtherFollowing = (req, res) => {
+  db
+    .any("SELECT users.username, COALESCE(this_user.follower_id, 0) AS this_following FROM friends AS other_user JOIN users ON following_id = id FULL JOIN (SELECT * FROM friends JOIN users ON following_id = id WHERE follower_id = ${thisUserID}) AS this_user ON other_user.following_id = this_user.following_id WHERE other_user.follower_id = (SELECT id FROM users WHERE username=${otherUsername})", {thisUserID: req.params.thisUserID, otherUsername: req.params.otherUsername})
+    .then(data => {
+      res
+        .status(200)
+        .json(data)
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({status: 'Failed'})
+    })
+};
+
 const getFollow = (req, res) => {
   db
     .any("SELECT * FROM friends WHERE follower_id = ${followerID} AND following_id = (SELECT id FROM users WHERE username = ${followingUsername})", {followerID: req.params.followerID, followingUsername: req.params.followingUsername})
@@ -358,6 +373,7 @@ module.exports = {
   getCollaboratorsForPlaylist,
   getFollowers,
   getFollowing,
+  getOtherFollowing,
   getFollow,
   createPlaylist,
   addCollaborators,

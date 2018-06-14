@@ -1,17 +1,3 @@
-.modal {
-  width: 100vw;
-  height: 100vh;
-  color: #24242C;
-  background: rgba(0,0,0,.5);
-  right: 0;
-  top: 0;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-}
-
 .action-cap {
   display: flex;
 }
@@ -29,6 +15,13 @@
 
 .length {
   width: 3em;
+  color: #24242C;
+  padding: 15px;
+}
+
+.modal-selected-friend {
+  height: 16%;
+  margin: 0;
 }
 
 .new-section {
@@ -36,18 +29,27 @@
   margin-bottom: 30px;
 }
 
+.new-selected-friend {
+  width: 50%;
+}
+
 .new-title {
   margin-bottom: 20px;
 }
 
-#new-title-input, #add-friends-button, #new-done, .length {
+.selectedLength {
+  background: white;
+  color: #2FD887;
+}
+
+#new-title-input, #add-friends-button, #new-done{
   padding: 15px;
   color: #24242C;
 }
 
 #done-section {
   width: 60%;
-  margin: 65px auto auto 20px;
+  margin: 25px auto auto 20px;
 }
 
 #new-done {
@@ -64,12 +66,10 @@
 }
 
 #selected-friends {
-  margin-left: 30px;
-}
-
-.selectedLength {
-  background: white;
-  color: #2FD887;
+  width: 95%;
+  margin: 5% auto auto 5%;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 #add-friends-button {
@@ -97,11 +97,11 @@
 
 #modal-search, #modal-panel {
   height: 60vh;
-  padding: 20px;
+  padding: 30px;
 }
 
 #modal-search {
-  width: 30vw;
+  width: 25vw;
   border-right: 1px solid #eee;
   background: white;
 }
