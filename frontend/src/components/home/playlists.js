@@ -5,7 +5,7 @@ import modules from './modules'
 import '../../CSS/playlists.css'
 
 const Playlists = props => {
-  console.log(props)
+  // console.log(props)
   const acceptCollab = e => {
     let playlistID = e.target.dataset.id
     axios
