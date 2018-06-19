@@ -36,6 +36,7 @@ router.post("/addCollaborators", db.addCollaborators)
 router.post("/saveTracks", db.saveTracks)
 router.post("/followUser", db.followUser)
 router.post("/unfollowUser", db.unfollowUser)
+router.post("/unfollowMany", db.unfollowMany)
 
 router.patch("/acceptCollaboration", db.acceptCollaboration)
 router.patch("/declineCollaboration", db.declineCollaboration)

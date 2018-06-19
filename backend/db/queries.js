@@ -361,6 +361,23 @@ const unfollowUser = (req, res) => {
     })
 }
 
+const unfollowMany = (req, res) => {
+  // console.log('HERE', req.body.followingIDs.join(','))
+  db
+    // .none("DELETE FROM friends WHERE follower_id = ${followerID} AND following_id = ANY (${followingIDs:csv})", {followerID: req.body.followerID, followingIDs: req.body.followingIDs.join(',')})
+    .none("DELETE FROM friends WHERE follower_id = ${followerID} AND following_id = ANY (array ${followingIDs:raw})", {followerID: req.body.followerID, followingIDs: JSON.stringify(req.body.followingIDs)})
+    .then(data => {
+      res
+        .status(200)
+        .json({status: 'Success'})
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({status: 'Failed'})
+    })
+}
+
 module.exports = {
   register,
   getThisUser,
@@ -385,5 +402,6 @@ module.exports = {
   savePlaylistURI,
   saveSpotifyID,
   followUser,
-  unfollowUser
+  unfollowUser,
+  unfollowMany
 }

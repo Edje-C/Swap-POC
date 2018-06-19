@@ -19,6 +19,7 @@ class ProfileRouter extends Component {
       renderModal: false,
       allUsers: [],
       friends: [],
+      unfollowList: [],
       access_token: this.props.access_token
     }
   }
@@ -78,7 +79,7 @@ class ProfileRouter extends Component {
     axios
       .get(thisUsername === profileUsername ? `/users/getFollowing/${thisUsername}` : `/users/getOtherFollowing/${this.props.thisUserID}/${profileUsername}`)
       .then(res => {
-        // console.log('friends', res.data)
+        console.log('friends', res.data)
         this.setState({friends: res.data})
       });
   }
@@ -89,9 +90,13 @@ class ProfileRouter extends Component {
     axios
       .get(`/users/getUser/${username}`)
       .then(res => {
-        this.getPlaylists(username)
-        this.setState({new: false, searchInput: ''})
         this.getFollowing()
+        this.getPlaylists(username)
+        this.setState({
+          new: false,
+          searchInput: '',
+          renderModal: false
+        })
       })
   }
 
@@ -120,18 +125,21 @@ class ProfileRouter extends Component {
   }
 
   toggleFollow = e => {
-    // console.log('toggle')
-    e.persist()
-    axios
-      .post(e.target.innerText === 'remove' ? '/users/unfollowUser' : '/users/followUser', {
-        followerID: this.props.thisUserID,
-        followingUsername: e.target.dataset.name
-      })
-      .then(res => {
-        e.target.innerText === 'remove' ?
-          (e.target.innerText = "add", e.target.className = 'material-icons green'):
-          (e.target.innerText = "remove", e.target.className = 'material-icons background-color')
-      })
+    console.log('toggle', e.target.key)
+    let unfollowList = this.state.unfollowList,
+        id = Number(e.target.dataset.id)
+
+    if(e.target.innerText === 'remove') {
+      e.target.innerText = "add"
+      e.target.className = 'material-icons green'
+      unfollowList.push(id)
+    } else {
+      e.target.innerText = "remove"
+      e.target.className = 'material-icons background-color'
+      let index = unfollowList.indexOf(id)
+      unfollowList.splice(index, 1)
+    }
+    this.setState({unfollowList})
   }
 
   modalUp = e => {
@@ -142,8 +150,20 @@ class ProfileRouter extends Component {
 
   modalDown = e => {
     if(e.target.className === 'modal' || e.target.id === 'modal-cancel'){
+      if(this.state.unfollowList[0]) {
+        axios
+          .post('/users/unfollowMany', {
+            followerID: this.props.thisUserID,
+            followingIDs: this.state.unfollowList
+          })
+          .then(res => {
+            console.log(res)
+          })
+          .catch(err => {console.log(err)})
+      }
       this.setState({
-        renderModal: false
+        renderModal: false,
+        unfollowList: []
       })
       this.getFollowing()
     }
@@ -153,18 +173,12 @@ class ProfileRouter extends Component {
     <div className="modal" onClick={this.modalDown}>
       <div id="friend-modal"  onClick={this.getFollowing}>
         {this.state.friends.map(v =>
-          v.username === this.props.thisUsername ?
-            (
-              <div className="add-friend-container" data-name={v.username} data-id={Number(v.id)}>
-                <p data-name={v.username} data-id={Number(v.id)}>{v.username}</p>
-              </div>
-            ):
-            (
-              <div className="add-friend-container" data-name={v.username} data-id={Number(v.id)}>
-                <p data-name={v.username} data-id={Number(v.id)}>{v.username}</p>
-                <p data-name={v.username} data-id={Number(v.id)}><i class="material-icons background-color" data-name={v.username} data-id={Number(v.id)} onClick={this.toggleFollow}>remove</i></p>
-              </div>
-            )
+          (
+            <div className="add-friend-container" data-name={v.username} data-id={Number(v.id)}>
+              <Link to={`/users/${v.username}`} data-username={v.username} onClick={this.changeProfile}>{v.username}</Link>
+              {v.username === this.props.thisUsername ? null : <i class="material-icons background-color" data-name={v.username} data-id={Number(v.id)} onClick={this.toggleFollow}>remove</i>}
+            </div>
+          )
         )}
       </div>
     </div>
@@ -196,7 +210,7 @@ class ProfileRouter extends Component {
   }
 
   render() {
-    // console.log('PR', this.state, this.props)
+    console.log('PR', this.state, this.props)
     let {thisUsername, profileUsername} = this.props
     return (
       <div  id="profile">

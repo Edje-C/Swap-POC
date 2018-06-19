@@ -51,6 +51,11 @@ h1, h2, h3 {
   justify-content: center;
 }
 
+.material-icons {
+  display: flex;
+  align-items:  center;
+}
+
 .blue {
   color: #005059
 }
