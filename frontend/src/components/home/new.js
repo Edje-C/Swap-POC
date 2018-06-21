@@ -48,7 +48,7 @@ class New extends Component {
     }
 
     if(selectedFriends.length < 1) {
-      this.setState({message: 'Choose at least one friend.', messageClass: 'new-message'})
+      this.setState({message: 'Invite at least one friend.', messageClass: 'new-message'})
       return false
     }
 
@@ -68,42 +68,47 @@ class New extends Component {
       return
     }
 
-    axios
-      .post('/users/createPlaylist', {
-        username: this.props.thisUsername,
-        name: this.state.title,
-        length: this.state.length,
-        date: modules.getDate()
-      })
-      .then(res => {
-        let playlistID = res.data.id
+    modules.getSongs(this.props.spotifyApi, this.state.length, this.state.selectedFriends.length)
+      .then(data => {
+        console.log('DATA!', data)
+        if(!data || !data[0]) {
+          this.setState({error: true})
+          return
+        }
+
+        let neededData = data.map(v => {
+                return {
+                  trackURI: v.id,
+                  name: v.name.replace(/(')/g, "''"),
+                  duration: modules.getDuration(v.duration_ms),
+                  artists: v.artists.map(v => v.name).join(', ').replace(/(')/g, "''"),
+                  album: v.album.name.replace(/(')/g, "''")
+                }
+            })
+
         axios
-          .post('/users/addCollaborators', {
-            playlistID,
-            userIDs: this.state.selectedFriendsIDs
+          .post('/users/createPlaylist', {
+            username: this.props.thisUsername,
+            name: this.state.title,
+            length: this.state.length,
+            date: modules.getDate()
           })
           .then(res => {
-            console.log('ADDED collaborations', res)
-          })
-          .catch(err => {console.log(err)})
+            let playlistID = res.data.id
 
-          modules.getSongs(this.props.spotifyApi, this.state.length, this.state.selectedFriends.length)
-            .then(data => {
-              console.log('DATA!', data)
-              if(!data || !data[0]) {
-                this.setState({error: true})
-                return
-              }
-              let neededData = data.map(v => {
-                  return {
-                    trackURI: v.id,
-                    name: v.name.replace(/(')/g, "''"),
-                    duration: modules.getDuration(v.duration_ms),
-                    artists: v.artists.map(v => v.name).join(', ').replace(/(')/g, "''"),
-                    album: v.album.name.replace(/(')/g, "''")
-                  }
+            axios
+              .post('/users/addCollaborators', {
+                playlistID,
+                userIDs: this.state.selectedFriendsIDs
               })
-              console.log('neededDataNEw', neededData)
+              .then(res => {
+                console.log('ADDED collaborations', res)
+              })
+              .catch(err => {
+                this.setState({message: 'Something went wrong!'})
+                return
+              })
+
               axios
                 .post('/users/saveTracks', {
                   playlistID: playlistID,
@@ -113,11 +118,18 @@ class New extends Component {
                   this.props.toggleNew()
                 })
                 .catch(err => {
-                  console.log('err', err)
+                  this.setState({message: 'Something went wrong!'})
                 })
+
             })
-            .catch(err => {console.log('Something went wrong!', err)});
-      })
+            .catch(err => {
+              this.setState({message: 'Something went wrong!'})
+            });
+        })
+        .catch(err => {
+          console.log('Couldn\'t get songs')
+          this.setState({message: 'Something went wrong!'})
+        })
   }
 
 

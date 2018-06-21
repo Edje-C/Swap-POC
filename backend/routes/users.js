@@ -31,7 +31,7 @@ router.get("/getOtherFollowing/:thisUserID/:otherUsername", db.getOtherFollowing
 router.get("/getFollow/:followerID/:followingUsername", db.getFollow)
 router.get("/getPlaylistStatus/:playlistID", db.getPlaylistStatus)
 
-router.post("/createPlaylist", db.createPlaylist)
+router.post("/createPlaylist", db.createPlaylist2)
 router.post("/addCollaborators", db.addCollaborators)
 router.post("/saveTracks", db.saveTracks)
 router.post("/followUser", db.followUser)
