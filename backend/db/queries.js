@@ -380,20 +380,36 @@ exports.unfollowMany = (req, res) => {
 }
 
 exports.createPlaylist2 = (req, res) => {
-  db.tx(t => {
-    let addCollaborators = t.none("INSERT INTO collaborations (playlist_id, user_id) VALUES" + req.body.userIDs.map(v => `(${req.body.playlistID}, ${v})`).join(','))
-    let saveTracks = t.none("INSERT INTO tracks (playlist_id, track_uri, name, duration, artists, album) VALUES" + req.body.tracks.map(v => `(${req.body.playlistID}, '${v.trackURI}', '${v.name}', '${v.duration}', '${v.artists}', '${v.album}')`).join(','))
+  db
+    .one("INSERT INTO playlists (creator_id, name, length, date_created) VALUES ((SELECT id FROM users WHERE username = ${username}), ${name}, ${length}, to_timestamp(${date}, 'DD/MM/YYYY HH24:MI:SS')) RETURNING id", {username: req.body.username, name: req.body.name, length: req.body.length, date: req.body.date})
+    .then(data => {
+      console.log(data)
+      db
+        .tx(t => {
+          let addCollaborators = t.none("INSERT INTO collaborations (playlist_id, user_id) VALUES" + req.body.userIDs.map(v => `(${data.id}, ${v})`).join(','))
+          let saveTracks = t.none("INSERT INTO tracks (playlist_id, track_uri, name, duration, artists, album) VALUES" + req.body.tracks.map(v => `(${data.id}, '${v.trackURI}', '${v.name}', '${v.duration}', '${v.artists}', '${v.album}')`).join(','))
 
-    return t.batch([addCollaborators, saveTracks]);
-  })
-  .then(data => {
-    res
-      .status(200)
-      .json({status: 'Success'})
-  })
-  .catch(error => {
-    res
-      .status(500)
-      .json({status: 'Failed'})
-  });
+          return t.batch([addCollaborators, saveTracks]);
+        })
+        .then(data => {
+          res
+            .status(200)
+            .json({status: 'Success'})
+        })
+        .catch(err => {
+          db
+            .one("DELETE FROM playlists WHERE id = ${data.id}")
+            .then(data => {
+              res
+                .status(200)
+                .json({status: 'Success'})
+            })
+            .catch(err => {
+              res
+                .status(500)
+                .json({status: 'Failed'})
+            })
+        });
+
+    });
 }

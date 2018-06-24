@@ -72,7 +72,7 @@ class New extends Component {
       .then(data => {
         console.log('DATA!', data)
         if(!data || !data[0]) {
-          this.setState({error: true})
+          this.setState({message: 'Something went wrong!'})
           return
         }
 
@@ -91,35 +91,43 @@ class New extends Component {
             username: this.props.thisUsername,
             name: this.state.title,
             length: this.state.length,
-            date: modules.getDate()
+            date: modules.getDate(),
+            userIDs: this.state.selectedFriendsIDs,
+            tracks: neededData
           })
           .then(res => {
             let playlistID = res.data.id
+            console.log('playlistID', playlistID)
 
-            axios
-              .post('/users/addCollaborators', {
-                playlistID,
-                userIDs: this.state.selectedFriendsIDs
-              })
-              .then(res => {
-                console.log('ADDED collaborations', res)
-              })
-              .catch(err => {
-                this.setState({message: 'Something went wrong!'})
-                return
-              })
 
-              axios
-                .post('/users/saveTracks', {
-                  playlistID: playlistID,
-                  tracks: neededData
-                })
-                .then(data => {
-                  this.props.toggleNew()
-                })
-                .catch(err => {
-                  this.setState({message: 'Something went wrong!'})
-                })
+            //
+            // axios
+            //   .post('/users/addCollaborators', {
+            //     playlistID,
+            //     userIDs: this.state.selectedFriendsIDs
+            //   })
+            //   .then(res => {
+            //     console.log('ADDED collaborations', res)
+            //   })
+            //   .catch(err => {
+            //     this.setState({message: 'Something went wrong!'})
+            //     return
+            //   })
+            //
+            //   axios
+            //     .post('/users/saveTracks', {
+            //       playlistID: playlistID,
+            //       tracks: neededData
+            //     })
+            //     .then(data => {
+            //       this.props.toggleNew()
+            //     })
+            //     .catch(err => {
+            //       this.setState({message: 'Something went wrong!'})
+            //     })
+
+            this.setState({message: 'Success'})
+            this.props.toggleNew()
 
             })
             .catch(err => {
