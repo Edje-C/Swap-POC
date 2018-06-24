@@ -397,14 +397,16 @@ exports.createPlaylist2 = (req, res) => {
             .json({status: 'Success'})
         })
         .catch(err => {
+          console.log('fdshfjlk', data.id)
           db
-            .one("DELETE FROM playlists WHERE id = ${data.id}")
+            .none("DELETE FROM playlists WHERE id = ${playlistID}", {playlistID: data.id})
             .then(data => {
               res
-                .status(200)
-                .json({status: 'Success'})
+                .status(500)
+                .json({status: 'Failed'})
             })
             .catch(err => {
+              console.log('error')
               res
                 .status(500)
                 .json({status: 'Failed'})
