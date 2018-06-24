@@ -70,7 +70,7 @@
   margin-bottom: 30px;
 }
 
-#friend-modal {
+#friend-modal, #error-modal {
   width: 35vw;
   height: 60vh;
   background: white;

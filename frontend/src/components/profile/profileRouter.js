@@ -16,7 +16,9 @@ class ProfileRouter extends Component {
       searchInput: '',
       new: false,
       following: false,
-      renderModal: false,
+      friendsModal: false,
+      errorModal: false,
+      errorModalMessgage: '',
       allUsers: [],
       friends: [],
       unfollowList: [],
@@ -95,7 +97,7 @@ class ProfileRouter extends Component {
         this.setState({
           new: false,
           searchInput: '',
-          renderModal: false
+          friendsModal: false
         })
       })
   }
@@ -142,14 +144,8 @@ class ProfileRouter extends Component {
     this.setState({unfollowList})
   }
 
-  modalUp = e => {
-    this.setState({
-      renderModal: true
-    })
-  }
-
   modalDown = e => {
-    if(e.target.className === 'modal' || e.target.id === 'modal-cancel'){
+    if(e.target.className === 'modal' || e.target.id === 'modal-error-cancel'){
       if(this.state.unfollowList[0]) {
         axios
           .post('/users/unfollowMany', {
@@ -162,11 +158,16 @@ class ProfileRouter extends Component {
           .catch(err => {console.log(err)})
       }
       this.setState({
-        renderModal: false,
+        friendsModal: false,
+        errorModal: false,
         unfollowList: []
       })
       this.getFollowing()
     }
+  }
+
+  triggerErrorModal = message => {
+    this.setState({errorModal: true, errorModalMessgage: message})
   }
 
   renderFriendsModal = () => (
@@ -180,6 +181,13 @@ class ProfileRouter extends Component {
             </div>
           )
         )}
+      </div>
+    </div>
+  )
+
+  renderErrorModal = () => (
+    <div className="modal" onClick={this.modalDown}>
+      <div id="error-modal">
       </div>
     </div>
   )
@@ -203,6 +211,7 @@ class ProfileRouter extends Component {
             thisUserSpotifyID={this.props.thisUserSpotifyID}
             toggleNew={this.toggleNew}
             usersPlaylists={this.state.usersPlaylists}
+            triggerErrorModal={this.triggerErrorModal}
           />
         ) :
         window.location = "http://localhost:3100/users/spotifyLogin") :
@@ -214,7 +223,8 @@ class ProfileRouter extends Component {
     let {thisUsername, profileUsername} = this.props
     return (
       <div  id="profile">
-        {this.state.renderModal ? this.renderFriendsModal() : ''}
+        {this.state.friendsModal ? this.renderFriendsModal() : ''}
+        {this.state.errorModal ? this.renderErrorModal() : ''}
         <div id="profile-data">
           <div className="logo">
             <Link to={`/users/${thisUsername}`} data-username={thisUsername} onClick={this.changeProfile}>
@@ -223,7 +233,7 @@ class ProfileRouter extends Component {
             </Link>
           </div>
           <h2>{profileUsername}</h2>
-          <h3><button id="friends-modal-button" onClick={this.modalUp}>{`${this.state.friends.length} Friends`}</button></h3>
+          <h3><button id="friends-modal-button" onClick={()=>{this.setState({friendsModal: true})}}>{`${this.state.friends.length} Friends`}</button></h3>
           {
             thisUsername !== profileUsername ?
               this.state.following ?

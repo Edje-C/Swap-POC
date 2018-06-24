@@ -33,6 +33,7 @@ class Profile extends Component {
       playlists={this.props.usersPlaylists}
       getPlaylists={this.props.getPlaylists}
       spotifyApi={this.props.spotifyApi}
+      triggerErrorModal={this.props.triggerErrorModal}
     />
   )
 
@@ -43,11 +44,13 @@ class Profile extends Component {
       users={this.props.allUsers}
       spotifyApi={this.props.spotifyApi}
       toggleNew={this.props.toggleNew}
+      triggerErrorModal={this.props.triggerErrorModal}
     />
   )
 
 
   render(){
+    console.log('profile', this.props)
     return (
       this.props.new ?
         this.renderNew():

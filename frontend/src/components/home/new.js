@@ -14,7 +14,7 @@ class New extends Component {
       allUsers: [],
       friends: [],
       selectedFriends: [],
-      selectedFriendsIDs: [],
+      selectedFriendsIDs: ['a'],
       renderModal: false,
       searchInput: '',
       tracks: [],
@@ -96,47 +96,15 @@ class New extends Component {
             tracks: neededData
           })
           .then(res => {
-            let playlistID = res.data.id
-            console.log('playlistID', playlistID)
-
-
-            //
-            // axios
-            //   .post('/users/addCollaborators', {
-            //     playlistID,
-            //     userIDs: this.state.selectedFriendsIDs
-            //   })
-            //   .then(res => {
-            //     console.log('ADDED collaborations', res)
-            //   })
-            //   .catch(err => {
-            //     this.setState({message: 'Something went wrong!'})
-            //     return
-            //   })
-            //
-            //   axios
-            //     .post('/users/saveTracks', {
-            //       playlistID: playlistID,
-            //       tracks: neededData
-            //     })
-            //     .then(data => {
-            //       this.props.toggleNew()
-            //     })
-            //     .catch(err => {
-            //       this.setState({message: 'Something went wrong!'})
-            //     })
-
             this.setState({message: 'Success'})
             this.props.toggleNew()
-
-            })
-            .catch(err => {
-              this.setState({message: 'Something went wrong!'})
-            });
+          })
+          .catch(err => {
+            this.props.triggerErrorModal('creating your playlist')
+          });
         })
         .catch(err => {
-          console.log('Couldn\'t get songs')
-          this.setState({message: 'Something went wrong!'})
+          this.props.triggerErrorModal('getting songs from your Spotify account')
         })
   }
 

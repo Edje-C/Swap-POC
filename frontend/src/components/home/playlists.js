@@ -13,45 +13,45 @@ const Playlists = props => {
       .then(res => {
         console.log('resGET' ,res.data)
         modules.getSongs(props.spotifyApi, (res.data.length).toString(), Number(res.data.collaborators))
-        .then(data => {
-          if(!data[0] || !data) {
-            return
-          }
-          console.log('DATA' ,data)
-          let neededData = data.map(v => {
-            return {
-              trackURI: v.id,
-              name: v.name.replace(/(')/g, "''"),
-              duration: modules.getDuration(v.duration_ms),
-              artists: v.artists.map(v => v.name).join(', ').replace(/(')/g, "''"),
-              album: v.album.name.replace(/(')/g, "''")
-            }
-          })
-
-          console.log('neededDataPlay', neededData)
-          axios
-          .post('/users/saveTracks', {
-            playlistID: playlistID,
-            tracks: neededData
-          })
           .then(data => {
+            if(!data[0] || !data) {
+              return
+            }
+            console.log('DATA' ,data)
+            let neededData = data.map(v => {
+              return {
+                trackURI: v.id,
+                name: v.name.replace(/(')/g, "''"),
+                duration: modules.getDuration(v.duration_ms),
+                artists: v.artists.map(v => v.name).join(', ').replace(/(')/g, "''"),
+                album: v.album.name.replace(/(')/g, "''")
+              }
+            })
+
+            console.log('neededDataPlay', neededData)
             axios
-            .patch('/users/acceptCollaboration', {
-              playlistID,
-              username: props.thisUsername,
+            .post('/users/saveTracks', {
+              playlistID: playlistID,
+              tracks: neededData
             })
-            .then(res => {
-              updatePlaylist(playlistID)
+            .then(data => {
+              axios
+              .patch('/users/acceptCollaboration', {
+                playlistID,
+                username: props.thisUsername,
+              })
+              .then(res => {
+                updatePlaylist(playlistID)
+              })
+              .catch(err => {console.log(err)})
             })
-            .catch(err => {console.log(err)})
+            .catch(err => {
+              console.log('err', err)
+            })
           })
-          .catch(err => {
-            console.log('err', err)
-          })
+          .catch(err => {console.log('Something went wrong!', err)});
         })
-        .catch(err => {console.log('Something went wrong!', err)});
-      })
-      .catch(err => {console.log('Something went wrong!', err)})
+        .catch(err => {console.log('Something went wrong!', err)})
 
   }
 
