@@ -31,14 +31,14 @@ router.get("/getOtherFollowing/:thisUserID/:otherUsername", db.getOtherFollowing
 router.get("/getFollow/:followerID/:followingUsername", db.getFollow)
 router.get("/getPlaylistStatus/:playlistID", db.getPlaylistStatus)
 
-router.post("/createPlaylist", db.createPlaylist2)
+router.post("/createPlaylist", db.createPlaylist)
 router.post("/addCollaborators", db.addCollaborators)
 router.post("/saveTracks", db.saveTracks)
 router.post("/followUser", db.followUser)
 router.post("/unfollowUser", db.unfollowUser)
 router.post("/unfollowMany", db.unfollowMany)
+router.post("/acceptCollaboration", db.acceptCollaboration)
 
-router.patch("/acceptCollaboration", db.acceptCollaboration)
 router.patch("/declineCollaboration", db.declineCollaboration)
 router.patch("/setAsComplete", db.setAsComplete)
 router.patch("/saveURI", db.savePlaylistURI)

@@ -145,7 +145,7 @@ class ProfileRouter extends Component {
   }
 
   modalDown = e => {
-    if(e.target.className === 'modal' || e.target.id === 'modal-error-cancel'){
+    if(e.target.className === 'modal' || e.target.className === 'modal-cancel'){
       if(this.state.unfollowList[0]) {
         axios
           .post('/users/unfollowMany', {
@@ -173,14 +173,17 @@ class ProfileRouter extends Component {
   renderFriendsModal = () => (
     <div className="modal" onClick={this.modalDown}>
       <div id="friend-modal"  onClick={this.getFollowing}>
-        {this.state.friends.map(v =>
-          (
-            <div className="add-friend-container" data-name={v.username} data-id={Number(v.id)}>
-              <Link to={`/users/${v.username}`} data-username={v.username} onClick={this.changeProfile}>{v.username}</Link>
-              {v.username === this.props.thisUsername ? null : <i class="material-icons background-color" data-name={v.username} data-id={Number(v.id)} onClick={this.toggleFollow}>remove</i>}
-            </div>
-          )
-        )}
+        <div id="friends">
+          {this.state.friends.map(v =>
+            (
+              <div className="add-friend-container" data-name={v.username} data-id={Number(v.id)}>
+                <Link to={`/users/${v.username}`} data-username={v.username} onClick={this.changeProfile}>{v.username}</Link>
+                {v.username === this.props.thisUsername ? null : <i class="material-icons background-color" data-name={v.username} data-id={Number(v.id)} onClick={this.toggleFollow}>remove</i>}
+              </div>
+            )
+          )}
+        </div>
+        <button className="modal-cancel">Cancel</button>
       </div>
     </div>
   )
@@ -188,6 +191,11 @@ class ProfileRouter extends Component {
   renderErrorModal = () => (
     <div className="modal" onClick={this.modalDown}>
       <div id="error-modal">
+        <div id="error">
+          <p className="error-message">Sorry, something went wrong while {this.state.errorModalMessgage}.</p>
+          <p className="error-message">Check your wifi and try again.</p>
+        </div>
+        <button className="modal-cancel">Cancel</button>
       </div>
     </div>
   )
@@ -219,7 +227,7 @@ class ProfileRouter extends Component {
   }
 
   render() {
-    console.log('PR', this.state, this.props)
+    // console.log('PR', this.state, this.props)
     let {thisUsername, profileUsername} = this.props
     return (
       <div  id="profile">

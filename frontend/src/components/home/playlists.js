@@ -7,7 +7,7 @@ import '../../CSS/playlists.css'
 const Playlists = props => {
   // console.log(props)
   const acceptCollab = e => {
-    let playlistID = e.target.dataset.id
+    let playlistID = Number(e.target.dataset.id)
     axios
       .get(`/users/getPlaylist/${playlistID}`)
       .then(res => {
@@ -15,9 +15,10 @@ const Playlists = props => {
         modules.getSongs(props.spotifyApi, (res.data.length).toString(), Number(res.data.collaborators))
           .then(data => {
             if(!data[0] || !data) {
+              this.props.triggerErrorModal('getting songs from your Spotify account')
               return
             }
-            console.log('DATA' ,data)
+            
             let neededData = data.map(v => {
               return {
                 trackURI: v.id,
@@ -28,30 +29,27 @@ const Playlists = props => {
               }
             })
 
-            console.log('neededDataPlay', neededData)
             axios
-            .post('/users/saveTracks', {
-              playlistID: playlistID,
-              tracks: neededData
-            })
-            .then(data => {
-              axios
-              .patch('/users/acceptCollaboration', {
+              .post('/users/acceptCollaboration', {
                 playlistID,
                 username: props.thisUsername,
+                tracks: neededData
               })
               .then(res => {
                 updatePlaylist(playlistID)
               })
-              .catch(err => {console.log(err)})
-            })
-            .catch(err => {
-              console.log('err', err)
-            })
+              .catch(err => {
+                this.props.triggerErrorModal('')
+              })
+
           })
-          .catch(err => {console.log('Something went wrong!', err)});
+          .catch(err => {
+            this.props.triggerErrorModal('getting songs from your Spotify account')
+          });
         })
-        .catch(err => {console.log('Something went wrong!', err)})
+        .catch(err => {
+          this.props.triggerErrorModal('getting songs from your Spotify account')
+        })
 
   }
 
@@ -72,9 +70,7 @@ const Playlists = props => {
       .get(`/users/getPlaylistStatus/${playlistID}`)
       .then(res => {
         console.log('playlsit status', res.data)
-        if(res.data.filter(v => v.status === 'p').length) {
-          props.getPlaylists(props.thisUsername)
-        } else {
+        if(!res.data.filter(v => v.status === 'p').length) {
           axios
             .patch('/users/setAsComplete', {playlistID})
             .then(res => {
@@ -82,6 +78,7 @@ const Playlists = props => {
             })
             .catch(err => {console.log(err)})
         }
+        props.getPlaylists(props.thisUsername)
       })
       .catch(err => {console.log(err)})
   }

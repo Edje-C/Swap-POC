@@ -85,10 +85,6 @@ const getSongs = (spotifyApi, length, selectedFriends) => {
   let savedSongsCount =  Math.floor(trackCount*.7)
   let savedSongs = []
 
-  if(length>200 || selectedFriends<1 || !spotifyApi){
-    return [];
-  }
-
   if(trackCount < 4) {
     return getOnlyTopSongs(spotifyApi, trackCount)
   }
@@ -229,9 +225,9 @@ const getSongs = (spotifyApi, length, selectedFriends) => {
     })
     .catch(err => {console.log(err)})
 
-      return Promise.all([getSavedTracks])
-        .then(data => {return [...data[0]]})
-        .catch(err => {console.log('Something went wrong!', err)})
+    return Promise.all([getSavedTracks])
+      .then(data => {return [...data[0]]})
+      .catch(err => {console.log('Something went wrong!', err)})
 }
 
 

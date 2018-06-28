@@ -32,7 +32,7 @@ class New extends Component {
     axios
       .get(`/users/getFollowing/${this.props.thisUsername}`)
       .then(res => {
-        console.log('res.data')
+        // console.log('res.data')
         this.setState({friends: res.data})
       });
 
@@ -68,11 +68,16 @@ class New extends Component {
       return
     }
 
+    if(!this.props.spotifyApi) {
+      this.props.triggerErrorModal('getting songs from your Spotify account')
+      return
+    }
+
     modules.getSongs(this.props.spotifyApi, this.state.length, this.state.selectedFriends.length)
       .then(data => {
         console.log('DATA!', data)
         if(!data || !data[0]) {
-          this.setState({message: 'Something went wrong!'})
+          this.props.triggerErrorModal('getting songs from your Spotify account')
           return
         }
 
@@ -104,6 +109,7 @@ class New extends Component {
           });
         })
         .catch(err => {
+          console.log('NAH')
           this.props.triggerErrorModal('getting songs from your Spotify account')
         })
   }
@@ -111,9 +117,12 @@ class New extends Component {
 
   setLength = e => {
     console.log('setting length')
+    let length = e.target.dataset.length, subNum = Math.floor(25/(this.state.selectedFriends.length+1)) * (this.state.selectedFriends.length+1)
+    console.log(subNum)
     this.setState({
-      length: Number(e.target.dataset.length)
+      length: length > 15 && length < 210 ? Number(length) : subNum
     })
+
   }
 
   setClass = num => (

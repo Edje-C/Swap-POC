@@ -199,15 +199,36 @@ exports.createPlaylist = (req, res) => {
   db
     .one("INSERT INTO playlists (creator_id, name, length, date_created) VALUES ((SELECT id FROM users WHERE username = ${username}), ${name}, ${length}, to_timestamp(${date}, 'DD/MM/YYYY HH24:MI:SS')) RETURNING id", {username: req.body.username, name: req.body.name, length: req.body.length, date: req.body.date})
     .then(data => {
-      res
-        .status(200)
-        .json(data)
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .json({status: 'Failed'})
-    })
+      db
+        .tx(t => {
+          let addCollaborators = t.none("INSERT INTO collaborations (playlist_id, user_id) VALUES" + req.body.userIDs.map(v => `(${data.id}, ${v})`).join(','))
+          let saveTracks = t.none("INSERT INTO tracks (playlist_id, track_uri, name, duration, artists, album) VALUES" + req.body.tracks.map(v => `(${data.id}, '${v.trackURI}', '${v.name}', '${v.duration}', '${v.artists}', '${v.album}')`).join(','))
+
+          return t.batch([addCollaborators, saveTracks]);
+        })
+        .then(data => {
+          res
+            .status(200)
+            .json({status: 'Success'})
+        })
+        .catch(err => {
+          console.log('fdshfjlk', data.id)
+          db
+            .none("DELETE FROM playlists WHERE id = ${playlistID}", {playlistID: data.id})
+            .then(data => {
+              res
+                .status(500)
+                .json({status: 'Failed'})
+            })
+            .catch(err => {
+              console.log('error')
+              res
+                .status(500)
+                .json({status: 'Failed'})
+            })
+        });
+
+    });
 }
 
 exports.addCollaborators = (req, res) => {
@@ -241,9 +262,13 @@ exports.saveTracks = (req, res) => {
 }
 
 exports.acceptCollaboration = (req, res) => {
-  console.log('!!!!', req.body)
   db
-    .none("UPDATE collaborations SET status = 'a' WHERE playlist_id = ${playlistID} AND user_id = (SELECT id from users WHERE username = ${username})", {playlistID: req.body.playlistID, username: req.body.username})
+    .tx(t => {
+      let acceptCollab = t.none("UPDATE collaborations SET status = 'a' WHERE playlist_id = ${playlistID} AND user_id = (SELECT id from users WHERE username = ${username})", {playlistID: req.body.playlistID, username: req.body.username})
+      let saveTracks = t.none("INSERT INTO tracks (playlist_id, track_uri, name, duration, artists, album) VALUES" + req.body.tracks.map(v => `(${req.body.playlistID}, '${v.trackURI}', '${v.name}', '${v.duration}', '${v.artists}', '${v.album}')`).join(','))
+
+      return t.batch([acceptCollab, saveTracks]);
+    })
     .then(data => {
       res
         .status(200)
@@ -377,41 +402,4 @@ exports.unfollowMany = (req, res) => {
         .status(500)
         .json({status: 'Failed'})
     })
-}
-
-exports.createPlaylist2 = (req, res) => {
-  db
-    .one("INSERT INTO playlists (creator_id, name, length, date_created) VALUES ((SELECT id FROM users WHERE username = ${username}), ${name}, ${length}, to_timestamp(${date}, 'DD/MM/YYYY HH24:MI:SS')) RETURNING id", {username: req.body.username, name: req.body.name, length: req.body.length, date: req.body.date})
-    .then(data => {
-      console.log(data)
-      db
-        .tx(t => {
-          let addCollaborators = t.none("INSERT INTO collaborations (playlist_id, user_id) VALUES" + req.body.userIDs.map(v => `(${data.id}, ${v})`).join(','))
-          let saveTracks = t.none("INSERT INTO tracks (playlist_id, track_uri, name, duration, artists, album) VALUES" + req.body.tracks.map(v => `(${data.id}, '${v.trackURI}', '${v.name}', '${v.duration}', '${v.artists}', '${v.album}')`).join(','))
-
-          return t.batch([addCollaborators, saveTracks]);
-        })
-        .then(data => {
-          res
-            .status(200)
-            .json({status: 'Success'})
-        })
-        .catch(err => {
-          console.log('fdshfjlk', data.id)
-          db
-            .none("DELETE FROM playlists WHERE id = ${playlistID}", {playlistID: data.id})
-            .then(data => {
-              res
-                .status(500)
-                .json({status: 'Failed'})
-            })
-            .catch(err => {
-              console.log('error')
-              res
-                .status(500)
-                .json({status: 'Failed'})
-            })
-        });
-
-    });
 }
