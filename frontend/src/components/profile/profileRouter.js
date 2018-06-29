@@ -3,6 +3,7 @@ import { Link, Route, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import Profile from './profile'
 import '../../CSS/profile.css';
+import '../../CSS/profileMenu.css';
 import Button from '@material-ui/core/Button';
 
 const SpotifyWebApi = require('spotify-web-api-js');
@@ -123,7 +124,7 @@ class ProfileRouter extends Component {
             this.setState({following: !!res.data[0]})
           });
       })
-      .catch(err => console.log(err))
+      .catch(err => {this.triggerErrorModal(`${this.state.following ? 'unfollowing': 'following'} this user`)})
   }
 
   toggleFollow = e => {
@@ -192,7 +193,7 @@ class ProfileRouter extends Component {
     <div className="modal" onClick={this.modalDown}>
       <div id="error-modal">
         <div id="error">
-          <p className="error-message">Sorry, something went wrong while {this.state.errorModalMessgage}.</p>
+          <p className="error-message">Sorry, something went wrong while {this.state.errorModalMessgage}</p>
           <p className="error-message">Check your wifi and try again.</p>
         </div>
         <button className="modal-cancel">Cancel</button>
@@ -227,7 +228,7 @@ class ProfileRouter extends Component {
   }
 
   render() {
-    // console.log('PR', this.state, this.props)
+    console.log('PR', this.state, this.props)
     let {thisUsername, profileUsername} = this.props
     return (
       <div  id="profile">
@@ -245,7 +246,8 @@ class ProfileRouter extends Component {
           {
             thisUsername !== profileUsername ?
               this.state.following ?
-                <button onClick={this.toggleFriend}>Friend</button> : <button onClick={this.toggleFriend}>friend</button> :
+                <button className="friend-button" onClick={this.toggleFriend}>Friend</button> :
+                <button className="friend-button" onClick={this.toggleFriend}>Unfriend</button> :
               <h3 id="logout"><button onClick={this.props.logout}>logout</button></h3>
           }
         </div>

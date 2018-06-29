@@ -2,12 +2,6 @@
   display: flex;
 }
 
-.add-friend-container {
-  width: 100%;
-  height: auto;
-  display: flex;
-}
-
 .cap {
   width: 5em;
   margin-left: 20px;

@@ -1,17 +1,18 @@
+.add-friend-container {
+  width: 100%;
+  height: auto;
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.friend-button {
+  width: 6em;
+  padding: 8px 5px;
+}
+
 #profile {
   display: flex;
   background: #24242C;
-}
-
-#profile-data {
-  width: 25vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  position: fixed;
-  border-right: 1px solid #76EBBD;
 }
 
 #playlist-data {
@@ -19,25 +20,12 @@
   padding: 50px;
 }
 
-#logout {
-  display: flex;
-  justify-content: center;
-}
-
-#logout > button {
-  background: none;
-  text-decoration: underline;
-  color: #5F5F65;
-  padding: 15%;
-}
-
 #new-swap {
   width: auto;
-  height: 90%;
-  padding: 5vh 0;
+  height: 95%;
   display: flex;
   align-items: flex-end;
-  padding-bottom: 25px;
+  padding-bottom: 5%;
   position: fixed;
   right: 2%;
 }
@@ -64,9 +52,27 @@
   padding: 5% 5% 10% 5%;
 }
 
-#search-field {
+.modal {
+  width: 100vw;
+  height: 100vh;
+  color: #24242C;
+  background: rgba(0,0,0,.5);
+  right: 0;
+  top: 0;
   display: flex;
-  margin-bottom: 30px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1;
+}
+
+.modal-cancel {
+  width: 7em;
+  padding: 15px;
+  background: #76EBBD;
+  display: flex;
+  align-self: flex-end;
 }
 
 #friend-modal, #error-modal {
@@ -79,7 +85,7 @@
   justify-content: space-between;
 }
 
-#error {
+#friends, #error {
   font-size: 1.25em;
 }
 
@@ -88,6 +94,11 @@
   font-size: inherit;
   font-weight: inherit;
   color: inherit;
+}
+
+#search-field {
+  display: flex;
+  margin-bottom: 30px;
 }
 
 #search-icon {
@@ -113,4 +124,23 @@
 
 #search-user::placeholder {
   color: #5F5F65;
+}
+
+@media (max-width: 975px) {
+
+  #content {
+    width: 84%;
+    margin: 0;
+    padding: 5% 8% 25% 8%;
+  }
+
+  #new-swap {
+    height: 97%;
+    padding-bottom: 3%;
+  }
+
+  #profile {
+    flex-direction: column;
+  }
+
 }

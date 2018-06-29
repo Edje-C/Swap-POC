@@ -15,10 +15,10 @@ const Playlists = props => {
         modules.getSongs(props.spotifyApi, (res.data.length).toString(), Number(res.data.collaborators))
           .then(data => {
             if(!data[0] || !data) {
-              this.props.triggerErrorModal('getting songs from your Spotify account')
+              props.triggerErrorModal('getting songs from your Spotify account')
               return
             }
-            
+
             let neededData = data.map(v => {
               return {
                 trackURI: v.id,
@@ -39,16 +39,16 @@ const Playlists = props => {
                 updatePlaylist(playlistID)
               })
               .catch(err => {
-                this.props.triggerErrorModal('')
+                props.triggerErrorModal('')
               })
 
           })
           .catch(err => {
-            this.props.triggerErrorModal('getting songs from your Spotify account')
+            props.triggerErrorModal('getting songs from your Spotify account')
           });
         })
         .catch(err => {
-          this.props.triggerErrorModal('getting songs from your Spotify account')
+          props.triggerErrorModal('getting songs from your Spotify account')
         })
 
   }

@@ -5,6 +5,10 @@
   margin-bottom: 10px;
 }
 
+.playlist-name-info {
+  padding-right: 10px;
+}
+
 .playlist-name-info > a {
   display: flex;
   justify-content: center;
@@ -16,8 +20,9 @@
 }
 
 .playlist-status {
+  width: 10em;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
 }
 

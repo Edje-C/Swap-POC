@@ -79,26 +79,3 @@ h1, h2, h3 {
 .dark-gray {
   color: #5F5F65;
 }
-
-.modal {
-  width: 100vw;
-  height: 100vh;
-  color: #24242C;
-  background: rgba(0,0,0,.5);
-  right: 0;
-  top: 0;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  z-index: 1;
-}
-
-.modal-cancel {
-  width: 7em;
-  padding: 15px;
-  background: #76EBBD;
-  display: flex;
-  align-self: flex-end;
-}
