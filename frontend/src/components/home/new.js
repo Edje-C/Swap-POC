@@ -14,7 +14,7 @@ class New extends Component {
       allUsers: [],
       friends: [],
       selectedFriends: [],
-      selectedFriendsIDs: ['a'],
+      selectedFriendsIDs: [],
       renderModal: false,
       searchInput: '',
       tracks: [],

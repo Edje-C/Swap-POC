@@ -55,7 +55,6 @@
 
 #new-title-input {
   width: 100%;
-  /* width: 92.5%; */
   color: #5F5F65;
 }
 
@@ -122,4 +121,21 @@
 #selected-friends-container {
   height: 80%;
   overflow: scroll;
+}
+
+@media (max-width: 975px) {
+
+  .new-section {
+    width: 100%;
+    margin-bottom: 30px;
+  }
+
+  #done-section {
+    width: 90%;
+  }
+
+  #new {
+    padding-top: 20px;
+  }
+
 }

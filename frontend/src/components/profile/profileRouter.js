@@ -132,13 +132,11 @@ class ProfileRouter extends Component {
     let unfollowList = this.state.unfollowList,
         id = Number(e.target.dataset.id)
 
-    if(e.target.innerText === 'remove') {
-      e.target.innerText = "add"
-      e.target.className = 'material-icons green'
+    if(e.target.innerText === 'Unfollow') {
+      e.target.innerText = "Follow"
       unfollowList.push(id)
     } else {
-      e.target.innerText = "remove"
-      e.target.className = 'material-icons background-color'
+      e.target.innerText = "Unfollow"
       let index = unfollowList.indexOf(id)
       unfollowList.splice(index, 1)
     }
@@ -178,8 +176,8 @@ class ProfileRouter extends Component {
           {this.state.friends.map(v =>
             (
               <div className="add-friend-container" data-name={v.username} data-id={Number(v.id)}>
-                <Link to={`/users/${v.username}`} data-username={v.username} onClick={this.changeProfile}>{v.username}</Link>
-                {v.username === this.props.thisUsername ? null : <i class="material-icons background-color" data-name={v.username} data-id={Number(v.id)} onClick={this.toggleFollow}>remove</i>}
+                <Link to={`/users/${v.username}`} className="add-friend-username" data-username={v.username} onClick={this.changeProfile}>{v.username}</Link>
+                {v.username === this.props.thisUsername ? null : <button className="toggle-follow-button" data-name={v.username} data-id={Number(v.id)} onClick={this.toggleFollow}>Unfollow</button>}
               </div>
             )
           )}
