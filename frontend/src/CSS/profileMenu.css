@@ -9,21 +9,16 @@
   width: 75%;
 }
 
-.toggle-follow-button {
+.toggle-follow-button, .toggle-unfollow-button {
   width: 25%;
   font-size: .75em;
-  border: 1px solid #5F5F65;
+  border: 1px solid #76EBBD;
 }
 
-#profile-data {
-  width: 25vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  position: fixed;
-  border-right: 1px solid #76EBBD;
+.toggle-follow-button {
+  color: #76EBBD;
+  background: #24242C;
+  border: none;
 }
 
 #logout {
@@ -38,15 +33,63 @@
   padding: 15%;
 }
 
-@media (max-width: 975px) {
+#profile-bottom {
+  height: 45%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 
-    #profile-data {
-      width: 100%;
-      height: 20%;
-      border-right: none;
-      border-bottom: 1px solid #76EBBD;
-      /* flex-direction: row; */
-      position: relative;
-    }
+#profile-data {
+  width: 25vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  position: fixed;
+  border-right: 1px solid #76EBBD;
+}
+
+#user-info {
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+@media (max-width: 750px) {
+
+  #friends-modal-button {
+    padding-left: 20px;
+  }
+
+  #logout > button {
+    padding: 0;
+  }
+
+  #profile-bottom {
+    height: auto;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  #profile-data {
+    width: 100%;
+    height: auto;
+    padding: 20px 0;
+    border-right: none;
+    border-bottom: 1px solid #76EBBD;
+    flex-direction: column;
+    position: relative;
+  }
+
+  #user-info {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
 
 }

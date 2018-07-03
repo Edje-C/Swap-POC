@@ -67,7 +67,7 @@
   margin-right: 20px;
 }
 
-@media (max-width: 975px) {
+@media (max-width: 750px) {
 
   .playlist-name-info {
     width: 10em;

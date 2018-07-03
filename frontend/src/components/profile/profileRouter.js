@@ -134,9 +134,11 @@ class ProfileRouter extends Component {
 
     if(e.target.innerText === 'Unfollow') {
       e.target.innerText = "Follow"
+      e.target.className = 'toggle-follow-button'
       unfollowList.push(id)
     } else {
       e.target.innerText = "Unfollow"
+      e.target.className = 'toggle-unfollow-button'
       let index = unfollowList.indexOf(id)
       unfollowList.splice(index, 1)
     }
@@ -177,7 +179,7 @@ class ProfileRouter extends Component {
             (
               <div className="add-friend-container" data-name={v.username} data-id={Number(v.id)}>
                 <Link to={`/users/${v.username}`} className="add-friend-username" data-username={v.username} onClick={this.changeProfile}>{v.username}</Link>
-                {v.username === this.props.thisUsername ? null : <button className="toggle-follow-button" data-name={v.username} data-id={Number(v.id)} onClick={this.toggleFollow}>Unfollow</button>}
+                {v.username === this.props.thisUsername ? null : <button className="toggle-unfollow-button" data-name={v.username} data-id={Number(v.id)} onClick={this.toggleFollow}>Unfollow</button>}
               </div>
             )
           )}
@@ -239,15 +241,19 @@ class ProfileRouter extends Component {
               <p className="logo-name" data-username={thisUsername} >Swap</p>
             </Link>
           </div>
-          <h2>{profileUsername}</h2>
-          <h3><button id="friends-modal-button" onClick={()=>{this.setState({friendsModal: true})}}>{`${this.state.friends.length} Friends`}</button></h3>
-          {
-            thisUsername !== profileUsername ?
-              this.state.following ?
-                <button className="friend-button" onClick={this.toggleFriend}>Friend</button> :
-                <button className="friend-button" onClick={this.toggleFriend}>Unfriend</button> :
-              <h3 id="logout"><button onClick={this.props.logout}>logout</button></h3>
-          }
+          <div id="profile-bottom">
+            <div id="user-info">
+              <h2 id="username">{profileUsername}</h2>
+              <h3><button id="friends-modal-button" onClick={()=>{this.setState({friendsModal: true})}}>{`${this.state.friends.length} Friends`}</button></h3>
+            </div>
+            {
+              thisUsername !== profileUsername ?
+                this.state.following ?
+                  <button className="friend-button" onClick={this.toggleFriend}>Unfriend</button> :
+                  <button className="friend-button" onClick={this.toggleFriend}>Friend</button> :
+                <h3 id="logout"><button onClick={this.props.logout}>logout</button></h3>
+            }
+          </div>
         </div>
         <div id="content">
           <Route path = {`/users/:username`} render={this.renderProfile}/>

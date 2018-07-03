@@ -13,7 +13,7 @@
 .auth-container {
   width: 25em;
   background: white;
-  padding: 20px 60px;
+  padding: 20px 40px;
   border-radius: 5px;
   text-align: center;
 }
@@ -62,5 +62,28 @@
   background: #76EBBD;
   border: 1px solid #76EBBD;
   color: white;
-  /* border: 1px solid #24242C; */
+}
+
+
+@media (max-width: 750px) {
+
+  .auth {
+    overflow: visible;
+    padding: 100px 0;
+  }
+
+  .auth-container {
+    width: 75vw;
+    padding: 20px;
+    overflow: visible;
+  }
+
+  .auth-input, .auth-submit{
+    width: 12em;
+  }
+
+  .auth-submit {
+    width: 14.5em;
+  }
+
 }

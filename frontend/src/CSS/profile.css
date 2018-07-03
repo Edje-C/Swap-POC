@@ -87,6 +87,7 @@
   font-size: inherit;
   font-weight: inherit;
   color: inherit;
+  padding: 0;
 }
 
 #search-field {
@@ -120,12 +121,20 @@
   color: #5F5F65;
 }
 
-@media (max-width: 975px) {
+#username {
+  padding-bottom: 3%;
+}
+
+@media (max-width: 750px) {
 
   #content {
     width: 84%;
     margin: 0;
     padding: 5% 8% 25% 8%;
+  }
+
+  #friend-modal, #error-modal {
+    width: 75%;
   }
 
   #new-swap {

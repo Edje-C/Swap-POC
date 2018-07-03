@@ -123,7 +123,7 @@
   overflow: scroll;
 }
 
-@media (max-width: 975px) {
+@media (max-width: 750px) {
 
   .new-section {
     width: 100%;
