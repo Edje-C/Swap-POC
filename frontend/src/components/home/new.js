@@ -173,15 +173,17 @@ class New extends Component {
     return (
       <div className="modal" onClick={this.modalDown}>
         <div id="modal-search">
-          <input id="add-friend-input" type="text" data-type="searchInput" onChange={this.handleInput} value={this.state.searchInput}/>
-          {
-            friendsList.filter(v => v.username.includes(this.state.searchInput) && v.username !== this.props.thisUsername).map(v => (
-              <div className="add-friend-container" data-name={v.username} data-id={Number(v.id)} onClick={this.toggleFriend}>
-                <p data-name={v.username} data-id={Number(v.id)}>{v.username}</p>
-                <button data-name={v.username} data-id={Number(v.id)}>{this.state.selectedFriends.includes(v.username)? <i class="material-icons background-color" data-name={v.username} data-id={Number(v.id)} onClick={this.toggleFriend}>remove</i> :  <i class="material-icons green" data-name={v.username} data-id={Number(v.id)} onClick={this.toggleFriend}>add</i>}</button>
-              </div>
-            ))
-          }
+          <div id="search-friends">
+            <input id="add-friend-input" type="text" data-type="searchInput" onChange={this.handleInput} value={this.state.searchInput}/>
+            {
+              friendsList.filter(v => v.username.includes(this.state.searchInput) && v.username !== this.props.thisUsername).map(v => (
+                <div className="add-friend-container" data-name={v.username} data-id={Number(v.id)} onClick={this.toggleFriend}>
+                  <p data-name={v.username} data-id={Number(v.id)}>{v.username}</p>
+                  <button data-name={v.username} data-id={Number(v.id)}>{this.state.selectedFriends.includes(v.username)? <i class="material-icons background-color" data-name={v.username} data-id={Number(v.id)} onClick={this.toggleFriend}>remove</i> :  <i class="material-icons green" data-name={v.username} data-id={Number(v.id)} onClick={this.toggleFriend}>add</i>}</button>
+                </div>
+              ))
+            }
+          </div>
           <button id="panel-done" onClick={this.modalDown}>Done</button>
         </div>
         <div id="modal-panel">

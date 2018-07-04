@@ -234,11 +234,6 @@ class ProfileRouter extends Component {
       <div  id="profile">
         {this.state.friendsModal ? this.renderFriendsModal() : ''}
         {this.state.errorModal ? this.renderErrorModal() : ''}
-      <div id="new-swap">
-        <Button variant="fab" onClick={this.toggleNew} id="new-button">
-          {this.state.new ? <i class="material-icons">close</i>: <i class="material-icons">add</i>}
-        </Button>
-      </div>
         <div id="profile-data">
           <div className="logo">
             <Link to={`/users/${thisUsername}`} data-username={thisUsername} onClick={this.changeProfile}>
@@ -262,6 +257,11 @@ class ProfileRouter extends Component {
         </div>
         <div id="content">
           <Route path = {`/users/:username`} render={this.renderProfile}/>
+        </div>
+        <div id="new-swap">
+          <Button variant="fab" onClick={this.toggleNew} id="new-button">
+            {this.state.new ? <i class="material-icons">close</i>: <i class="material-icons">add</i>}
+          </Button>
         </div>
       </div>
     )

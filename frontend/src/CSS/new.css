@@ -19,7 +19,7 @@
 }
 
 .new-section {
-  width: 60%;
+  width: 65%;
   margin-bottom: 30px;
 }
 
@@ -72,7 +72,7 @@
 }
 
 #add-friend-input {
-  width: 90%;
+  width: 85%;
   border: 1px solid #eee;
   padding: 10px;
 }
@@ -101,6 +101,9 @@
   width: 25vw;
   border-right: 1px solid #eee;
   background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 #modal-panel {
@@ -152,7 +155,6 @@
   }
 
   #panel-done {
-    display: inherit;
     display: flex;
     margin-left: auto;
   }
