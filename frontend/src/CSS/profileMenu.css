@@ -62,6 +62,10 @@
 
 @media (max-width: 750px) {
 
+  .toggle-follow-button, .toggle-unfollow-button {
+    width: 30%;
+  }
+
   #friends-modal-button {
     padding-left: 20px;
   }

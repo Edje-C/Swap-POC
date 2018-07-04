@@ -82,10 +82,14 @@
   justify-content: space-evenly;
 }
 
-#modal-done {
+#modal-done, #panel-done {
   width: 6em;
   padding: 10px;
   background: #2FD887;
+}
+
+#panel-done {
+  display: none;
 }
 
 #modal-search, #modal-panel {
@@ -134,8 +138,23 @@
     width: 90%;
   }
 
+  #modal-panel {
+    display: none;
+  }
+
+  #modal-search {
+    width: 60%;
+  }
+
   #new {
+    font-size: .75em;
     padding-top: 20px;
+  }
+
+  #panel-done {
+    display: inherit;
+    display: flex;
+    margin-left: auto;
   }
 
 }

@@ -83,10 +83,10 @@ p {
   color: #5F5F65;
 }
 
-@media (max-width: 750px) {
+@media (max-width: 750px), (max-width: 1024px) {
 
     button {
-      background-color: white;
+      background: white;
     }
 
 }

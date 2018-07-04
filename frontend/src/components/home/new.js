@@ -182,6 +182,7 @@ class New extends Component {
               </div>
             ))
           }
+          <button id="panel-done" onClick={this.modalDown}>Done</button>
         </div>
         <div id="modal-panel">
           <div id="modal-panel-top">
@@ -205,7 +206,7 @@ class New extends Component {
   }
 
   modalDown = e => {
-    if(e.target.className === 'modal' || e.target.id === 'modal-done'){
+    if(e.target.className === 'modal' || e.target.id === 'modal-done' || e.target.id === 'panel-done'){
       this.setState({
         renderModal: false
       })

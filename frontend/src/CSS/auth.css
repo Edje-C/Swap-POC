@@ -1,5 +1,5 @@
 .auth {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -69,7 +69,8 @@
 
   .auth {
     overflow: visible;
-    padding: 100px 0;
+    padding: 50px 0;
+    justify-content: space-around;
   }
 
   .auth-container {
@@ -78,7 +79,7 @@
     overflow: visible;
   }
 
-  .auth-input, .auth-submit{
+  .auth-input {
     width: 12em;
   }
 
