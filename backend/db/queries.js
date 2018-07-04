@@ -150,7 +150,6 @@ exports.getFollowers = (req, res) => {
 };
 
 exports.getFollowing = (req, res) => {
-  console.log(db)
   db
     .any("SELECT id, username FROM friends JOIN users ON following_id = users.id WHERE follower_id = (SELECT id FROM users WHERE username = ${username}) ORDER BY username", {username: req.params.username})
     .then(data => {
@@ -388,9 +387,7 @@ exports.unfollowUser = (req, res) => {
 }
 
 exports.unfollowMany = (req, res) => {
-  // console.log('HERE', req.body.followingIDs.join(','))
   db
-    // .none("DELETE FROM friends WHERE follower_id = ${followerID} AND following_id = ANY (${followingIDs:csv})", {followerID: req.body.followerID, followingIDs: req.body.followingIDs.join(',')})
     .none("DELETE FROM friends WHERE follower_id = ${followerID} AND following_id = ANY (array ${followingIDs:raw})", {followerID: req.body.followerID, followingIDs: JSON.stringify(req.body.followingIDs)})
     .then(data => {
       res

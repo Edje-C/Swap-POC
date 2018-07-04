@@ -128,7 +128,6 @@ class ProfileRouter extends Component {
   }
 
   toggleFollow = e => {
-    console.log('toggle', e.target.key)
     let unfollowList = this.state.unfollowList,
         id = Number(e.target.dataset.id)
 
@@ -154,16 +153,17 @@ class ProfileRouter extends Component {
             followingIDs: this.state.unfollowList
           })
           .then(res => {
-            console.log(res)
+            this.getFollowing()
           })
           .catch(err => {console.log(err)})
+      } else {
+        this.getFollowing()
       }
       this.setState({
         friendsModal: false,
         errorModal: false,
         unfollowList: []
       })
-      this.getFollowing()
     }
   }
 
@@ -173,7 +173,7 @@ class ProfileRouter extends Component {
 
   renderFriendsModal = () => (
     <div className="modal" onClick={this.modalDown}>
-      <div id="friend-modal"  onClick={this.getFollowing}>
+      <div id="friend-modal">
         <div id="friends">
           {this.state.friends.map(v =>
             (
@@ -228,7 +228,7 @@ class ProfileRouter extends Component {
   }
 
   render() {
-    console.log('PR', this.state, this.props)
+    // console.log('PR', this.state, this.props)
     let {thisUsername, profileUsername} = this.props
     return (
       <div  id="profile">

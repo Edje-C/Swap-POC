@@ -54,6 +54,8 @@ const Playlists = props => {
   }
 
   const declineCollab = e => {
+    console.log('!!!!!!!!!!! IT\'S HAPPTNIENG')
+    e.persist()
     axios
       .patch('/users/declineCollaboration', {
         playlistID: e.target.dataset.id,
