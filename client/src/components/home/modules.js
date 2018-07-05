@@ -80,12 +80,13 @@ const getOnlyTopSongs = (spotifyApi, length) => {
 }
 
 const getSongs = (spotifyApi, length, selectedFriends) => {
-
+  console.log('inside function')
   let trackCount = Math.floor(length/(selectedFriends+1))
   let savedSongsCount =  Math.floor(trackCount*.7)
   let savedSongs = []
 
   if(trackCount < 4) {
+    console.log('trackcount < 4')
     return getOnlyTopSongs(spotifyApi, trackCount)
   }
 
@@ -127,10 +128,13 @@ const getSongs = (spotifyApi, length, selectedFriends) => {
       .catch(err => {return err})
   }
 
+  console.log('api', spotifyApi.getMySavedTracks)
+
   let getSavedTracks = spotifyApi.getMySavedTracks({
       limit: 50
     })
     .then(data => {
+      console.log('inside aved', data)
       if(data.total >= savedSongsCount*2){
         let maxPossibleIterations = Math.ceil(data.total/50)
         let maxAdds = Math.ceil(savedSongsCount/maxPossibleIterations)
@@ -223,11 +227,11 @@ const getSongs = (spotifyApi, length, selectedFriends) => {
         return getSongsFree(spotifyApi, length, selectedFriends)
       }
     })
-    .catch(err => {console.log(err)})
+    .catch(err => {console.log('i dunno', err)})
 
     return Promise.all([getSavedTracks])
       .then(data => {return [...data[0]]})
-      .catch(err => {console.log('Something went wrong!', err)})
+      .catch(err => {console.log('Something went wrong!!!!!', err)})
 }
 
 

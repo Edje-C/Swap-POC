@@ -78,7 +78,6 @@ class ProfileRouter extends Component {
 
   getFollowing = () => {
     let {thisUsername, profileUsername} = this.props
-    console.log('GETTING FOLLOWING', thisUsername, profileUsername)
     axios
       .get(thisUsername === profileUsername ? `/users/getFollowing/${thisUsername}` : `/users/getOtherFollowing/${this.props.thisUserID}/${profileUsername}`)
       .then(res => {
@@ -202,6 +201,7 @@ class ProfileRouter extends Component {
   )
 
   renderProfile = (props) => {
+    console.log('!!!!!!!!', props, this.props)
     return this.props.thisUsername ?
       (this.props.access_token || (this.props.thisUsername !== this.props.profileUsername) ?
         (
