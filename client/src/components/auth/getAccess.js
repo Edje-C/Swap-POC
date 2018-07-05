@@ -1,14 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import axios from 'axios';
-
-const SpotifyWebApi = require('spotify-web-api-js');
-const spotifyApi = new SpotifyWebApi();
 
 class Access extends Component {
-  constructor(){
-    super();
-  }
 
   componentDidMount(){
     this.getHashParams()

@@ -1,9 +1,7 @@
 import React, { Component, Fragment } from 'react';
-import { Link, Route, Redirect } from 'react-router-dom';
 import Playlists from '../home/playlists';
 import Search from '../home/search';
 import New from '../home/new'
-import axios from 'axios';
 
 class Profile extends Component {
   constructor(){
@@ -12,17 +10,14 @@ class Profile extends Component {
     }
   }
 
-  renderSearch = () => {
-    let {thisUsername, profileUsername, searchInput, allUsers, changeProfile, getPlaylists} = this.props
-    return (
-      <Search
-        users={allUsers}
-        search={this.props.searchInput}
-        thisUsername={thisUsername}
-        changeProfile={changeProfile}
-      />
-    )
-  }
+  renderSearch = () => (
+    <Search
+      users={this.props.allUsers}
+      search={this.props.searchInput}
+      thisUsername={this.props.thisUsername}
+      changeProfile={this.props.changeProfile}
+    />
+  )
 
   renderPlaylists = () => (
     <Playlists
@@ -50,7 +45,6 @@ class Profile extends Component {
 
 
   render(){
-    // console.log('profile', this.props)
     return (
       this.props.new ?
         this.renderNew():

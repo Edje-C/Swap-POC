@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import React, { Fragment } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import modules from './modules'
 import '../../CSS/playlists.css'
