@@ -1,8 +1,3 @@
-DROP DATABASE IF EXISTS swap;
-CREATE DATABASE swap;
-
-\c swap;
-
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR UNIQUE,
