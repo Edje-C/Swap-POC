@@ -48,6 +48,7 @@ class ProfileRouter extends Component {
     axios
       .get('/users/getAllUsers')
       .then(res => {
+        console.log(res)
         this.setState({allUsers: res.data.user})
       });
 
