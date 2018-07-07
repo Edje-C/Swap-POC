@@ -9,7 +9,6 @@
   "dependencies": {
     "bcryptjs": "*",
     "body-parser": "*",
-    "connect-pg-simple": "^5.0.0",
     "cookie-parser": "*",
     "debug": "*",
     "dotenv": "^6.0.0",

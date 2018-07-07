@@ -50,6 +50,8 @@ router.patch("/saveSpotifyID", db.saveSpotifyID)
 
 // ~ * Spotify * ~ //
 
+// console.log(process.env.DATABASE_URL);
+
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').load();
 }
