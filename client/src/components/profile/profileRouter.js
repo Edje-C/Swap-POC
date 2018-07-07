@@ -41,7 +41,6 @@ class ProfileRouter extends Component {
       axios
         .get(`/users/getFollow/${props.thisUserID}/${props.profileUsername}`)
         .then(res => {
-          // console.log('get follow', res.data)
           this.setState({following: !!res.data[0]})
         });
     }
@@ -223,7 +222,7 @@ class ProfileRouter extends Component {
             triggerErrorModal={this.triggerErrorModal}
           />
         ) :
-        window.location = "http://localhost:3100/users/spotifyLogin") :
+        window.location = "https://spotify-swap.herokuapp.com/users/spotifyLogin") :
       <div>Loading</div>
   }
 

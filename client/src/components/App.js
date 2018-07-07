@@ -118,7 +118,6 @@ class App extends Component {
   )
 
   render() {
-    // console.log(this.state)
     return (
       <div>
         <Route exact path="/" render={this.redirectToProfile}/>

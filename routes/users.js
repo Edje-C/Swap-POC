@@ -58,7 +58,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 let {client_id, client_secret} = process.env
 
-var redirect_uri = 'http://localhost:3100/users/callback';
+var redirect_uri = 'https://spotify-swap.herokuapp.com/callback';
 
 /**
  * Generates a random string containing numbers and letters
@@ -147,7 +147,7 @@ router.get('/callback', function(req, res) {
         });
 
         // we can also pass the token to the browser to make requests from there
-        res.redirect('http://localhost:3000/access/#' +
+        res.redirect('https://spotify-swap.herokuapp.com/access/#' +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token
