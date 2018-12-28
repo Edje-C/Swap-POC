@@ -8,7 +8,6 @@ class Search extends Component {
   }
 
   render(){
-    // console.log('!!!!!!!!!PROPS', this.props)
     let {users, search, thisUsername, changeProfile} = this.props
     return (
       <div id="search">

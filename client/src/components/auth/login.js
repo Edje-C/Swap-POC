@@ -31,16 +31,10 @@ class Login extends Component {
     }
 
     axios
-      .post('/users/login', {
-          username: username,
-          password: password
-        })
-        .then(res => {
-          this.props.getUser()
-        })
-        .catch(err => {
-          this.setState({message: 'Username or password is incorrect.', messageClassName: 'auth-message'})
-        });
+      .get('/login')
+      .catch(err => {
+        this.setState({message: 'Username or password is incorrect.', messageClassName: 'auth-message'})
+      });
   }
 
   render() {
@@ -55,6 +49,7 @@ class Login extends Component {
             <input className="auth-input" data-type='username' type="text" value={this.state.username} onChange={this.handleInput} placeholder="Username"/>
             <input className="auth-input" data-type='password' type="password" value={this.state.password} onChange={this.handleInput} placeholder="Password"/>
             <input className="auth-submit" type="submit" value="Login"/>
+            <a href="http://localhost:3100/login">LOGIN</a>
           </form>
           <p className={`auth-message ${this.state.messageClassName}`}>{this.state.message}</p>
         </div>

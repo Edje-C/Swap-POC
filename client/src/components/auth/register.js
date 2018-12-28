@@ -86,15 +86,14 @@ class Register extends Component {
     }
 
     axios
-      .post('/users/register', {
+      .post('/register', {
           username: this.state.username,
           email: this.state.email,
           password: this.state.password
         })
       .then(res => {
-        console.log(res.data)
         axios
-          .post('/users/login', {
+          .post('/login', {
               username: this.state.username,
               password: this.state.password
             })
@@ -111,7 +110,6 @@ class Register extends Component {
   }
 
   render() {
-    console.log('register', this.state)
     return (
       <div className="auth">
         <div className="auth-container">

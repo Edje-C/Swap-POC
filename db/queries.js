@@ -26,7 +26,7 @@ exports.register = (req, res) => {
 
 exports.getThisUser = (req, res) => {
   db
-    .one("SELECT id, username, spotify_id, email FROM users WHERE username=${username}", {username: req.user.username})
+    .one("SELECT * FROM users WHERE username=${username}", {username: req.user.username})
     .then(data => {
       res
         .status(200)
@@ -46,7 +46,7 @@ exports.logout = (req, res) => {
 
 exports.getAllUsers = (req, res) => {
   db
-    .any("SELECT id, username, spotify_id, email FROM users")
+    .any("SELECT id, username, email FROM users")
     .then(data => {
       res
         .status(200)
@@ -61,7 +61,7 @@ exports.getAllUsers = (req, res) => {
 
 exports.getUser = (req, res) => {
   db
-    .one("SELECT id, username, spotify_id, email FROM users WHERE username=${username}", {username: req.params.username})
+    .one("SELECT id, username,email FROM users WHERE username=${username}", {username: req.params.username})
     .then(data => {
       res
         .status(200)
@@ -76,7 +76,7 @@ exports.getUser = (req, res) => {
 
 exports.getPlaylistsByUsername = (req, res) => {
   db
-    .any("SELECT DISTINCT playlists.id, NULL AS status, name, creator_id, spotify_id, date_created, uri, complete FROM collaborations JOIN playlists ON playlists.id = playlist_id JOIN users ON creator_id = users.id WHERE creator_id = (SELECT id FROM users WHERE username = ${username}) UNION SELECT DISTINCT playlists.id, status, name, creator_id, spotify_id, date_created, uri, complete FROM collaborations JOIN playlists ON playlists.id = playlist_id JOIN users ON creator_id = users.id  WHERE user_id = (SELECT id FROM users WHERE username = ${username}) AND status <> 'd' ORDER BY date_created DESC", {username: req.params.username})
+    .any("SELECT DISTINCT playlists.id, NULL AS status, name, creator_id, date_created, uri, complete FROM collaborations JOIN playlists ON playlists.id = playlist_id JOIN users ON creator_id = users.id WHERE creator_id = (SELECT id FROM users WHERE username = ${username}) UNION SELECT DISTINCT playlists.id, status, name, creator_id, date_created, uri, complete FROM collaborations JOIN playlists ON playlists.id = playlist_id JOIN users ON creator_id = users.id  WHERE user_id = (SELECT id FROM users WHERE username = ${username}) AND status <> 'd' ORDER BY date_created DESC", {username: req.params.username})
     .then(data => {
       res
         .status(200)
@@ -211,7 +211,6 @@ exports.createPlaylist = (req, res) => {
             .json({status: 'Success'})
         })
         .catch(err => {
-          console.log('fdshfjlk', data.id)
           db
             .none("DELETE FROM playlists WHERE id = ${playlistID}", {playlistID: data.id})
             .then(data => {
@@ -220,7 +219,6 @@ exports.createPlaylist = (req, res) => {
                 .json({status: 'Failed'})
             })
             .catch(err => {
-              console.log('error')
               res
                 .status(500)
                 .json({status: 'Failed'})
@@ -329,21 +327,6 @@ exports.setAsComplete = (req, res) => {
 exports.savePlaylistURI = (req, res) => {
   db
     .none("UPDATE playlists SET uri = ${uri} WHERE id = ${playlistID}", {playlistID: req.body.playlistID, uri: req.body.playlistURI})
-    .then(data => {
-      res
-        .status(200)
-        .json({status: 'Success'})
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .json({status: 'Failed'})
-    })
-}
-
-exports.saveSpotifyID = (req, res) => {
-  db
-    .none("UPDATE users SET spotify_id = ${spotifyID} WHERE id = ${userID}", {userID: req.body.userID, spotifyID: req.body.spotifyID})
     .then(data => {
       res
         .status(200)

@@ -6,9 +6,7 @@ CREATE DATABASE swap;
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR UNIQUE,
-    password_digest VARCHAR,
-    email VARCHAR,
-    spotify_id VARCHAR DEFAULT ''
+    email VARCHAR
 );
 
 CREATE TABLE playlists (
@@ -42,19 +40,19 @@ CREATE TABLE collaborations (
 );
 
 
-INSERT INTO users (username, password_digest, email)
-  VALUES('edje-c', '$2a$10$nNpYLNkN7AOP41hvoVtaT.bUW3R.e3Fb/ZGqsXaOn3xlMuFW4wWeG', 'edje-c@swap.com'),
-        ('ikyomadu', '$2a$10$noryJFgByFccCS/F6XILSeqM.3TqBhmRJ0QtAMPHtlzriqk6rsY8S', 'ikyomadu@swap.com'),
-        ('xavierbx', '$2a$10$noryJFgByFccCS/F6XILSeqM.3TqBhmRJ0QtAMPHtlzriqk6rsY8S', 'xavierbx@swap.com'),
-        ('newtonjr', '$2a$10$noryJFgByFccCS/F6XILSeqM.3TqBhmRJ0QtAMPHtlzriqk6rsY8S', 'newtonjr@swap.com'),
-        ('ferminjan', '$2a$10$noryJFgByFccCS/F6XILSeqM.3TqBhmRJ0QtAMPHtlzriqk6rsY8S', 'ferminjan@swap.com'),
-        ('doriguzman', '$2a$10$noryJFgByFccCS/F6XILSeqM.3TqBhmRJ0QtAMPHtlzriqk6rsY8S', 'doriguzman@swap.com'),
-        ('notadocbuta', '$2a$10$noryJFgByFccCS/F6XILSeqM.3TqBhmRJ0QtAMPHtlzriqk6rsY8S', 'notadocbuta@swap.com'),
-        ('kelstar809', '$2a$10$noryJFgByFccCS/F6XILSeqM.3TqBhmRJ0QtAMPHtlzriqk6rsY8S', 'kelstar809@swap.com'),
-        ('jason', '$2a$10$noryJFgByFccCS/F6XILSeqM.3TqBhmRJ0QtAMPHtlzriqk6rsY8S', 'jason@swap.com'),
-        ('izza', '$2a$10$noryJFgByFccCS/F6XILSeqM.3TqBhmRJ0QtAMPHtlzriqk6rsY8S', 'izza@swap.com'),
-        ('liu', '$2a$10$noryJFgByFccCS/F6XILSeqM.3TqBhmRJ0QtAMPHtlzriqk6rsY8S', 'liu@swap.com'),
-        ('chrisyzeli', '$2a$10$noryJFgByFccCS/F6XILSeqM.3TqBhmRJ0QtAMPHtlzriqk6rsY8S', 'chrisyzeli@swap.com');
+INSERT INTO users (username, email)
+  VALUES('edje-c', 'edje-c@swap.com'),
+        ('ikyomadu', 'ikyomadu@swap.com'),
+        ('xavierbx', 'xavierbx@swap.com'),
+        ('newtonjr', 'newtonjr@swap.com'),
+        ('ferminjan', 'ferminjan@swap.com'),
+        ('doriguzman', 'doriguzman@swap.com'),
+        ('notadocbuta', 'notadocbuta@swap.com'),
+        ('kelstar809', 'kelstar809@swap.com'),
+        ('jason', 'jason@swap.com'),
+        ('izza', 'izza@swap.com'),
+        ('liu', 'liu@swap.com'),
+        ('chrisyzeli', 'chrisyzeli@swap.com');
 
 
 INSERT INTO playlists (creator_id, name, length, date_created, complete)

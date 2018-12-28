@@ -9,7 +9,6 @@
   "dependencies": {
     "bcryptjs": "*",
     "body-parser": "*",
-    "connect-pg-simple": "^5.0.0",
     "cookie-parser": "*",
     "debug": "*",
     "dotenv": "^6.0.0",
@@ -17,8 +16,10 @@
     "express-session": "*",
     "jade": "*",
     "morgan": "*",
+    "nodejs-base64": "^1.0.3",
     "passport": "*",
     "passport-local": "*",
+    "passport-spotify": "^1.0.1",
     "pg-promise": "*",
     "querystring": "*",
     "request": "*",

@@ -28,36 +28,21 @@ class App extends Component {
 
   getUser = () => {
     axios
-      .get('/users/getThisUser')
+      .get('/getThisUser')
       .then(res => {
-        console.log('!!!!1' ,res.data)
         this.setState({
           thisUserID: res.data.user.id,
-          thisUserSpotifyID: res.data.user.spotify_id,
           thisUsername: res.data.user.username,
           profileUsername: res.data.user.username,
           loggedUser: true
         })
-        if(!res.data.user.spotify_id) {
-          spotifyApi.getMe()
-            .then(data => {
-              axios
-                .patch('/users/saveSpotifyID', {
-                  userID: res.data.user.id,
-                  spotifyID: data.id
-                })
-                .then(data => {
-                  this.getUser()
-                })
-            })
-        }
       })
       .catch(err => {this.setState({ loggedUser: false })} )
   }
 
   logoutUser = () => {
     axios
-      .get('/users/logout')
+      .get('/logout')
       .then(res => {
         this.setState({
           thisUsername: '',
@@ -118,7 +103,6 @@ class App extends Component {
   )
 
   render() {
-    // console.log(this.state)
     return (
       <div>
         <Route exact path="/" render={this.redirectToProfile}/>

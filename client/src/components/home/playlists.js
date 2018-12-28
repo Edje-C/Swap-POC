@@ -9,7 +9,7 @@ const Playlists = props => {
   const acceptCollab = e => {
     let playlistID = Number(e.target.dataset.id)
     axios
-      .get(`/users/getPlaylist/${playlistID}`)
+      .get(`/getPlaylist/${playlistID}`)
       .then(res => {
         console.log('resGET' ,res.data)
         modules.getSongs(props.spotifyApi, (res.data.length).toString(), Number(res.data.collaborators))
@@ -30,7 +30,7 @@ const Playlists = props => {
             })
 
             axios
-              .post('/users/acceptCollaboration', {
+              .post('/acceptCollaboration', {
                 playlistID,
                 username: props.thisUsername,
                 tracks: neededData
@@ -57,7 +57,7 @@ const Playlists = props => {
     console.log('!!!!!!!!!!! IT\'S HAPPTNIENG')
     e.persist()
     axios
-      .patch('/users/declineCollaboration', {
+      .patch('/declineCollaboration', {
         playlistID: e.target.dataset.id,
         username: props.thisUsername,
       })
@@ -69,12 +69,12 @@ const Playlists = props => {
 
   const updatePlaylist = playlistID => {
     axios
-      .get(`/users/getPlaylistStatus/${playlistID}`)
+      .get(`/getPlaylistStatus/${playlistID}`)
       .then(res => {
         console.log('playlsit status', res.data)
         if(!res.data.filter(v => v.status === 'p').length) {
           axios
-            .patch('/users/setAsComplete', {playlistID})
+            .patch('/setAsComplete', {playlistID})
             .then(res => {
               props.getPlaylists(props.thisUsername)
             })
@@ -90,7 +90,7 @@ const Playlists = props => {
     e.persist()
     let playlistID = e.target.dataset.id
     axios
-      .get(`/users/getTracks/${playlistID}`)
+      .get(`/getTracks/${playlistID}`)
       .then(res => {
         console.log('hbrefd', res.data, e.target.dataset.name)
         let allUris = res.data.map(v => `spotify:track:${v.track_uri}`)
@@ -110,7 +110,7 @@ const Playlists = props => {
             }
 
             axios
-              .patch('/users/saveURI', {playlistID, playlistURI })
+              .patch('/saveURI', {playlistID, playlistURI })
               .then(res => {
                 console.log(res.data)
                 props.getPlaylists(props.thisUsername)
