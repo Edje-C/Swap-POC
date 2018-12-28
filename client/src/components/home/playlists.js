@@ -133,7 +133,7 @@ const Playlists = props => {
           props.playlists.map(v => (
             <div className="playlist">
               <div className="playlist-name-info">
-                {v.uri ? <a className="playlist-link" href={`http://open.spotify.com/user/${v.spotify_id}/playlist/${v.uri}`} target="_blank">{v.name}<i class="material-icons green">call_made</i></a>: <p>{v.name}</p>}
+                {v.uri ? <a className="playlist-link" href={`http://open.spotify.com/user/${v.creator}/playlist/${v.uri}`} target="_blank">{v.name}<i class="material-icons green">call_made</i></a>: <p>{v.name}</p>}
               </div>
               <div className="playlist-status">
                 {
@@ -141,7 +141,7 @@ const Playlists = props => {
                     <p className="white">{v.date_created.substr(0, 10)}</p>:
                     props.profileUsername === props.thisUsername ?
                       v.complete ?
-                        v.creator_id === props.thisUserID ?
+                        v.creator === props.thisUsername ?
                           <button className="save" data-id={v.id} data-name={v.name} onClick={saveToSpotify}>Save To Spotify<i class="material-icons blue">arrow_downward</i></button> :
                           <p>Ready To Save</p>:
                         v.status === 'p' ?

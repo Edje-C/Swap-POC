@@ -14,7 +14,6 @@ class New extends Component {
       allUsers: [],
       friends: [],
       selectedFriends: [],
-      selectedFriendsIDs: [],
       renderModal: false,
       searchInput: '',
       tracks: [],
@@ -95,7 +94,7 @@ class New extends Component {
             name: this.state.title,
             length: this.state.length,
             date: modules.getDate(),
-            userIDs: this.state.selectedFriendsIDs,
+            usernames: this.state.selectedFriends,
             tracks: neededData
           })
           .then(res => {
@@ -136,13 +135,12 @@ class New extends Component {
     }
     let index = this.state.selectedFriends.indexOf(e.target.dataset.name)
     let newFriendsArr = [...this.state.selectedFriends]
-    let newIDsArr = [...this.state.selectedFriendsIDs]
 
     index > -1 ?
-      (newFriendsArr.splice(index, 1), newIDsArr.splice(index, 1)):
-      (newFriendsArr.push(e.target.dataset.name), newIDsArr.push(Number(e.target.dataset.id)))
+      (newFriendsArr.splice(index, 1)):
+      (newFriendsArr.push(e.target.dataset.name))
 
-    this.setState({selectedFriends: newFriendsArr, selectedFriendsIDs: newIDsArr, length: 0})
+    this.setState({selectedFriends: newFriendsArr, length: 0})
   }
 
   handleInput = e => {
@@ -171,9 +169,9 @@ class New extends Component {
             <input id="add-friend-input" type="text" data-type="searchInput" onChange={this.handleInput} value={this.state.searchInput}/>
             {
               friendsList.filter(v => v.username.includes(this.state.searchInput) && v.username !== this.props.thisUsername).map(v => (
-                <div className="add-friend-container" data-name={v.username} data-id={Number(v.id)} onClick={this.toggleFriend}>
-                  <p data-name={v.username} data-id={Number(v.id)}>{v.username}</p>
-                  <button data-name={v.username} data-id={Number(v.id)}>{this.state.selectedFriends.includes(v.username)? <i class="material-icons background-color" data-name={v.username} data-id={Number(v.id)} onClick={this.toggleFriend}>remove</i> :  <i class="material-icons green" data-name={v.username} data-id={Number(v.id)} onClick={this.toggleFriend}>add</i>}</button>
+                <div className="add-friend-container" data-name={v.username} onClick={this.toggleFriend}>
+                  <p data-name={v.username}>{v.username}</p>
+                  <button data-name={v.username} >{this.state.selectedFriends.includes(v.username)? <i class="material-icons background-color" data-name={v.username} onClick={this.toggleFriend}>remove</i> :  <i class="material-icons green" data-name={v.username} onClick={this.toggleFriend}>add</i>}</button>
                 </div>
               ))
             }
@@ -211,6 +209,7 @@ class New extends Component {
   }
 
   render() {
+    console.log('this.state', this.props)
     return (
       <div id="new">
         {this.state.renderModal ? this.modal() : null}

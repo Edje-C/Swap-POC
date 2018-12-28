@@ -39,7 +39,7 @@ class ProfileRouter extends Component {
 
     if(props.thisUsername !== props.profileUsername) {
       axios
-        .get(`/getFollow/${props.thisUserID}/${props.profileUsername}`)
+        .get(`/getFollow/${props.thisUsername}/${props.profileUsername}`)
         .then(res => {
           this.setState({following: !!res.data[0]})
         });
@@ -78,7 +78,7 @@ class ProfileRouter extends Component {
   getFollowing = () => {
     let {thisUsername, profileUsername} = this.props
     axios
-      .get(thisUsername === profileUsername ? `/getFollowing/${thisUsername}` : `/getOtherFollowing/${this.props.thisUserID}/${profileUsername}`)
+      .get(thisUsername === profileUsername ? `/getFollowing/${thisUsername}` : `/getOtherFollowing/${this.props.thisUsername}/${profileUsername}`)
       .then(res => {
         this.setState({friends: res.data})
       });
@@ -109,12 +109,12 @@ class ProfileRouter extends Component {
   toggleFriend = e => {
     axios
       .post(this.state.following ? '/unfollowUser' : '/followUser', {
-        followerID: this.props.thisUserID,
+        follower: this.props.thisUsername,
         followingUsername: this.props.profileUsername
       })
       .then(res => {
         axios
-          .get(`/getFollow/${this.props.thisUserID}/${this.props.profileUsername}`)
+          .get(`/getFollow/${this.props.thisUsername}/${this.props.profileUsername}`)
           .then(res => {
             this.setState({following: !!res.data[0]})
           });
@@ -124,16 +124,16 @@ class ProfileRouter extends Component {
 
   toggleFollow = e => {
     let unfollowList = this.state.unfollowList,
-        id = Number(e.target.dataset.id)
+        username = Number(e.target.dataset.username)
 
     if(e.target.innerText === 'Unfollow') {
       e.target.innerText = "Follow"
       e.target.className = 'toggle-follow-button'
-      unfollowList.push(id)
+      unfollowList.push(username)
     } else {
       e.target.innerText = "Unfollow"
       e.target.className = 'toggle-unfollow-button'
-      let index = unfollowList.indexOf(id)
+      let index = unfollowList.indexOf(username)
       unfollowList.splice(index, 1)
     }
     this.setState({unfollowList})
@@ -144,8 +144,8 @@ class ProfileRouter extends Component {
       if(this.state.unfollowList[0]) {
         axios
           .post('/unfollowMany', {
-            followerID: this.props.thisUserID,
-            followingIDs: this.state.unfollowList
+            follower: this.props.thisUsername,
+            followings: this.state.unfollowList
           })
           .then(res => {
             this.getFollowing()
@@ -174,7 +174,7 @@ class ProfileRouter extends Component {
             (
               <div className="add-friend-container" data-name={v.username} data-id={Number(v.id)}>
                 <Link to={`/users/${v.username}`} className="add-friend-username" data-username={v.username} onClick={this.changeProfile}>{v.username}</Link>
-                {v.username === this.props.thisUsername ? null : <button className="toggle-unfollow-button" data-name={v.username} data-id={Number(v.id)} onClick={this.toggleFollow}>Unfollow</button>}
+                {v.username === this.props.thisUsername ? null : <button className="toggle-unfollow-button" data-name={v.username} onClick={this.toggleFollow}>Unfollow</button>}
               </div>
             )
           )}
@@ -210,9 +210,7 @@ class ProfileRouter extends Component {
             profileUsername={this.props.profileUsername}
             searchInput={this.state.searchInput}
             spotifyApi={this.props.spotifyApi}
-            thisUserID={this.props.thisUserID}
             thisUsername={this.props.thisUsername}
-            thisUserSpotifyID={this.props.thisUserSpotifyID}
             toggleNew={this.toggleNew}
             usersPlaylists={this.state.usersPlaylists}
             triggerErrorModal={this.triggerErrorModal}

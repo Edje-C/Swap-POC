@@ -13,7 +13,6 @@ class App extends Component {
   constructor(){
     super();
     this.state = {
-      thisUserID: 0,
       thisUsername: '',
       profileUsername: '',
       loggedUser: true,
@@ -31,7 +30,6 @@ class App extends Component {
       .get('/getThisUser')
       .then(res => {
         this.setState({
-          thisUserID: res.data.user.id,
           thisUsername: res.data.user.username,
           profileUsername: res.data.user.username,
           loggedUser: true
@@ -63,9 +61,7 @@ class App extends Component {
   renderProfile = (props) => (
     this.state.loggedUser ?
       <ProfileRouter
-        thisUserID={this.state.thisUserID}
         thisUsername={this.state.thisUsername}
-        thisUserSpotifyID={this.state.thisUserSpotifyID}
         profileUsername={props.match.params.username}
         access_token={this.state.access_token}
         spotifyApi={spotifyApi}

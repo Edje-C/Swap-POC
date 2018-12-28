@@ -21,7 +21,6 @@ class Profile extends Component {
 
   renderPlaylists = () => (
     <Playlists
-      thisUserID={this.props.thisUserID}
       thisUsername={this.props.thisUsername}
       thisUserSpotifyID={this.props.thisUserSpotifyID}
       profileUsername={this.props.profileUsername}

@@ -6,9 +6,13 @@ const getSongsFree = (spotifyApi, length, selectedFriends) => {
     })
     .then(data => {
       //get's random top songs
+
+      if(data.items.length < length) {
+
+      }
+
       let topSongsArr = []
       let nums = []
-
       //assures every song is different
       while(topSongsArr.length < Math.floor(trackCount/3)){
         let num = Math.floor(Math.random()*(data.items.length-1)) + 1;
@@ -95,6 +99,7 @@ const getSongs = (spotifyApi, length, selectedFriends) => {
         limit: 50
       })
       .then(data => {
+        console.log('top and recs', data)
         //get's random top songs
         let topSongsArr = []
         let nums = []

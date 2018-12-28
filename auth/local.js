@@ -24,13 +24,14 @@ passport.use(
       callbackURL: 'http://localhost:3100/callback/'
     },
     function (accessToken, refreshToken, expires_in, profile, done) {
-      let {display_name, email} = profile._json;
+      console.log('pro', profile)
+      let {display_name, id, email} = profile._json;
       data = {
         accessToken,
         refreshToken
       }
       db
-        .one("SELECT * FROM users WHERE username=${display_name}", {display_name})
+        .one("SELECT * FROM users WHERE email=${email}", {email})
         .then(user => {
           debug("user:", user);
           data.user = user
@@ -38,7 +39,7 @@ passport.use(
         })
         .catch(err => {
           db
-            .one("INSERT INTO users (username, email) VALUES (${display_name}, ${email}) RETURNING *", {display_name, email})
+            .one("INSERT INTO users (username, spotify_id, email) VALUES (${display_name}, ${id}, ${email}) RETURNING *", {display_name, id, email})
             .then(user => {
               data.user = user
               return done(null, data);

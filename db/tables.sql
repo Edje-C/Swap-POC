@@ -6,12 +6,13 @@ CREATE DATABASE swap;
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR UNIQUE,
-    email VARCHAR
+    spotify_id VARCHAR,
+    email VARCHAR UNIQUE
 );
 
 CREATE TABLE playlists (
     id SERIAL PRIMARY KEY,
-    creator_id INTEGER REFERENCES users(id),
+    creator VARCHAR REFERENCES users (username),
     name VARCHAR,
     length INTEGER,
     date_created TIMESTAMP,
@@ -20,7 +21,7 @@ CREATE TABLE playlists (
 );
 
 CREATE TABLE tracks (
-    playlist_id INTEGER REFERENCES playlists(id),
+    playlist_id INTEGER REFERENCES playlists (id),
     track_uri VARCHAR,
     name VARCHAR,
     duration VARCHAR,
@@ -29,42 +30,42 @@ CREATE TABLE tracks (
 );
 
 CREATE TABLE friends (
-    follower_id INTEGER REFERENCES users(id),
-    following_id INTEGER REFERENCES users(id)
+    follower VARCHAR REFERENCES users (username),
+    following VARCHAR REFERENCES users (username)
 );
 
 CREATE TABLE collaborations (
-    playlist_id INTEGER REFERENCES playlists(id),
-    user_id INTEGER REFERENCES users(id),
+    playlist_id INTEGER REFERENCES playlists (id),
+    username VARCHAR REFERENCES users (username),
     status CHAR DEFAULT 'p'
 );
 
 
-INSERT INTO users (username, email)
-  VALUES('edje-c', 'edje-c@swap.com'),
-        ('ikyomadu', 'ikyomadu@swap.com'),
-        ('xavierbx', 'xavierbx@swap.com'),
-        ('newtonjr', 'newtonjr@swap.com'),
-        ('ferminjan', 'ferminjan@swap.com'),
-        ('doriguzman', 'doriguzman@swap.com'),
-        ('notadocbuta', 'notadocbuta@swap.com'),
-        ('kelstar809', 'kelstar809@swap.com'),
-        ('jason', 'jason@swap.com'),
-        ('izza', 'izza@swap.com'),
-        ('liu', 'liu@swap.com'),
-        ('chrisyzeli', 'chrisyzeli@swap.com');
+INSERT INTO users (username, spotify_id, email)
+  VALUES('edje-c', 'edje-c','edje-c@swap.com'),
+        ('ikyomadu', 'ikyomadu', 'ikyomadu@swap.com'),
+        ('xavierbx', 'xavierbx', 'xavierbx@swap.com'),
+        ('newtonjr', 'newtonjr', 'newtonjr@swap.com'),
+        ('ferminjan', 'ferminjan', 'ferminjan@swap.com'),
+        ('doriguzman', 'doriguzman', 'doriguzman@swap.com'),
+        ('notadocbuta', 'notadocbuta', 'notadocbuta@swap.com'),
+        ('kelstar809', 'kelstar809', 'kelstar809@swap.com'),
+        ('jason', 'jason', 'jason@swap.com'),
+        ('izza', 'izza', 'izza@swap.com'),
+        ('liu', 'liu', 'liu@swap.com'),
+        ('chrisyzeli', 'chrisyzeli', 'chrisyzeli@swap.com');
 
 
-INSERT INTO playlists (creator_id, name, length, date_created, complete)
-  VALUES(1, 'New Beginnings', 15, '05/01/2018 14:05:06', true),
-        (1, 'Road Trip With Losers', 96, '05/03/2018 11:12:16', true),
-        (7, 'Jams', 56, '05/05/2018 20:01:12', true),
-        (3, 'Quality and Trash', 30, '05/05/2018 22:15:14', true),
-        (1, 'Today''s A Good One', 50, '05/07/2018 14:34:43', true),
-        (6, 'Poppin Playlist Remix', 60, '05/09/2018 16:05:06', true),
-        (2, '音楽は癒しです', 10, '05/10/2018 23:05:46', false),
-        (4, 'That Mix', 72, '05/10/2018 23:45:45', false),
-        (5, 'Música Para Las Chicas', 80, '05/15/2018 11:27:17', true);
+INSERT INTO playlists (creator, name, length, date_created, complete)
+  VALUES('edje-c', 'New Beginnings', 15, '05/01/2018 14:05:06', true),
+        ('edje-c', 'Road Trip With Losers', 96, '05/03/2018 11:12:16', true),
+        ('notadocbuta', 'Jams', 56, '05/05/2018 20:01:12', true),
+        ('xavierbx', 'Quality and Trash', 30, '05/05/2018 22:15:14', true),
+        ('edje-c', 'Today''s A Good One', 50, '05/07/2018 14:34:43', true),
+        ('doriguzman', 'Poppin Playlist Remix', 60, '05/09/2018 16:05:06', true),
+        ('ikyomadu', '音楽は癒しです', 10, '05/10/2018 23:05:46', false),
+        ('newtonjr', 'That Mix', 72, '05/10/2018 23:45:45', false),
+        ('ferminjan', 'Música Para Las Chicas', 80, '05/15/2018 11:27:17', true);
 
 INSERT INTO tracks (playlist_id, track_uri, name, duration, artists, album)
   VALUES(1, '34xTFwjPQ1dC6uJmleno7x', 'Godspeed', '2:57', 'Frank Ocean', 'Blonde'),
@@ -83,49 +84,49 @@ INSERT INTO tracks (playlist_id, track_uri, name, duration, artists, album)
         (1, '4L2K7JKseFCBoHMZEAszW0', 'Jealous', '4:47', 'Labrinth', 'Jealous'),
         (1, '5q5gzmbBS5yQzos2BvVr1t', 'Nights With You', '3:17', 'MØ', 'Nights With You');
 
-INSERT INTO friends (follower_id, following_id)
-  VALUES(5, 1),
-        (1, 5),
-        (4, 1),
-        (6, 1),
-        (1, 4),
-        (6, 5),
-        (7, 6),
-        (6, 7),
-        (1, 6),
-        (5, 6),
-        (3, 6),
-        (1, 2),
-        (3, 1),
-        (1, 3),
-        (6, 3),
-        (2, 1);
+INSERT INTO friends (follower, following)
+  VALUES('ferminjan', 'edje-c'),
+        ('edje-c', 'ferminjan'),
+        ('newtonjr', 'edje-c'),
+        ('doriguzman', 'edje-c'),
+        ('edje-c', 'newtonjr'),
+        ('doriguzman', 'ferminjan'),
+        ('notadocbuta', 'doriguzman'),
+        ('doriguzman', 'notadocbuta'),
+        ('edje-c', 'doriguzman'),
+        ('ferminjan', 'doriguzman'),
+        ('xavierbx', 'doriguzman'),
+        ('edje-c', 'ikyomadu'),
+        ('xavierbx', 'edje-c'),
+        ('edje-c', 'xavierbx'),
+        ('doriguzman', 'xavierbx'),
+        ('ikyomadu', 'edje-c');
 
-INSERT INTO collaborations (playlist_id, user_id, status)
-  VALUES(1, 6, 'a'),
-        (1, 5, 'a'),
-        (2, 7, 'a'),
-        (2, 2, 'a'),
-        (2, 3, 'a'),
-        (2, 4, 'a'),
-        (3, 1, 'a'),
-        (3, 3, 'a'),
-        (3, 4, 'a'),
-        (4, 5, 'a'),
-        (4, 1, 'a'),
-        (5, 6, 'a'),
-        (5, 4, 'a'),
-        (5, 5, 'a'),
-        (5, 3, 'a'),
-        (6, 5, 'a'),
-        (6, 4, 'a'),
-        (6, 3, 'a'),
-        (7, 1, 'p'),
-        (8, 5, 'a'),
-        (8, 3, 'a'),
-        (8, 1, 'p'),
-        (8, 6, 'a'),
-        (8, 7, 'a'),
-        (9, 6, 'a'),
-        (9, 3, 'a'),
-        (9, 7, 'a');
+INSERT INTO collaborations (playlist_id, username, status)
+  VALUES(1, 'doriguzman', 'a'),
+        (1, 'ferminjan', 'a'),
+        (2, 'notadocbuta', 'a'),
+        (2, 'ikyomadu', 'a'),
+        (2, 'xavierbx', 'a'),
+        (2, 'newtonjr', 'a'),
+        (3, 'edje-c', 'a'),
+        (3, 'xavierbx', 'a'),
+        (3, 'newtonjr', 'a'),
+        (4, 'ferminjan', 'a'),
+        (4, 'edje-c', 'a'),
+        (5, 'doriguzman', 'a'),
+        (5, 'newtonjr', 'a'),
+        (5, 'ferminjan', 'a'),
+        (5, 'xavierbx', 'a'),
+        (6, 'ferminjan', 'a'),
+        (6, 'newtonjr', 'a'),
+        (6, 'xavierbx', 'a'),
+        (7, 'edje-c', 'p'),
+        (8, 'ferminjan', 'a'),
+        (8, 'xavierbx', 'a'),
+        (8, 'edje-c', 'p'),
+        (8, 'doriguzman', 'a'),
+        (8, 'notadocbuta', 'a'),
+        (9, 'doriguzman', 'a'),
+        (9, 'xavierbx', 'a'),
+        (9, 'notadocbuta', 'a');

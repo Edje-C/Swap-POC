@@ -20,7 +20,7 @@ router.get("/getTracks/:playlistID", db.getTracksForPlaylist)
 router.get("/getCollaborators/:playlistID", db.getCollaboratorsForPlaylist)
 router.get("/getFollowers/:username", db.getFollowers)
 router.get("/getFollowing/:username", db.getFollowing)
-router.get("/getOtherFollowing/:thisUserID/:otherUsername", db.getOtherFollowing)
+router.get("/getOtherFollowing/:thisUsername/:otherUsername", db.getOtherFollowing)
 router.get("/getFollow/:followerID/:followingUsername", db.getFollow)
 router.get("/getPlaylistStatus/:playlistID", db.getPlaylistStatus)
 
