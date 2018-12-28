@@ -2,28 +2,6 @@ const db = require("./index");
 const authHelpers = require("../auth/helpers");
 const passport = require("../auth/local");
 
-exports.register = (req, res) => {
-  const hash = authHelpers.createHash(req.body.password);
-  db
-    .one("INSERT INTO users (username, password_digest, email) VALUES (${username}, ${password}, ${email}) RETURNING username",
-    {
-      username: req.body.username,
-      password: hash,
-      email: req.body.email
-    })
-    .then((data) => {
-      res
-        .status(200)
-        .json({data: data});
-    })
-    .catch(err => {
-      res.status(500)
-        .json({
-          message: `Something went wrong: ${err}`
-        })
-    })
-}
-
 exports.getThisUser = (req, res) => {
   db
     .one("SELECT id, username, spotify_id, email FROM users WHERE username=${username}", {username: req.user.username})
@@ -211,7 +189,6 @@ exports.createPlaylist = (req, res) => {
             .json({status: 'Success'})
         })
         .catch(err => {
-          console.log('fdshfjlk', data.id)
           db
             .none("DELETE FROM playlists WHERE id = ${playlistID}", {playlistID: data.id})
             .then(data => {
@@ -329,21 +306,6 @@ exports.setAsComplete = (req, res) => {
 exports.savePlaylistURI = (req, res) => {
   db
     .none("UPDATE playlists SET uri = ${uri} WHERE id = ${playlistID}", {playlistID: req.body.playlistID, uri: req.body.playlistURI})
-    .then(data => {
-      res
-        .status(200)
-        .json({status: 'Success'})
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .json({status: 'Failed'})
-    })
-}
-
-exports.saveSpotifyID = (req, res) => {
-  db
-    .none("UPDATE users SET spotify_id = ${spotifyID} WHERE id = ${userID}", {userID: req.body.userID, spotifyID: req.body.spotifyID})
     .then(data => {
       res
         .status(200)

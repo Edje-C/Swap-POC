@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 class Search extends Component {
   constructor(){
@@ -8,7 +8,6 @@ class Search extends Component {
   }
 
   render(){
-    // console.log('!!!!!!!!!PROPS', this.props)
     let {users, search, thisUsername, changeProfile} = this.props
     return (
       <div id="search">

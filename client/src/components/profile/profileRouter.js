@@ -39,14 +39,14 @@ class ProfileRouter extends Component {
 
     if(props.thisUsername !== props.profileUsername) {
       axios
-        .get(`/users/getFollow/${props.thisUserID}/${props.profileUsername}`)
+        .get(`/getFollow/${props.thisUserID}/${props.profileUsername}`)
         .then(res => {
           this.setState({following: !!res.data[0]})
         });
     }
 
     axios
-      .get('/users/getAllUsers')
+      .get('/getAllUsers')
       .then(res => {
         this.setState({allUsers: res.data.user})
       });
@@ -68,9 +68,8 @@ class ProfileRouter extends Component {
 
   getPlaylists = (username) => {
     axios
-      .get(`/users/getPlaylists/${username}`)
+      .get(`/getPlaylists/${username}`)
       .then(res => {
-        console.log('logging get playlist response', res)
         this.setState({usersPlaylists: res.data})
       })
       .catch(err => {console.log(err)})
@@ -79,7 +78,7 @@ class ProfileRouter extends Component {
   getFollowing = () => {
     let {thisUsername, profileUsername} = this.props
     axios
-      .get(thisUsername === profileUsername ? `/users/getFollowing/${thisUsername}` : `/users/getOtherFollowing/${this.props.thisUserID}/${profileUsername}`)
+      .get(thisUsername === profileUsername ? `/getFollowing/${thisUsername}` : `/getOtherFollowing/${this.props.thisUserID}/${profileUsername}`)
       .then(res => {
         this.setState({friends: res.data})
       });
@@ -88,7 +87,7 @@ class ProfileRouter extends Component {
   changeProfile = e => {
     let username = e.target.dataset.username
     axios
-      .get(`/users/getUser/${username}`)
+      .get(`/getUser/${username}`)
       .then(res => {
         this.getFollowing()
         this.getPlaylists(username)
@@ -109,15 +108,14 @@ class ProfileRouter extends Component {
 
   toggleFriend = e => {
     axios
-      .post(this.state.following ? '/users/unfollowUser' : '/users/followUser', {
+      .post(this.state.following ? '/unfollowUser' : '/followUser', {
         followerID: this.props.thisUserID,
         followingUsername: this.props.profileUsername
       })
       .then(res => {
         axios
-          .get(`/users/getFollow/${this.props.thisUserID}/${this.props.profileUsername}`)
+          .get(`/getFollow/${this.props.thisUserID}/${this.props.profileUsername}`)
           .then(res => {
-            console.log('get follow', res.data)
             this.setState({following: !!res.data[0]})
           });
       })
@@ -145,7 +143,7 @@ class ProfileRouter extends Component {
     if(e.target.className === 'modal' || e.target.className === 'modal-cancel'){
       if(this.state.unfollowList[0]) {
         axios
-          .post('/users/unfollowMany', {
+          .post('/unfollowMany', {
             followerID: this.props.thisUserID,
             followingIDs: this.state.unfollowList
           })
@@ -220,12 +218,11 @@ class ProfileRouter extends Component {
             triggerErrorModal={this.triggerErrorModal}
           />
         ) :
-        window.location = "https://spotify-swap.herokuapp.com/users/spotifyLogin") :
+        window.location = "https://spotify-swap.herokuapp.com/users/auth/login") :
       <div>Loading</div>
   }
 
   render() {
-    // console.log('PR', this.state, this.props)
     let {thisUsername, profileUsername} = this.props
     return (
       <div  id="profile">

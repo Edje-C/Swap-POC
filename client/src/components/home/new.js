@@ -25,13 +25,12 @@ class New extends Component {
 
   componentDidMount(){
     axios
-      .get('/users/getAllUsers')
+      .get('/getAllUsers')
       .then(res => {this.setState({allUsers: res.data.user})});
 
     axios
-      .get(`/users/getFollowing/${this.props.thisUsername}`)
+      .get(`/getFollowing/${this.props.thisUsername}`)
       .then(res => {
-        // console.log('res.data')
         this.setState({friends: res.data})
       });
 
@@ -74,7 +73,6 @@ class New extends Component {
 
     modules.getSongs(this.props.spotifyApi, this.state.length, this.state.selectedFriends.length)
       .then(data => {
-        console.log('DATA!', data)
         if(!data || !data[0]) {
           this.props.triggerErrorModal('getting songs from your Spotify account')
           return
@@ -91,7 +89,7 @@ class New extends Component {
             })
 
         axios
-          .post('/users/createPlaylist', {
+          .post('/createPlaylist', {
             username: this.props.thisUsername,
             name: this.state.title,
             length: this.state.length,
@@ -108,16 +106,13 @@ class New extends Component {
           });
         })
         .catch(err => {
-          console.log('NAH')
           this.props.triggerErrorModal('getting songs from your Spotify account')
         })
   }
 
 
   setLength = e => {
-    console.log('setting length')
     let length = e.target.dataset.length, subNum = Math.floor(25/(this.state.selectedFriends.length+1)) * (this.state.selectedFriends.length+1)
-    console.log(subNum)
     this.setState({
       length: length > 15 && length < 210 ? Number(length) : subNum
     })
@@ -152,7 +147,6 @@ class New extends Component {
   handleInput = e => {
     let name = e.target.dataset.type
     let value = e.target.value
-    console.log(value, value.length)
     if(name === 'title') {
       if (value.length === 30){
         this.setState({[name]: value})
@@ -216,7 +210,6 @@ class New extends Component {
   }
 
   render() {
-    console.log('new', this.state)
     return (
       <div id="new">
         {this.state.renderModal ? this.modal() : null}

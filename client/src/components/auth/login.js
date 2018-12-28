@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios'
 import '../../CSS/auth.css'
 
@@ -52,13 +51,9 @@ class Login extends Component {
             <p className="logo-name">Swap</p>
           </div>
           <form onSubmit={this.loginUser} className="auth-form">
-            <input className="auth-input" data-type='username' type="text" value={this.state.username} onChange={this.handleInput} placeholder="Username"/>
-            <input className="auth-input" data-type='password' type="password" value={this.state.password} onChange={this.handleInput} placeholder="Password"/>
-            <input className="auth-submit" type="submit" value="Login"/>
+            <a href="/auth/login" className="auth-submit">LOGIN</a>
           </form>
-          <p className={`auth-message ${this.state.messageClassName}`}>{this.state.message}</p>
         </div>
-        <p className="auth-link">Don't have an account yet? <Link to="/register">Register</Link></p>
       </div>
     );
   }

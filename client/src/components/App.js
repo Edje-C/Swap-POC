@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import Login from './auth/login.js'
-import Register from './auth/register.js'
 import ProfileRouter from './profile/profileRouter.js'
 import Access from './auth/getAccess';
 
@@ -28,9 +27,8 @@ class App extends Component {
 
   getUser = () => {
     axios
-      .get('/users/getThisUser')
+      .get('/getThisUser')
       .then(res => {
-        console.log('!!!!1' ,res.data)
         this.setState({
           thisUserID: res.data.user.id,
           thisUserSpotifyID: res.data.user.spotify_id,
@@ -38,26 +36,13 @@ class App extends Component {
           profileUsername: res.data.user.username,
           loggedUser: true
         })
-        if(!res.data.user.spotify_id) {
-          spotifyApi.getMe()
-            .then(data => {
-              axios
-                .patch('/users/saveSpotifyID', {
-                  userID: res.data.user.id,
-                  spotifyID: data.id
-                })
-                .then(data => {
-                  this.getUser()
-                })
-            })
-        }
       })
       .catch(err => {this.setState({ loggedUser: false })} )
   }
 
   logoutUser = () => {
     axios
-      .get('/users/logout')
+      .get('/logout')
       .then(res => {
         this.setState({
           thisUsername: '',
@@ -97,13 +82,6 @@ class App extends Component {
       <Login getUser={this.getUser}/>
   )
 
-
-  renderRegister = () => (
-    this.state.thisUsername ?
-      <Redirect to={`/users/${this.state.thisUsername}`} /> :
-      <Register getUser={this.getUser}/>
-  )
-
   redirectToProfile = () => (
     this.state.loggedUser ?
       <Redirect to={`/users/${this.state.thisUsername}`} /> :
@@ -123,7 +101,6 @@ class App extends Component {
         <Route exact path="/" render={this.redirectToProfile}/>
         <Route exact path="/users" render={this.redirectToProfile}/>
         <Route path="/login" render={this.renderLogin} />
-        <Route path="/register" render={this.renderRegister} />
         <Route path="/access" render={this.renderAccess}/>
         <Route path="/users/:username" render={this.renderProfile} />
       </div>

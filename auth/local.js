@@ -1,38 +1,50 @@
 const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
+const SpotifyStrategy = require('passport-spotify').Strategy
 const db = require("../db/index");
 const init = require("./passport");
-const authHelpers = require("./helpers");
 const debug = require("debug")("auth:local");
+
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').load();
+}
+
+let { client_id, client_secret } = process.env
 
 const options = {};
 
 init();
 
 passport.use(
-    // getting username and password from req.body
-    new LocalStrategy(options, (username, password, done) => {
-        debug("trying to authenticate")
-        db
-        .any("SELECT * FROM users WHERE username=${username}", {username})
-        .then(rows => {
-            const user = rows[0];
-            debug("user:", user);
-            if(!user) {
-              return done(null, false);
-            }
-            if(!authHelpers.comparePass(password, user.password_digest)) {
-              return done('pass nuh match', false);
-            } else {
-              return done(null, user);
-            }
+  new SpotifyStrategy(
+    {
+      clientID: client_id,
+      clientSecret: client_secret,
+      callbackURL: 'https://spotify-swap.herokuapp.com/callback'
+    },
+    function (accessToken, refreshToken, expires_in, profile, done) {
+      let {display_name, id, email} = profile._json;
+      data = {
+        accessToken,
+        refreshToken
+      }
+      db
+        .one("SELECT * FROM users WHERE email=${email}", {email})
+        .then(user => {
+          debug("user:", user);
+          data.user = user
+          return done(null, data);
         })
         .catch(err => {
-            debug("error:", err);
-            console.log('err', err)
-            return done(err)
+          db
+            .one("INSERT INTO users (username, spotify_id, email) VALUES (${display_name}, ${id}, ${email}) RETURNING *", {display_name, id, email})
+            .then(user => {
+              data.user = user
+              return done(null, data);
+            })
+          debug("error:", err);
         })
-    })
+    }
+  )
 );
 
 
