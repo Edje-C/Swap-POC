@@ -101,7 +101,7 @@ class App extends Component {
       <div>
         <Switch>
           <Route exact path="/" render={this.redirectToProfile}/>
-          <Route path="/users" render={this.redirectToProfile}/>
+          <Route exact path="/users" render={this.redirectToProfile}/>
           <Route path="/login" render={this.renderLogin} />
           <Route path="/access" render={this.renderAccess}/>
           <Route path="/users/:username" render={this.renderProfile} />
