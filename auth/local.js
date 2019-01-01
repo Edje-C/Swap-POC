@@ -10,8 +10,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 let { client_id, client_secret } = process.env
 
-const options = {};
-
 init();
 
 passport.use(

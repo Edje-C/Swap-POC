@@ -36,10 +36,7 @@ router.patch("/setAsComplete", db.setAsComplete)
 
 
 
-
 // ~ * Spotify * ~ //
-
-var redirect_uri = 'http://localhost:3100/callback/';
 
 /**
  * Generates a random string containing numbers and letters
