@@ -51,7 +51,7 @@ class Login extends Component {
             <p className="logo-name">Swap</p>
           </div>
           <form onSubmit={this.loginUser} className="auth-form">
-            <a href="https://spotify-swap.herokuapp.com/auth/login" className="auth-submit">LOGIN</a>
+            <a href="https://spotify-swap.herokuapp.com/spotify-login" className="auth-submit">LOGIN</a>
           </form>
         </div>
       </div>

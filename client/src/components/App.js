@@ -85,7 +85,7 @@ class App extends Component {
   redirectToProfile = () => (
     this.state.loggedUser ?
       <Redirect to={`/users/${this.state.thisUsername}`} /> :
-      <Redirect to="/login" />
+      <div>Nothing to see herel, folks . . .</div>
   )
 
   renderAccess = () => (

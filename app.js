@@ -42,45 +42,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 app.use('/', index);
-
-/**
- * Generates a random string containing numbers and letters
- * @param  {number} length The length of the string
- * @return {string} The generated string
- */
-
-var generateRandomString = function(length) {
-  var text = '';
-  var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-  for (var i = 0; i < length; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return text;
-};
-
-var stateKey = generateRandomString(16)
-
-
-///////////////////////////////////////////////////////////////////////
-
-app.get('/', function(req, res) {
-  res.send('respond with a resource');
-});
-
-app.get("/auth/login", passport.authenticate("spotify", {
-    scope: ['user-read-private', 'user-read-email', 'user-library-read', 'user-top-read', 'user-follow-read', 'playlist-modify-private', 'playlist-modify-public', 'playlist-read-collaborative'],
-    showDialog: true,
-    'state': stateKey
-  }), function(req, res){}
-);
-
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '/client/build/index.html'));
-});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
