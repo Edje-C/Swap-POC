@@ -13,33 +13,12 @@ class Login extends Component {
     }
   }
 
-  handleInput = e => {
-    this.setState({
-      [e.target.dataset.type]: e.target.value
-    })
-  }
-
-  loginUser = e => {
-    let {username, password} = this.state
-
-    e.preventDefault()
-
-    if(!username || !password) {
-      this.setState({message: 'Please complete form.', messageClassName: 'auth-message'})
-      return
-    }
-
+  loginUser = () => {
     axios
-      .post('/users/login', {
-          username: username,
-          password: password
-        })
-        .then(res => {
-          this.props.getUser()
-        })
-        .catch(err => {
-          this.setState({message: 'Username or password is incorrect.', messageClassName: 'auth-message'})
-        });
+      .get('/spotify-login')
+      .then((req, res) => {
+        console.log(req, res)
+      });
   }
 
   render() {
@@ -51,7 +30,8 @@ class Login extends Component {
             <p className="logo-name">Swap</p>
           </div>
           <div className="auth-form">
-            <a href="https://spotify-swap.herokuapp.com/auth" className="auth-submit">LOGIN</a>
+            <a href="https://spotify-swap.herokuapp.com/spotify-login" className="auth-submit">LOGIN</a>
+            {/* <div onClick={this.loginUser} className="auth-submit">LOGIN</div> */}
           </div>
         </div>
       </div>

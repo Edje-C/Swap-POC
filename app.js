@@ -1,10 +1,10 @@
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var cors = require('cors');
+var {generateRandomString} = require('./routes/helpers');
 
 const session = require('express-session');
 const passport = require('passport');
@@ -12,6 +12,8 @@ const passport = require('passport');
 var index = require('./routes/index');
 
 var app = express();
+
+// app.use(express.static(path.join(__dirname, 'client/build'))).use(cors());
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -29,26 +31,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(express.static(path.join(__dirname, 'client/build'))).use(cors());
-
-/**
- * Generates a random string containing numbers and letters
- * @param  {number} length The length of the string
- * @return {string} The generated string
- */
-
-var generateRandomString = function(length) {
-  var text = '';
-  var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-  for (var i = 0; i < length; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return text;
-};
-
-var stateKey = generateRandomString(16)
-
 app.use('/', index);
 
 app.get("/spotify-login", 
@@ -64,7 +46,7 @@ app.get("/spotify-login",
       'playlist-read-collaborative'
     ],
     showDialog: true,
-    'state': stateKey
+    'state': generateRandomString(16)
   }), 
   function(req, res){}
 );
@@ -72,8 +54,6 @@ app.get("/spotify-login",
 app.get('/callback', passport.authenticate("spotify", {
   failureRedirect: 'https://spotify-swap.herokuapp.com/login'}), 
   (req, res, body) => {
-    // your application requests refresh and access tokens
-    // after checking the state parameter
 
     var user = req.session.passport.user;
 
@@ -83,7 +63,6 @@ app.get('/callback', passport.authenticate("spotify", {
 
     var accessToken = user.accessToken
     var refreshToken = user.refreshToken
-
 
     res.redirect('https://spotify-swap.herokuapp.com/access/#' +
       querystring.stringify({
@@ -95,7 +74,7 @@ app.get('/callback', passport.authenticate("spotify", {
 );
 
 app.get('*', (req, res) => {
-  res.sendfile(__dirname + '/client/build/index.html');
+  res.sendFile(path.join(__dirname, '/client/build/index.html'));
 });
 
 // catch 404 and forward to error handler

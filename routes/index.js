@@ -1,14 +1,15 @@
 var express = require('express');
-var request = require('request');
 var router = express.Router();
-var querystring = require('querystring');
 
 const {loginRequired} = require("../auth/helpers");
-const passport = require("../auth/local");
 const db = require("../db/queries");
 
-router.get("/logout", loginRequired, db.logout)
 
+router.get('/', function(req, res) {
+  res.send('respond with a resource');
+});
+
+router.get("/logout", loginRequired, db.logout)
 router.get("/getThisUser", loginRequired, db.getThisUser)
 router.get("/getAllUsers", db.getAllUsers)
 router.get("/getUser/:username", db.getUser)
@@ -29,20 +30,7 @@ router.post("/followUser", db.followUser)
 router.post("/unfollowUser", db.unfollowUser)
 router.post("/unfollowMany", db.unfollowMany)
 router.post("/acceptCollaboration", db.acceptCollaboration)
-
 router.patch("/declineCollaboration", db.declineCollaboration)
 router.patch("/setAsComplete", db.setAsComplete)
-
-
-
-// ~ * Spotify * ~ //
-
-
-///////////////////////////////////////////////////////////////////////
-
-router.get('/', function(req, res) {
-  res.send('respond with a resource');
-});
-
 
 module.exports = router;
