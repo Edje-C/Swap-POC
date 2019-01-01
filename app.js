@@ -41,7 +41,7 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.use('/', index);
 
@@ -95,7 +95,7 @@ res.redirect('https://spotify-swap.herokuapp.com/access/#' +
 });
 
 app.get('*', (req, res) => {
-  res.sendfile(__dirname + '/frontend/build/index.html');
+  res.sendfile(__dirname + '/client/build/index.html');
 });
 
 // catch 404 and forward to error handler
