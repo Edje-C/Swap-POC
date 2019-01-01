@@ -1,5 +1,5 @@
 const passport = require("passport");
-const SpotifyStrategy = require('passport-spotify').Strategy
+const SpotifyStrategy = require('passport-spotify').Strategy;
 const db = require("../db/index");
 const init = require("./passport");
 const debug = require("debug")("auth:local");

@@ -1,5 +1,3 @@
-const db = require("../db/index");
-
 function loginRequired(req, res, next) {
   if(!req.user) {
     res.status(401)
@@ -12,5 +10,5 @@ function loginRequired(req, res, next) {
 }
 
 module.exports = {
-    loginRequired
+  loginRequired
 };
