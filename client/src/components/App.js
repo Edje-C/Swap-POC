@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Route, Redirect, Switch } from 'react-router-dom';
 import axios from 'axios';
 import Login from './auth/login.js'
 import ProfileRouter from './profile/profileRouter.js'
@@ -15,7 +15,7 @@ class App extends Component {
       thisUserID: 0,
       thisUsername: '',
       profileUsername: '',
-      loggedUser: true,
+      loggedUser: false,
       access_token: '',
       refresh_token: ''
     }
@@ -96,13 +96,16 @@ class App extends Component {
   )
 
   render() {
+    console.log(this.state)
     return (
       <div>
-        <Route exact path="/" render={this.redirectToProfile}/>
-        <Route exact path="/users" render={this.redirectToProfile}/>
-        <Route path="/login" render={this.renderLogin} />
-        <Route path="/access" render={this.renderAccess}/>
-        <Route path="/users/:username" render={this.renderProfile} />
+        <Switch>
+          <Route exact path="/" render={this.redirectToProfile}/>
+          <Route path="/users" render={this.redirectToProfile}/>
+          <Route path="/login" render={this.renderLogin} />
+          <Route path="/access" render={this.renderAccess}/>
+          <Route path="/users/:username" render={this.renderProfile} />
+        </Switch>
       </div>
     );
   }
