@@ -13,38 +13,26 @@ var index = require('./routes/index');
 
 var app = express();
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'client/build'))).use(cors());
 
 // Middle Ware
 app.use(
   session({
-  secret: "\x02\xf3\xf7r\t\x9f\xee\xbbu\xb1\xe1\x90\xfe'\xab\xa6L6\xdd\x8d[\xccO\xfe",
+    secret: "\x02\xf3\xf7r\t\x9f\xee\xbbu\xb1\xe1\x90\xfe'\xab\xa6L6\xdd\x8d[\xccO\xfe",
   resave: false,
   saveUninitialized: true
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(express.static(path.join(__dirname, 'client/build'))).use(cors());
 
 app.use('/', index);
-
 
 /**
  * Generates a random string containing numbers and letters
@@ -65,34 +53,48 @@ var generateRandomString = function(length) {
 var stateKey = generateRandomString(16)
 
 
-app.get("/spotify-login", passport.authenticate("spotify", {
-  scope: ['user-read-private', 'user-read-email', 'user-library-read', 'user-top-read', 'user-follow-read', 'playlist-modify-private', 'playlist-modify-public', 'playlist-read-collaborative'],
-  showDialog: true,
-  'state': stateKey
-}), function(req, res){}
+app.get("/spotify-login", 
+  passport.authenticate("spotify", {
+    scope: [
+      'user-read-private', 
+      'user-read-email', 
+      'user-library-read', 
+      'user-top-read', 
+      'user-follow-read', 
+      'playlist-modify-private', 
+      'playlist-modify-public', 
+      'playlist-read-collaborative'
+    ],
+    showDialog: true,
+    'state': stateKey
+  }), 
+  function(req, res){}
 );
 
-app.get('/callback', passport.authenticate("spotify", {failureRedirect: 'https://spotify-swap.herokuapp.com/login'}), (req, res, body) => {
-// your application requests refresh and access tokens
-// after checking the state parameter
+app.get('/callback', passport.authenticate("spotify", {
+  failureRedirect: 'https://spotify-swap.herokuapp.com/login'}), 
+  (req, res, body) => {
+    // your application requests refresh and access tokens
+    // after checking the state parameter
 
-var user = req.session.passport.user;
+    var user = req.session.passport.user;
 
-if (user.access_token || user.refresh_token) {
-  res.redirect('https://spotify-swap.herokuapp.com/login');
-}
+    if (user.access_token || user.refresh_token) {
+      res.redirect('https://spotify-swap.herokuapp.com/login');
+    }
 
-var accessToken = user.accessToken
-var refreshToken = user.refreshToken
+    var accessToken = user.accessToken
+    var refreshToken = user.refreshToken
 
 
-res.redirect('https://spotify-swap.herokuapp.com/access/#' +
-  querystring.stringify({
-    access_token: accessToken,
-    refresh_token: refreshToken
-  })
+    res.redirect('https://spotify-swap.herokuapp.com/access/#' +
+      querystring.stringify({
+        access_token: accessToken,
+        refresh_token: refreshToken
+      })
+    );
+  }
 );
-});
 
 app.get('*', (req, res) => {
   res.sendfile(__dirname + '/client/build/index.html');
