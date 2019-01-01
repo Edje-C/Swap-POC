@@ -48,6 +48,7 @@ var generateRandomString = function(length) {
 
 var stateKey = generateRandomString(16)
 
+app.use('/', index);
 
 app.get("/spotify-login", 
   passport.authenticate("spotify", {
@@ -91,11 +92,8 @@ app.get('/callback', passport.authenticate("spotify", {
     );
   }
 );
-
-app.use('/', index);
-
 app.get('*', (req, res) => {
-  res.sendfile(__dirname + '/client/build/index.html');
+  res.sendfile(__dirname + '/client/public/index.html');
 });
 
 // catch 404 and forward to error handler

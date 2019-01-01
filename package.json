@@ -7,21 +7,21 @@
     "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
   },
   "dependencies": {
-    "body-parser": "*",
-    "cookie-parser": "*",
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.3",
     "cors": "^2.8.5",
-    "debug": "*",
-    "dotenv": "*",
-    "express": "*",
-    "express-session": "*",
-    "jade": "*",
-    "morgan": "*",
-    "passport": "*",
-    "passport-spotify": "*",
-    "pg-promise": "*",
-    "querystring": "*",
-    "request": "*",
-    "serve-favicon": "*"
+    "debug": "^4.1.1",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "jade": "^1.11.0",
+    "morgan": "^1.9.1",
+    "passport": "^0.4.0",
+    "passport-spotify": "^1.0.1",
+    "pg-promise": "^8.5.4",
+    "querystring": "^0.2.0",
+    "request": "^2.88.0",
+    "serve-favicon": "^2.5.0"
   },
   "devDependencies": {
     "nodemon": "*"
