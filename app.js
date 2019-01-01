@@ -13,8 +13,6 @@ var index = require('./routes/index');
 
 var app = express();
 
-// uncomment after placing your favicon in /public
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -31,8 +29,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'client/build'))).use(cors());
-
-app.use('/', index);
 
 /**
  * Generates a random string containing numbers and letters
@@ -95,6 +91,8 @@ app.get('/callback', passport.authenticate("spotify", {
     );
   }
 );
+
+app.use('/', index);
 
 app.get('*', (req, res) => {
   res.sendfile(__dirname + '/client/build/index.html');
