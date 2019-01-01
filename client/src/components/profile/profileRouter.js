@@ -218,7 +218,7 @@ class ProfileRouter extends Component {
             triggerErrorModal={this.triggerErrorModal}
           />
         ) :
-        window.location = "https://spotify-swap.herokuapp.com/users/auth/login") :
+        window.location = "https://spotify-swap.herokuapp.com/spotify-login") :
       <div>Loading</div>
   }
 

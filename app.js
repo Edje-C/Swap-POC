@@ -28,7 +28,6 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static(path.join(__dirname, 'client/build'))).use(cors());
 
 /**
  * Generates a random string containing numbers and letters
@@ -50,7 +49,7 @@ var stateKey = generateRandomString(16)
 
 app.use('/', index);
 
-app.get("/spotify-login", 
+app.use("/spotify-login", 
   passport.authenticate("spotify", {
     scope: [
       'user-read-private', 
@@ -92,8 +91,12 @@ app.get('/callback', passport.authenticate("spotify", {
     );
   }
 );
+
+
+app.use(express.static(path.join(__dirname, 'client/build'))).use(cors());
+
 app.get('*', (req, res) => {
-  res.sendfile(__dirname + '/client/public/index.html');
+  res.sendfile(__dirname + '/client/build/index.html');
 });
 
 // catch 404 and forward to error handler
