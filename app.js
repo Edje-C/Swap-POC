@@ -4,21 +4,19 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var cors = require('cors');
-var {generateRandomString} = require('./routes/helpers');
-
-const session = require('express-session');
-const passport = require('passport');
+var session = require('express-session');
+var passport = require('passport');
 
 var index = require('./routes/index');
+var {generateRandomString} = require('./routes/helpers');
 
 var app = express();
-
-// app.use(express.static(path.join(__dirname, 'client/build'))).use(cors());
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'client/build'))).use(cors());
 
 // Middle Ware
 app.use(
@@ -33,28 +31,33 @@ app.use(passport.session());
 
 app.use('/', index);
 
+app.get('/help', function(req, res, next) {
+  res.json('here')
+});
+  
 app.get("/spotify-login", 
   passport.authenticate("spotify", {
     scope: [
-      'user-read-private', 
-      'user-read-email', 
-      'user-library-read', 
-      'user-top-read', 
-      'user-follow-read', 
-      'playlist-modify-private', 
-      'playlist-modify-public', 
+      'user-read-private',
+      'user-read-email',
+      'user-library-read',
+      'user-top-read',
+      'user-follow-read',
+      'playlist-modify-private',
+      'playlist-modify-public',
       'playlist-read-collaborative'
     ],
     showDialog: true,
     'state': generateRandomString(16)
   }), 
-  function(req, res){}
+  function(req, res){
+    res.json('hit')
+  }
 );
 
 app.get('/callback', passport.authenticate("spotify", {
   failureRedirect: 'https://spotify-swap.herokuapp.com/login'}), 
   (req, res, body) => {
-
     var user = req.session.passport.user;
 
     if (user.access_token || user.refresh_token) {
@@ -63,6 +66,7 @@ app.get('/callback', passport.authenticate("spotify", {
 
     var accessToken = user.accessToken
     var refreshToken = user.refreshToken
+
 
     res.redirect('https://spotify-swap.herokuapp.com/access/#' +
       querystring.stringify({
@@ -74,7 +78,7 @@ app.get('/callback', passport.authenticate("spotify", {
 );
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '/client/build/index.html'));
+  res.sendFile(__dirname + '/client/public/index.html');
 });
 
 // catch 404 and forward to error handler
@@ -92,7 +96,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.json('error');
 });
 
 module.exports = app;

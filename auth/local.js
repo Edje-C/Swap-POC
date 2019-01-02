@@ -17,7 +17,7 @@ passport.use(
     {
       clientID: client_id,
       clientSecret: client_secret,
-      callbackURL: 'https://spotify-swap.herokuapp.com/callback'
+      callbackURL: 'https://spotify-swap.herokuapp.com/callback/'
     },
     function (accessToken, refreshToken, expires_in, profile, done) {
       let {display_name, id, email} = profile._json;

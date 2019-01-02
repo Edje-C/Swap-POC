@@ -17,7 +17,7 @@ class Login extends Component {
     axios
       .get('/spotify-login')
       .then((req, res) => {
-        console.log(req, res)
+        console.log(req, res);
       });
   }
 
@@ -30,8 +30,8 @@ class Login extends Component {
             <p className="logo-name">Swap</p>
           </div>
           <div className="auth-form">
-            <a href="https://spotify-swap.herokuapp.com/spotify-login" className="auth-submit">LOGIN</a>
-            {/* <div onClick={this.loginUser} className="auth-submit">LOGIN</div> */}
+            {/* <a href="https://spotify-swap.herokuapp.com/spotify-login" className="auth-submit">LOGIN</a> */}
+            <div onClick={this.loginUser} className="auth-submit">LOGIN</div>
           </div>
         </div>
       </div>

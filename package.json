@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "local": "nodemon ./bin/www",
     "start": "node ./bin/www",
-    "heroku-postbuild": "cd client && npm install && npm install && npm run build"
+    "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
