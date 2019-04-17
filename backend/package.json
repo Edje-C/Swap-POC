@@ -10,6 +10,7 @@
     "body-parser": "*",
     "cookie-parser": "*",
     "debug": "*",
+    "dotenv": "*",
     "express": "*",
     "express-session": "*",
     "jade": "*",

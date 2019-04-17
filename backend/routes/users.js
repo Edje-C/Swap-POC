@@ -46,9 +46,12 @@ router.patch("/saveSpotifyID", db.saveSpotifyID)
 
 // ~ * Spotify * ~ //
 
-var secrets = require('../secrets')
-var client_id = secrets.clientId;
-var client_secret = secrets.clientSecret;
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').load();
+}
+
+let {client_id, client_secret} = process.env;
+
 var redirect_uri = 'http://localhost:3100/users/callback';
 
 /**
